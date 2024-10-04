@@ -1,8 +1,8 @@
-import { Doctors } from '@/components/doctors'
-import DoctorCard from '@/components/ui/doctorCard'
+import { Doctors } from '@/components/doctors';
+import DoctorCard from '@/components/ui/doctorCard';
 
 interface DoctorListProps {
-  doctors: Doctors[]
+  doctors: Doctors[];
 }
 
 export default function DoctorList({ doctors }: DoctorListProps) {
@@ -17,5 +17,5 @@ export default function DoctorList({ doctors }: DoctorListProps) {
         ))}
       </main>
     </div>
-  )
+  );
 }
