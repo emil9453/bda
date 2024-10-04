@@ -12,51 +12,38 @@ import '@/public/customcss/custom.css';
 
 const specialtyOptions = [
   {
-    value: 'Pediatr',
+    value: '1',
     label: 'Pediatr',
-    subcategories: [
-      { value: 'Cardiologist', label: 'Cardiologist' },
-      { value: 'Dermatologist', label: 'Dermatologist' },
-    ],
   },
   {
-    value: 'Uşaq endokrinoloqu',
+    value: '2',
     label: 'Uşaq endokrinoloqu',
-    subcategories: [
-      { value: 'Neurologist', label: 'Neurologist' },
-      { value: 'Orthopedic Surgeon', label: 'Orthopedic Surgeon' },
-    ],
+    parent: '1',
   },
   {
-    value: 'Mama-ginekoloq',
-    label: 'Mama-ginekoloq',
-    subcategories: [
-      { value: 'Radiologist', label: 'Radiologist' },
-      { value: 'Pathologist', label: 'Pathologist' },
-    ],
+    value: '3',
+    label: 'Neotolog',
+    parent: '1',
   },
   {
-    value: 'Həkim-ginekoloq',
-    label: 'Həkim-ginekoloq',
-    subcategories: [
-      { value: 'Gynecologist', label: 'Gynecologist' },
-      { value: 'Obstetrician', label: 'Obstetrician' },
-    ],
-  },
-  {
-    value: 'Ginekoloq',
+    value: '4',
     label: 'Ginekoloq',
-    subcategories: [
-      { value: 'Gynecologist', label: 'Gynecologist' },
-      { value: 'Obstetrician', label: 'Obstetrician' },
-    ],
+  },
+  {
+    value: '5',
+    label: 'Həkim-ginekoloq',
+    parent: '4',
+  },
+  {
+    value: '6',
+    label: 'Mama-ginekoloq',
+    parent: '4',
   },
 ];
 
 const SearchBar: React.FC = () => {
   const [doctorName, setDoctorName] = useState<string>('');
   const [selectedSpecialty, setSelectedSpecialty] = useState<any | null>(null);
-  const [currentOptions, setCurrentOptions] = useState(specialtyOptions);
   const [location, setLocation] = useState<string>('');
   const [clinic, setClinic] = useState<string>('');
   const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]); // Filtrelenmiş doktorları saklamak için durum
@@ -93,9 +80,6 @@ const SearchBar: React.FC = () => {
 
   const handleSpecialtyChange = (selectedOption: any) => {
     setSelectedSpecialty(selectedOption);
-    if (selectedOption?.subcategories) {
-      setCurrentOptions(selectedOption.subcategories);
-    }
   };
 
   const handleDoctorNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,7 +110,7 @@ const SearchBar: React.FC = () => {
         className="flex overflow-visible justify-between mx-auto gap-5 items-center self-stretch height-[74px] pl-8 mt-16 w-full text-xl text-black rounded-lg border border-black border-solid max-md:pl-5 max-md:mt-10 max-md:max-w-full"
       >
         <input
-          className="w-[232px] focus:outline-none relative"
+          className="focus:outline-none relative"
           type="search"
           placeholder="Doctor name, Surname"
           value={doctorName}
@@ -152,24 +136,33 @@ const SearchBar: React.FC = () => {
 
         <Select
           className="max-w-54 our-select before:content-[''] before:absolute before:w-[2px] before:h-full before:bg-gray-400 before:left-0 
-               after:content-[''] after:absolute after:w-[2px] after:h-full after:bg-gray-400 after:right-0 after:top-0
-               relative px-4 text-black"
+    after:content-[''] after:absolute after:w-[2px] after:h-full after:bg-gray-400 after:right-0 after:top-0
+    relative px-4 text-black"
           styles={{
             control: provided => ({
               ...provided,
               border: 'none',
               boxShadow: 'none',
+              minWidth: '150px',
+            }),
+            container: provided => ({
+              ...provided,
+              minWidth: '150px',
             }),
           }}
           placeholder="Specialty"
-          options={currentOptions}
+          options={specialtyOptions}
           value={selectedSpecialty}
           onChange={handleSpecialtyChange}
+          formatGroupLabel={data => <div style={{ fontWeight: 'bold' }}>{data.label}</div>}
+          formatOptionLabel={({ label, parent }) => (
+            <div style={{ paddingLeft: parent ? '20px' : '0' }}>{label}</div>
+          )}
         />
 
         <div className="relative max-w-54">
           <input
-            className="relative w-full px-4 focus:outline-none text-black"
+            className="relative max-w-32 px-4 focus:outline-none text-black"
             type="search"
             placeholder="Clinic"
             value={clinic}
