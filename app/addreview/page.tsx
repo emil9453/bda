@@ -11,7 +11,7 @@ interface ReviewFormProps {
 const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // Handle form submission logic here
+   
     onSubmit({});
   };
 
