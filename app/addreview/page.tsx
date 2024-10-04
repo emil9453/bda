@@ -1,18 +1,11 @@
-"use client"
 import React from 'react';
 import InputField from "@/components/ui/InputField";
 import RatingStars from '@/components/ui/RatingStars';
 import SubmitButton from '@/components/ui/SubmitButton';
 
-interface ReviewFormProps {
-  onSubmit: (formData: any) => void;
-}
-
-const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
+export default function ReviewForm() {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // Handle form submission logic here
-    onSubmit({});
   };
 
   return (
@@ -46,12 +39,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
       <div className="flex gap-1.5 self-start mt-3.5 text-base text-neutral-800 max-md:ml-1.5">
         <input type="checkbox" name="checkbox" id="checkbox" required />
         <p className="flex-auto my-auto">
-          "By using "TopDoc", you agree to our Terms of Use."
+          &quot;By using &quot;TopDoc&quot;, you agree to our Terms of Use.&quot;
         </p>
       </div>
       <SubmitButton />
     </form>
   );
 };
-
-export default ReviewForm;

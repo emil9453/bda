@@ -2,7 +2,7 @@ import React from "react";
 import ReviewCard from "./ReviewCard";
 import SearchBar from "./SearchBar";
 import Link from "next/link";
-import ReviewArray,{Reviews} from "./reviews";
+import ReviewArray from "./reviews";
 
 
 const TopDocPage: React.FC = () => {
