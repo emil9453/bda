@@ -4,12 +4,9 @@ import RatingStars from '@/components/ui/RatingStars';
 import SubmitButton from '@/components/ui/SubmitButton';
 
 export default function ReviewForm() {
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-  };
-
+  
   return (
-    <form onSubmit={handleSubmit} className="flex overflow-hidden flex-col px-20 py-20 bg-white rounded-lg border border-black border-solid max-w-[1338px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5">
+    <form  className="flex overflow-hidden flex-col px-20 py-20 bg-white rounded-lg border border-black border-solid max-w-[1338px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5">
       <h1 className="self-center text-2xl font-semibold text-black">
         Add a new review
       </h1>
