@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { motion } from "framer-motion"
-import { Search, UserRound } from "lucide-react"
+import { motion } from 'framer-motion';
+import { Search, UserRound } from 'lucide-react';
 
 export function NoDoctorsFound() {
   return (
@@ -14,7 +14,7 @@ export function NoDoctorsFound() {
       <div className="relative mb-6">
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
           className="text-primary"
         >
           <Search size={64} />
@@ -29,9 +29,9 @@ export function NoDoctorsFound() {
       </div>
       <h2 className="text-2xl font-bold mb-2">No doctors found</h2>
       <p className="text-muted-foreground max-w-md">
-        We couldn't find any doctors matching your criteria. Don't worry, though! 
-        Try adjusting your search or explore other specialties to find the right doctor for you.
+        We couldn&apos;t find any doctors matching your criteria. Don&apos;t worry, though! Try
+        adjusting your search or explore other specialties to find the right doctor for you.
       </p>
     </motion.div>
-  )
+  );
 }
