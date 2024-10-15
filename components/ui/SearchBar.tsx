@@ -89,9 +89,9 @@ const SearchBar: React.FC = () => {
       const filtered = DoctorsArray.filter(doctor =>
         doctor.name.toLowerCase().includes(value.toLowerCase()),
       );
-      setFilteredDoctors(filtered); // Filtrelenmiş doktorları güncelle
+      setFilteredDoctors(filtered); 
     } else {
-      setFilteredDoctors([]); // Eğer input boşsa listeyi temizle
+      setFilteredDoctors([]); 
     }
   };
 

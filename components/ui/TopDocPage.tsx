@@ -1,13 +1,27 @@
-import React from 'react';
+"use client"
+import React, { useState } from 'react';
 import ReviewCard from './ReviewCard';
 import SearchBar from './SearchBar';
-import Link from 'next/link';
 import ReviewArray from './reviews';
+import ReviewForm from '../AddReview/ReviewForm';
+
 
 const TopDocPage: React.FC = () => {
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+
+  const ToggleReviewForm = ()=>{
+    setIsReviewFormOpen(!isReviewFormOpen);
+  }
+
+  const HandleClickOutside = (e: React.MouseEvent)=>{
+     if((e.target as HTMLElement).id === "overlay"){
+      setIsReviewFormOpen(false);
+     }
+  }
+
   return (
     <>
-      <header className="flex overflow-hidden flex-col pr-20 pb-32 bg-white max-md:pr-5 max-md:pb-24">
+      <header className="flex relative overflow-hidden flex-col pr-20 pb-32 bg-white max-md:pr-5 max-md:pb-24">
         <section className="flex flex-wrap gap-5 justify-between text-stone-50 max-md:max-w-full">
           <div className="flex overflow-hidden relative flex-col px-16 py-24 text-4xl font-bold whitespace-nowrap aspect-[1.238] fill-amber-500 max-md:px-5 max-md:pb-24">
             <img
@@ -18,14 +32,34 @@ const TopDocPage: React.FC = () => {
             />
             <span className="absolute top-[55px] left-[38px] font-kyiv">Topdoc</span>
           </div>
-          <Link
-            href="/addreview"
-            className="overflow-hidden px-4 py-3 my-auto text-xl font-semibold bg-amber-500 rounded-lg"
-          >
+             
+          
+            <button onClick={ToggleReviewForm} className="overflow-hidden px-4 py-3 my-auto text-xl font-semibold bg-amber-500 rounded-lg">
+          
             + Add Review
-          </Link>
+            </button>
+          
         </section>
+              {/* Overlay */}
+      {isReviewFormOpen && (
+        <div
+          id="overlay"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={HandleClickOutside}
+        ></div>
+      )}
+
+      {/* Sliding Review Form */}
+      <div
+        className={`fixed top-0 right-0 h-full overflow-scroll bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+          isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        style={{ width: '824px' }}
+      >
+        <ReviewForm onSubmit={(formData) => console.log("Form Submitted", formData)} />
+      </div>
       </header>
+
       <section className="flex mx-auto flex-col items-start self-center mt-28 mb-16 w-full max-w-[1097px] max-md:mt-10 max-md:max-w-full">
         <h1 className="ml-5 text-4xl font-semibold text-black max-md:max-w-full">
           Search Local Doctors
@@ -43,3 +77,7 @@ const TopDocPage: React.FC = () => {
 };
 
 export default TopDocPage;
+
+
+
+

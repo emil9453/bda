@@ -3,11 +3,52 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import DoctorsArray, { Doctors } from '@/components/doctors';
+// import axios from 'axios'
+
 
 export function useFilteredDoctors() {
   const searchParams = useSearchParams();
   console.log('🚀 ~ useFilteredDoctors ~ searchParams:', searchParams);
   const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]);
+  // const [DoctorArray, setDoctorsArray] = useState<Doctors[]>([]);
+
+//   const fetchDoctors = async () => {
+//     try {
+//       const response = await fetch('http://64.226.99.16:8090/api/v1/doctor/all'); 
+//       if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//       }
+//       const DocArray = await response.json(); 
+//       setDoctorsArray(DocArray); 
+//       console.log(DocArray);
+//     } catch (error) {
+//       console.error("Error fetching doctors:", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchDoctors(); 
+//   }, []); 
+
+
+
+  // const fetchDoctors = async () => {
+  //   try {
+  //     const response = await axios.get(`http://64.226.99.16:8090/api/v1/doctor/all`);
+  //     const DocArray = response.data;
+  //     setDoctorsArray(DocArray); 
+  //     console.log(DocArray);
+  //   } catch (error) {
+  //     console.error("Error fetching doctors:", error);
+  //   }
+  // };
+  
+  // useEffect(() => {
+  //   fetchDoctors();
+  // }, []);
+  
+  
+  
 
   useEffect(() => {
     const name = searchParams.get('name')?.toLowerCase() || '';
