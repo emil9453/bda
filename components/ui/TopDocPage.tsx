@@ -36,7 +36,7 @@ const TopDocPage: React.FC = () => {
           
             <button onClick={ToggleReviewForm} className="overflow-hidden px-4 py-3 my-auto text-xl font-semibold bg-amber-500 rounded-lg">
           
-            + Add Review
+            + Yeni Rəy
             </button>
           
         </section>
@@ -51,18 +51,20 @@ const TopDocPage: React.FC = () => {
 
       {/* Sliding Review Form */}
       <div
-        className={`fixed top-0 right-0 h-full overflow-scroll bg-white shadow-lg z-50 transform transition-transform duration-300 ${
-          isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-        style={{ width: '824px' }}
-      >
-        <ReviewForm onSubmit={(formData) => console.log("Form Submitted", formData)} />
-      </div>
+  className={`fixed top-14 h-full overflow-scroll hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+    isReviewFormOpen ? 'translate-x-1/4' : '-translate-x-full'
+  }`}
+  style={{ width: '824px'}}
+>
+  <ReviewForm onSubmit={(formData) => console.log("Form Submitted", formData)} />
+</div>
+
+
       </header>
 
       <section className="flex mx-auto flex-col items-start self-center mt-28 mb-16 w-full max-w-[1097px] max-md:mt-10 max-md:max-w-full">
-        <h1 className="ml-5 text-4xl font-semibold text-black max-md:max-w-full">
-          Search Local Doctors
+        <h1 className="ml-5 text-5xl leading-tight font-semibold text-black max-md:max-w-[926px]">
+        “Sağlamlığınıza etibar etdiyiniz həkimi seçin, həyatınızı daha sağlam yaşayın!”
         </h1>
         <SearchBar />
         <h2 className="self-center mt-36 text-2xl font-semibold text-black max-md:mt-10">

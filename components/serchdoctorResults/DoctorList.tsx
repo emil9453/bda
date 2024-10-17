@@ -1,8 +1,6 @@
 import { Doctors } from '@/components/doctors';
 import DoctorCard from '@/components/ui/doctorCard';
 
-
-
 interface DoctorListProps {
   doctors: Doctors[];
 }
