@@ -1,5 +1,4 @@
 'use client';
-
 import { useFilteredDoctors } from '@/components/hooks/useDoctorFilters';
 import DoctorList from '@/components/serchdoctorResults/DoctorList';
 import SearchBar from '@/components/ui/SearchBar';

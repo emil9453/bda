@@ -1,5 +1,3 @@
-import DoctorImage from '@/public/doctor_images/doctor.png';
-import { StaticImageData } from 'next/image';
 
 export type Doctors = {
   id: string;
