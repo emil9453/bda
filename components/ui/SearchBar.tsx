@@ -124,7 +124,7 @@ const SearchBar: React.FC = () => {
           e.preventDefault();
           handleSearch();
         }}
-        className="flex overflow-visible justify-between mx-auto gap-5 items-center self-stretch height-[74px] pl-8 mt-16 w-full text-xl text-black rounded-lg border border-black border-solid max-md:pl-5 max-md:mt-10 max-md:max-w-full"
+        className="flex overflow-visible justify-between mx-auto gap-5 items-center self-stretch height-[74px] pl-8 mt-16 w-full text-xl text-black rounded-lg border border-white shadow-md border-solid max-md:pl-5 max-md:mt-10 max-md:max-w-full"
       >
         <input
           className="focus:outline-none relative"

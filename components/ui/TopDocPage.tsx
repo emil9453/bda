@@ -51,7 +51,7 @@ const TopDocPage: React.FC = () => {
 
       {/* Sliding Review Form */}
       <div
-  className={`fixed top-14 h-full overflow-scroll hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+  className={`fixed top-14 overflow-scroll h-[500px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
     isReviewFormOpen ? 'translate-x-1/4' : '-translate-x-full'
   }`}
   style={{ width: '824px'}}
