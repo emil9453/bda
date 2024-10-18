@@ -1,10 +1,9 @@
 'use client';
-
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useJsApiLoader, StandaloneSearchBox } from '@react-google-maps/api';
-import DoctorsArray, { Doctors } from '@/components/doctors';
+import { Doctors } from '@/components/doctors';
 import Select from 'react-select';
 import search from '@/public/search/search-normal.png';
 import locationIcon from '@/public/location/gridicons_location.png';
@@ -47,8 +46,26 @@ const SearchBar: React.FC = () => {
   const [location, setLocation] = useState<string>('');
   const [clinic, setClinic] = useState<string>('');
   const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]); // Filtrelenmiş doktorları saklamak için durum
-
   const router = useRouter();
+  const [DoctorArray, setDoctorsArray] = useState<Doctors[]>([]);
+
+  const fetchDoctors = async () => {
+    try {
+      const response = await fetch('http://64.226.99.16:8090/api/v1/doctor/all');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const DocArray = await response.json();
+      setDoctorsArray(DocArray);
+      console.log(DocArray);
+    } catch (error) {
+      console.error('Error fetching doctors:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDoctors();
+  }, []);
 
   // Google Map Location
   const inputRef = useRef<google.maps.places.SearchBox | null>(null);
@@ -71,8 +88,8 @@ const SearchBar: React.FC = () => {
   const handleSearch = () => {
     const query = new URLSearchParams({
       name: doctorName,
-      specialties: selectedSpecialty?.value || '',
-      location,
+      specialties: selectedSpecialty?.label || '',
+      location: location,
       clinic: clinic,
     }).toString();
     router.push(`/search-results?${query}`);
@@ -86,18 +103,18 @@ const SearchBar: React.FC = () => {
     const value = e.target.value;
     setDoctorName(value);
     if (value) {
-      const filtered = DoctorsArray.filter(doctor =>
-        doctor.name.toLowerCase().includes(value.toLowerCase()),
+      const filtered = DoctorArray.filter(doctor =>
+        doctor.fullName.toLowerCase().includes(value.toLowerCase()),
       );
-      setFilteredDoctors(filtered); // Filtrelenmiş doktorları güncelle
+      setFilteredDoctors(filtered);
     } else {
-      setFilteredDoctors([]); // Eğer input boşsa listeyi temizle
+      setFilteredDoctors([]);
     }
   };
 
   const handleDoctorSelect = (doctorName: string) => {
-    setDoctorName(doctorName); // Seçilen doktor adını input alanına yerleştir
-    setFilteredDoctors([]); // Listeyi temizle
+    setDoctorName(doctorName);
+    setFilteredDoctors([]);
   };
 
   return (
@@ -107,12 +124,12 @@ const SearchBar: React.FC = () => {
           e.preventDefault();
           handleSearch();
         }}
-        className="flex overflow-visible justify-between mx-auto gap-5 items-center self-stretch height-[74px] pl-8 mt-16 w-full text-xl text-black rounded-lg border border-black border-solid max-md:pl-5 max-md:mt-10 max-md:max-w-full"
+        className="flex overflow-visible justify-between mx-auto gap-5 items-center self-stretch height-[74px] pl-8 mt-16 w-full text-xl text-black rounded-lg border border-white shadow-md border-solid max-md:pl-5 max-md:mt-10 max-md:max-w-full"
       >
         <input
           className="focus:outline-none relative"
           type="search"
-          placeholder="Doctor name, Surname"
+          placeholder="Həkimin adı,Soyadı"
           value={doctorName}
           onChange={handleDoctorNameChange}
         />
@@ -124,11 +141,11 @@ const SearchBar: React.FC = () => {
           >
             {filteredDoctors.map(doctor => (
               <li
-                key={doctor.id}
-                onClick={() => handleDoctorSelect(doctor.name)}
+                key={doctor.doctorId}
+                onClick={() => handleDoctorSelect(doctor.fullName)}
                 className="cursor-pointer p-2 hover:bg-gray-200"
               >
-                {doctor.name}
+                {doctor.fullName}
               </li>
             ))}
           </ul>
@@ -150,7 +167,7 @@ const SearchBar: React.FC = () => {
               minWidth: '150px',
             }),
           }}
-          placeholder="Specialty"
+          placeholder="İxtisas"
           options={specialtyOptions}
           value={selectedSpecialty}
           onChange={handleSpecialtyChange}
@@ -164,7 +181,7 @@ const SearchBar: React.FC = () => {
           <input
             className="relative max-w-32 px-4 focus:outline-none text-black"
             type="search"
-            placeholder="Clinic"
+            placeholder="Klinika"
             value={clinic}
             onChange={e => setClinic(e.target.value)}
           />
@@ -178,7 +195,7 @@ const SearchBar: React.FC = () => {
               onLoad={ref => (inputRef.current = ref)}
               onPlacesChanged={handleOnPlaceChanged}
             >
-              <input className="max-w-56 focus:outline-none" type="text" placeholder="Location" />
+              <input className="max-w-56 focus:outline-none" type="text" placeholder="Məkan" />
             </StandaloneSearchBox>
           </>
         )}
