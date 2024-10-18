@@ -40,7 +40,7 @@ export default function DoctorProfile() {
 
             <div className="bg-gray-100 p-4 rounded-lg mb-6">
               <p className="text-sm">
-                "Rəşad doktor uşaqlara qarşı göstərdiyi qayğı və diqqətlə seçilən peşəkar həkimlərdən biridir. Hər bir uşağın sağlamlıq vəziyyətini dərindən araşdırır və valideyinlərə ətraflı izahlar verir. Pasientlərə ya..."
+              `&quot;`quot Rəşad doktor uşaqlara qarşı göstərdiyi qayğı və diqqətlə seçilən peşəkar həkimlərdən biridir. Hər bir uşağın sağlamlıq vəziyyətini dərindən araşdırır və valideyinlərə ətraflı izahlar verir. Pasientlərə ya...`&quot;`
               </p>
             </div>
 

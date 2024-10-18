@@ -3,6 +3,7 @@ import Image from 'next/image';
 import star from "@/public/star/material-symbols-light_star.png"
 import location from "@/public/location/gridicons_location.png"
 import { Doctors } from '../doctors';
+import Link from 'next/link';
 
 interface DoctorCardProps {
     doctor: Doctors;
@@ -24,7 +25,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
 />
           <div className="flex z-0 flex-col items-start self-stretch pr-12 my-auto min-w-[240px] w-[314px]">
             <div className="font-semibold underline text-neutral-800">
-              {doctor.fullName}
+              <Link href={`doctor/${doctor.doctorId}`}>{doctor.fullName}</Link>
             </div>
             <div className="mt-7 ml-2 text-neutral-800 max-md:ml-2.5">
              <p className='text-sm'> {doctor.speciality}</p>

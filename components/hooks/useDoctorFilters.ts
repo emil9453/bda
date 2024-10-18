@@ -15,7 +15,6 @@ export function useFilteredDoctors() {
     try {
       const response = await fetch('http://64.226.99.16:8090/api/v1/doctor/all',{
         method: "GET",
-        mode: "no-cors"
       }); 
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -31,26 +30,6 @@ export function useFilteredDoctors() {
   useEffect(() => {
     fetchDoctors(); 
   }, []); 
-
-
-
-  // const fetchDoctors = async () => {
-  //   try {
-  //     const response = await axios.get(`http://64.226.99.16:8090/api/v1/doctor/all`);
-  //     const DocArray = response.data;
-  //     setDoctorsArray(DocArray); 
-  //     console.log(DocArray);
-  //   } catch (error) {
-  //     console.error("Error fetching doctors:", error);
-  //   }
-  // };
-  
-  // useEffect(() => {
-  //   fetchDoctors();
-  // }, []);
-  
-  
-  
 
   useEffect(() => {
     const name = searchParams.get('name')?.toLowerCase() || '';

@@ -88,7 +88,7 @@ const SearchBar: React.FC = () => {
   const handleSearch = () => {
     const query = new URLSearchParams({
       name: doctorName,
-      specialties: selectedSpecialty?.value || '',
+      specialties: selectedSpecialty?.label || '',
       location: location,
       clinic: clinic,
     }).toString();
@@ -141,7 +141,7 @@ const SearchBar: React.FC = () => {
           >
             {filteredDoctors.map(doctor => (
               <li
-                key={doctor.id}
+                key={doctor.doctorId}
                 onClick={() => handleDoctorSelect(doctor.fullName)}
                 className="cursor-pointer p-2 hover:bg-gray-200"
               >

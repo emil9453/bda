@@ -1,6 +1,6 @@
 
 export type Doctors = {
-  id: string;
+  doctorId: string;
   fullName: string;
   photoUrl: string;
   speciality: string;
@@ -23,8 +23,9 @@ distance: null;
 
 export type Reviews= {
   rating: number;
-  comments: string;
-  reviewDate: string
+  comment: string;
+  reviewDate: string;
+  fullName: string
 }
 // const DoctorsArray: Doctors[] = [
 //   {
