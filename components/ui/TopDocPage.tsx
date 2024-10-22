@@ -1,9 +1,9 @@
 "use client"
 import React, { useState } from 'react';
+import ReviewForm from '../AddReview/ReviewForm';
 import ReviewCard from './ReviewCard';
 import SearchBar from './SearchBar';
 import ReviewArray from './reviews';
-import ReviewForm from '../AddReview/ReviewForm';
 
 
 const TopDocPage: React.FC = () => {
@@ -56,7 +56,7 @@ const TopDocPage: React.FC = () => {
   }`}
   style={{ width: '824px'}}
 >
-  <ReviewForm onSubmit={(formData) => console.log("Form Submitted", formData)} />
+  <ReviewForm onSubmit={(formData) => console.log("Form Submitted", formData)} doctorName={''} clinic={''} specialty={''} />
 </div>
 
 

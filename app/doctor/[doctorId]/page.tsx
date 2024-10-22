@@ -1,12 +1,12 @@
 'use client';
+import ReviewForm from '@/components/AddReview/ReviewForm';
 import { Doctors } from '@/components/doctors';
 import location from '@/public/location/gridicons_location.png';
-import { Mail, MapPin, Phone, Star } from 'lucide-react';
 import stars from '@/public/stars/stars.png';
+import { Mail, MapPin, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import ReviewFormTwo from '@/components/AddReview/ReviewFormTwo';
+import { useEffect, useState } from 'react';
 
 export default function DoctorProfile({
   params,
@@ -71,7 +71,7 @@ export default function DoctorProfile({
   }`}
   style={{ width: '824px'}}
 >
-  <ReviewFormTwo
+  <ReviewForm
    onSubmit={(formData) => console.log("Form Submitted", formData)}
    doctorName={doctor.fullName}
    clinic={doctor.clinics[0]?.clinicName || ''}

@@ -1,16 +1,91 @@
-import React from 'react';
-import { useReviewForm } from '../hooks/useReviewForm';
-import InputField from './InputField';
-import RatingStars from './RatingStars';
-import SubmitButton from './SubmitButton';
+'use client'
+
+import React from 'react'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import InputField from './InputField'
+import RatingStars from './RatingStars'
+import SubmitButton from './SubmitButton'
+import axios from 'axios'
 
 interface ReviewFormProps {
-  onSubmit: (formData: any) => void;
+  onSubmit: (formData: any) => void
+  doctorName?: string
+  clinic?: string
+  specialty?: string
+  isPreFilled?: boolean
 }
 
-export default function Component({ onSubmit }: ReviewFormProps) {
-  
-  const formik = useReviewForm({ onSubmit });
+const ReviewForm: React.FC<ReviewFormProps> = ({ 
+  onSubmit, 
+  doctorName = '', 
+  clinic = '', 
+  specialty = '', 
+  isPreFilled = false 
+}) => {
+  const validationSchema = Yup.object({
+    fullName: Yup.string()
+      .test(
+        'fullName',
+        'Ad və soyad tələb olunur (ən azı iki söz olmalıdır)',
+        (value) => !!value && value.trim().split(/\s+/).filter(Boolean).length >= 2
+      )
+      .required('Ad və soyad tələb olunur'),
+    doctorName: Yup.string()
+      .test(
+        'doctorName',
+        'Həkimin adı, soyadı tələb olunur (ən azı iki söz olmalıdır)',
+        (value) => !!value && value.trim().split(/\s+/).filter(Boolean).length >= 2
+      )
+      .required('Həkimin adı, soyadı tələb olunur'),
+    clinic: Yup.string().required('Klinika tələb olunur'),
+    specialty: Yup.string().required('İxtisas tələb olunur'),
+    rating: Yup.number().min(1, 'Reytinq tələb olunur').required('Reytinq tələb olunur'),
+    reviewText: Yup.string().required('Rəy yazılması tələb olunur'),
+    acceptTerms: Yup.boolean().oneOf([true], 'Şərtləri qəbul etməlisiniz'),
+  })
+
+  const formik = useFormik({
+    initialValues: {
+      fullName: '',
+      doctorName: doctorName,
+      clinic: clinic,
+      specialty: specialty,
+      rating: 0,
+      reviewText: '',
+      acceptTerms: false,
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.get(`http://64.226.99.16:8090/api/v1/doctor/all`, {
+          params: {
+            fullName: values.doctorName,
+            speciality: values.specialty,
+          }
+        })
+        if (response.data.length > 0) {
+          const doctorId = response.data[0].id
+          await axios.post(`http://64.226.99.16:8090/api/v1/doctor/${doctorId}/reviews`, {
+            fullName: values.fullName,
+            reviewText: values.reviewText, 
+            rating: values.rating 
+          })
+          alert("Review başarıyla gönderildi!")
+        } else {
+          await axios.post(`/api/admin/notifications`, {
+            message: `Yeni hekim profili yaratmaq lazimdir: ${values.doctorName}, İxtisas: ${values.specialty}`
+          })
+          alert("hekim tapilmadi, admine bildiris gonderildi.")
+        }
+      } catch (error) {
+        console.error("Xeta Bas verdi:", error)
+        alert("Xeta Bas verdi.")
+      }
+      onSubmit(values)
+    },
+  })
+
   return (
     <form
       className="flex overflow-hidden flex-col px-20 py-20 bg-white rounded-lg border border-black border-solid max-w-[824px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5"
@@ -29,13 +104,10 @@ export default function Component({ onSubmit }: ReviewFormProps) {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 disabled={false}
-              
               />
-              {
-                formik.touched.fullName && formik.errors.fullName && (
-                  <div className='text-red-500 text-sm'> {formik.errors.fullName}</div>
-                )
-              }
+              {formik.touched.fullName && formik.errors.fullName && (
+                <div className='text-red-500 text-sm'>{formik.errors.fullName}</div>
+              )}
               
               <InputField
                 label="Həkimin adı, soyadı*"
@@ -44,21 +116,18 @@ export default function Component({ onSubmit }: ReviewFormProps) {
                 value={formik.values.doctorName}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                disabled={false}
-                
+                disabled={isPreFilled}
               />
-              {
-                formik.touched.doctorName && formik.errors.doctorName && (
-                  <div className='text-red-500 text-sm'> {formik.errors.doctorName}</div>
-                )
-              }
+              {formik.touched.doctorName && formik.errors.doctorName && (
+                <div className='text-red-500 text-sm'>{formik.errors.doctorName}</div>
+              )}
               
               <div className="w-full">
                 <RatingStars
                   rating={formik.values.rating}
                   onRatingChange={(newRating) => {
-                    formik.setFieldValue('rating', newRating);
-                    formik.setFieldTouched('rating', true, false);
+                    formik.setFieldValue('rating', newRating)
+                    formik.setFieldTouched('rating', true, false)
                   }}
                 />
                 {formik.touched.rating && formik.errors.rating && (
@@ -76,13 +145,11 @@ export default function Component({ onSubmit }: ReviewFormProps) {
               value={formik.values.clinic}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              disabled={false}
+              disabled={isPreFilled}
             />
-            {
-                formik.touched.clinic && formik.errors.clinic && (
-                  <div className='text-red-500 text-sm'> {formik.errors.clinic}</div>
-                )
-              }
+            {formik.touched.clinic && formik.errors.clinic && (
+              <div className='text-red-500 text-sm'>{formik.errors.clinic}</div>
+            )}
             
             <InputField
               label="İxtisas*"
@@ -91,13 +158,11 @@ export default function Component({ onSubmit }: ReviewFormProps) {
               value={formik.values.specialty}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              disabled={false}
+              disabled={isPreFilled}
             />
-            {
-                formik.touched.specialty && formik.errors.specialty && (
-                  <div className='text-red-500 text-sm'> {formik.errors.specialty}</div>
-                )
-              }
+            {formik.touched.specialty && formik.errors.specialty && (
+              <div className='text-red-500 text-sm'>{formik.errors.specialty}</div>
+            )}
           </div>
         </div>
       </div>
@@ -139,5 +204,7 @@ export default function Component({ onSubmit }: ReviewFormProps) {
       )}
       <SubmitButton />
     </form>
-  );
+  )
 }
+
+export default ReviewForm

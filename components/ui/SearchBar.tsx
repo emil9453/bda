@@ -45,7 +45,7 @@ const SearchBar: React.FC = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState<any | null>(null);
   const [location, setLocation] = useState<string>('');
   const [clinic, setClinic] = useState<string>('');
-  const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]); // Filtrelenmiş doktorları saklamak için durum
+  const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]); 
   const router = useRouter();
   const [DoctorArray, setDoctorsArray] = useState<Doctors[]>([]);
 
