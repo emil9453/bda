@@ -152,8 +152,8 @@ const SearchBar: React.FC = () => {
         )}
 
         <Select
-          className="max-w-54 our-select before:content-[''] before:absolute before:w-[2px] before:h-full before:bg-gray-400 before:left-0 
-    after:content-[''] after:absolute after:w-[2px] after:h-full after:bg-gray-400 after:right-0 after:top-0
+          className="max-w-54 our-select before:content-[''] before:absolute before:w-[1px] before:h-full before:bg-[rgba(189,188,179,1)] before:left-0 
+    after:content-[''] after:absolute after:w-[1.5px] after:h-full after:bg-[rgba(189,188,179,1)] after:right-0 after:top-0
     relative px-4 text-black"
           styles={{
             control: provided => ({
@@ -185,7 +185,7 @@ const SearchBar: React.FC = () => {
             value={clinic}
             onChange={e => setClinic(e.target.value)}
           />
-          <span className="absolute right-0 -top-1.5 w-[2px] h-[40px] bg-gray-400"></span>
+          <span className="absolute right-0 -top-1.5 w-[1px] h-[40px] bg-[rgba(189,188,179,1)]"></span>
         </div>
 
         {isLoaded && (
@@ -209,3 +209,6 @@ const SearchBar: React.FC = () => {
 };
 
 export default SearchBar;
+
+
+

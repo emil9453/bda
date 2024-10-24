@@ -8,6 +8,8 @@ import RatingStars from './RatingStars'
 import SubmitButton from './SubmitButton'
 import axios from 'axios'
 
+
+
 interface ReviewFormProps {
   onSubmit: (formData: any) => void
   doctorName?: string
@@ -57,6 +59,18 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     },
     validationSchema,
     onSubmit: async (values) => {
+      // console.log(values.doctorName, values.specialty)
+    
+      //   const response = await axios.get(`http://64.226.99.16:8090/api/v1/doctor/all`, {
+      //     params: {
+      //       fullName: values.doctorName,
+      //       speciality: values.specialty,
+      //     }
+      //   })
+
+      //   console.log(response.data)
+        
+
       try {
         const response = await axios.get(`http://64.226.99.16:8090/api/v1/doctor/all`, {
           params: {
@@ -65,23 +79,29 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           }
         })
         if (response.data.length > 0) {
-          const doctorId = response.data[0].id
-          await axios.post(`http://64.226.99.16:8090/api/v1/doctor/${doctorId}/reviews`, {
+          const doctorId = response.data[0].doctorId
+          console.log(`D👻😐😐 Doctor id: ${doctorId}`)
+          await axios.post(`http://64.226.99.16:8090/api/v1/review/reviews?fullName=${values.doctorName}&clinicName=${values.clinic}%20Clinic&speciality=${values.specialty}`, {
             fullName: values.fullName,
-            reviewText: values.reviewText, 
+            comment: values.reviewText, 
             rating: values.rating 
           })
-          alert("Review başarıyla gönderildi!")
-        } else {
-          await axios.post(`/api/admin/notifications`, {
-            message: `Yeni hekim profili yaratmaq lazimdir: ${values.doctorName}, İxtisas: ${values.specialty}`
-          })
-          alert("hekim tapilmadi, admine bildiris gonderildi.")
+          alert("Review uğurla gönderildi!")
         }
+        
+        // else {
+        //   await axios.post(`/api/admin/notifications`, {
+        //     message: `Yeni hekim profili yaratmaq lazimdir: ${values.doctorName}, İxtisas: ${values.specialty}`
+        //   })
+        //   alert("hekim tapilmadi, admine bildiris gonderildi.")
+        // }
       } catch (error) {
         console.error("Xeta Bas verdi:", error)
         alert("Xeta Bas verdi.")
       }
+      onSubmit(values)
+        
+      
       onSubmit(values)
     },
   })

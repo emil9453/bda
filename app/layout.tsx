@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Link from "next/link";
 import "./globals.css";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,6 +35,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${kyivType.variable} ${geistMono.variable} antialiased`}
       >
+   
+      <header className="overflow-hidden px-12 py-3.5 text-4xl font-bold text-black whitespace-nowrap bg-[rgba(255,174,53,1)] max-md:px-5">
+        <Link href={"/"} className="font-kyiv">Topdoc</Link>
+      </header>
         {children}
       </body>
     </html>
