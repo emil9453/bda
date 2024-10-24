@@ -64,10 +64,10 @@ export default function DoctorProfile({
 
       {/* Sliding Review Form */}
       <div
-  className={`fixed top-14 overflow-scroll h-[500px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
-    isReviewFormOpen ? 'translate-x-1/4' : '-translate-x-full'
+  className={`fixed top-0 right-0 overflow-scroll h-[600px] w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+    isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
   }`}
-  style={{ width: '824px'}}
+  
 >
   <ReviewForm
    onSubmit={(formData) => console.log("Form Submitted", formData)}

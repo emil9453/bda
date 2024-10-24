@@ -13,7 +13,7 @@ interface InputFieldProps {
 const InputField: React.FC<InputFieldProps> = ({ label, id, value, name, onChange, onBlur }) => {
   return (
     <>
-      <label htmlFor={id} className="text-base font-bold text-zinc-400">
+      <label htmlFor={id} className="text-xs mt-2 font-bold text-zinc-400">
         {label}
       </label>
       <input
@@ -22,7 +22,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, id, value, name, onChang
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        className="flex shrink-0 self-stretch mt-1 border-b border-solid border-b-yellow-500 h-[52px]"
+        className="flex shrink-0 focus:outline-none w-40 self-stretch mt-1 border-b border-solid border-b-yellow-500 h-[32px]"
         type="text"
         aria-label={label}
         

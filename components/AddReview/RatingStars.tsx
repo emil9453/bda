@@ -21,8 +21,8 @@ const RatingStars: React.FC<RatingStarsProps> = ({ rating, onRatingChange }) => 
   };
 
   return (
-    <div className="flex flex-col mt-12 max-w-full w-[150px] max-md:mt-10">
-      <h2 className="text-2xl font-semibold text-neutral-500">Reyting*</h2>
+    <div className="flex flex-col mt-9 max-w-full w-[150px] max-md:mt-10">
+      <h2 className="text-lg font-semibold text-neutral-500">Reyting*</h2>
       <div className="flex gap-px items-center mt-2.5 w-full">
         {[1, 2, 3, 4, 5].map(star => (
           <Image

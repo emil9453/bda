@@ -108,12 +108,12 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
   return (
     <form
-      className="flex overflow-hidden flex-col px-20 py-20 bg-white rounded-lg border border-black border-solid max-w-[824px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5"
+      className="flex overflow-hidden flex-col px-8 py-2 bg-white rounded-lg h-full max-w-[824px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5"
       onSubmit={formik.handleSubmit}
     >
-      <h1 className="self-center text-2xl font-semibold text-black">Yeni rəy əlavə et</h1>
-      <div className="mt-16 max-md:mt-10 max-md:mr-1 max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col">
+      <h1 className="self-center text-base font-semibold text-black">Yeni rəy əlavə et</h1>
+      <div className="mt-3 max-md:mt-7 max-md:mr-1 max-md:max-w-full">
+        <div className="flex gap-3 max-md:flex-col">
           <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
             <div className="flex flex-col grow items-start max-md:mt-10">
               <InputField
@@ -126,7 +126,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 disabled={false}
               />
               {formik.touched.fullName && formik.errors.fullName && (
-                <div className='text-red-500 text-sm'>{formik.errors.fullName}</div>
+                <div className='text-red-500 text-xs'>{formik.errors.fullName}</div>
               )}
               
               <InputField
@@ -139,7 +139,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 disabled={isPreFilled}
               />
               {formik.touched.doctorName && formik.errors.doctorName && (
-                <div className='text-red-500 text-sm'>{formik.errors.doctorName}</div>
+                <div className='text-red-500 text-xs'>{formik.errors.doctorName}</div>
               )}
               
               <div className="w-full">
@@ -168,7 +168,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               disabled={isPreFilled}
             />
             {formik.touched.clinic && formik.errors.clinic && (
-              <div className='text-red-500 text-sm'>{formik.errors.clinic}</div>
+              <div className='text-red-500 text-xs'>{formik.errors.clinic}</div>
             )}
             
             <InputField
@@ -181,7 +181,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               disabled={isPreFilled}
             />
             {formik.touched.specialty && formik.errors.specialty && (
-              <div className='text-red-500 text-sm'>{formik.errors.specialty}</div>
+              <div className='text-red-500 text-xs'>{formik.errors.specialty}</div>
             )}
           </div>
         </div>
@@ -189,7 +189,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
       <div className="w-full mt-2">
         <textarea
-          className={`overflow-hidden resize-none px-16 pt-12 pb-24 mt-2 text-base font-bold rounded-md border ${
+          className={`overflow-hidden resize-none px-3 py-3 h-24 mt-2 text-base font-bold rounded-md border ${
             formik.touched.reviewText && formik.errors.reviewText ? 'border-red-500' : 'border-orange-400'
           } border-solid text-zinc-600 text-opacity-70 max-md:px-5 max-md:pb-28 max-md:max-w-full w-full`}
           placeholder="Rəy yaz"
@@ -201,11 +201,11 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           name="reviewText"
         />
         {formik.touched.reviewText && formik.errors.reviewText && (
-          <div className="text-red-500 text-sm">{formik.errors.reviewText}</div>
+          <div className="text-red-500 text-xs">{formik.errors.reviewText}</div>
         )}
       </div>
 
-      <div className="flex flex-wrap gap-1 self-start mt-3.5 text-base text-neutral-800">
+      <div className="flex items-start gap-1 self-start mt-3.5 text-base text-neutral-800">
         <input
           type="checkbox"
           name="acceptTerms"
@@ -213,9 +213,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           checked={formik.values.acceptTerms}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          className="object-contain shrink-0 aspect-square w-[22px]"
+          className="object-contain shrink-0 aspect-square w-[14px]"
         />
-        <p className="flex-auto my-auto max-md:max-w-full">
+        <p className="flex-auto text-xs my-auto max-md:max-w-full">
           TopDoc istifadə edərəkən istifadə şərtlərimizlə razılaşırsınız.
         </p>
       </div>
