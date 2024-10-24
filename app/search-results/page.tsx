@@ -1,5 +1,5 @@
 import SearchResults from '@/components/serchdoctorResults/SearchResults';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { Suspense } from 'react';
 
 export default async function DoctorSearchPage() {

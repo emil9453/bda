@@ -5,7 +5,7 @@ import location from '@/public/location/gridicons_location.png';
 import stars from '@/public/stars/stars.png';
 import { Mail, MapPin, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function DoctorProfile({

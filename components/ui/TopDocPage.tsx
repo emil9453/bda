@@ -1,9 +1,9 @@
 "use client"
 import React, { useState } from 'react';
 import ReviewForm from '../AddReview/ReviewForm';
-import ReviewCard from './ReviewCard';
+// import ReviewCard from './ReviewCard';
 import SearchBar from './SearchBar';
-import ReviewArray from './reviews';
+// import ReviewArray from './reviews';
 import plus from "@/public/plusSvg/PlusCircle.svg"
 import Image from 'next/image';
 import notepad from '@/public/Notepad/notepad.png'
