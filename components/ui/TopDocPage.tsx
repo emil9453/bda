@@ -1,14 +1,14 @@
 "use client"
 import React, { useState } from 'react';
 import ReviewForm from '../AddReview/ReviewForm';
-// import ReviewCard from './ReviewCard';
 import SearchBar from './SearchBar';
-// import ReviewArray from './reviews';
 import plus from "@/public/plusSvg/PlusCircle.svg"
 import Image from 'next/image';
 import notepad from '@/public/Notepad/notepad.png'
 import injection from '@/public/injection/injection.png'
 import thermometer from '@/public/thermometer/thermometer.png'
+import { Toaster } from 'react-hot-toast';
+import Cardiologist from '@/public/cardiologist/5 - Cardiologist.png'
 
 
 const TopDocPage: React.FC = () => {
@@ -55,13 +55,24 @@ const TopDocPage: React.FC = () => {
 }`}
 
 >
-  <ReviewForm onSubmit={(formData) => console.log("Form Submitted", formData)} doctorName={''} clinic={''} specialty={''} />
+<ReviewForm 
+      onSubmit={(formData: any) => {
+        console.log("Form Submitted", formData);
+        setIsReviewFormOpen(false); 
+      }} 
+      doctorName={''} 
+      clinic={''} 
+      specialty={''} 
+      setIsReviewFormOpen={setIsReviewFormOpen} 
+      fullname=''
+      reviewtext=''
+    />
 </div>
 
 
       </header>
 
-      <section className="flex mx-auto flex-col items-start self-center mt-8 mb-16 w-full max-w-[1097px] max-md:mt-10 max-md:max-w-full">
+      <section className="flex mx-auto flex-col items-start self-center  mb-16 w-full max-w-[1097px] max-md:mt-10 max-md:max-w-full">
       
         <div className='flex items-center gap-10'>
         <div className='w-[820px] h-[108px]'>
@@ -89,10 +100,12 @@ const TopDocPage: React.FC = () => {
           <ReviewCard key={index} {...review} />
         ))} */}
 
-        <div className='h-[435px]'>
-
-        </div>
+        
       </section>
+      <div className='h-[435px] w-full mt-28 flex justify-end'>
+          <Image src={Cardiologist} alt='cardiolog'/>
+        </div>
+      <Toaster position='top-center'/>
     </>
   );
 };

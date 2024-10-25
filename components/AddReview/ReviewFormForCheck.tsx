@@ -1,33 +1,36 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import InputField from './InputField'
 import RatingStars from './RatingStars'
-import SubmitButton from './SubmitButton'
+import IconExample from './CheckOrReject'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-
-
 
 interface ReviewFormProps {
   onSubmit: (formData: any) => void
   doctorName?: string
   clinic?: string
   specialty?: string
-  isPreFilled?: boolean
-  setIsReviewFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  fullname: string,
-  reviewtext:string,
+ 
+  setIsReviewFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+  fullname: string
+  reviewtext: string
+  rating: number
 }
 
-const ReviewForm: React.FC<ReviewFormProps> = ({ 
+const ReviewFormForCheck: React.FC<ReviewFormProps> = ({ 
   onSubmit, 
   doctorName = '', 
   clinic = '', 
   specialty = '', 
-  isPreFilled = false 
+ 
+  setIsReviewFormOpen,
+  fullname = "",
+  reviewtext = '',
+  rating = 0,
 }) => {
   const validationSchema = Yup.object({
     fullName: Yup.string()
@@ -53,18 +56,16 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
 
   const formik = useFormik({
     initialValues: {
-      fullName: '',
+      fullName: fullname,
       doctorName: doctorName,
       clinic: clinic,
       specialty: specialty,
-      rating: 0,
-      reviewText: '',
+      rating: rating,
+      reviewText: reviewtext,
       acceptTerms: false,
     },
     validationSchema,
     onSubmit: async (values) => {
-     
-
       try {
         const response = await axios.get(`http://64.226.99.16:8090/api/v1/doctor/all`, {
           params: {
@@ -82,30 +83,33 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           })
           toast.success("Review uğurla gönderildi!")
         }
-        
-        // else {
-        //   await axios.post(`/api/admin/notifications`, {
-        //     message: `Yeni hekim profili yaratmaq lazimdir: ${values.doctorName}, İxtisas: ${values.specialty}`
-        //   })
-        //   alert("hekim tapilmadi, admine bildiris gonderildi.")
-        // }
       } catch (error) {
         console.error("Xeta Bas verdi:", error)
         alert("Xeta Bas verdi.")
       }
       onSubmit(values)
-        
-      
-      onSubmit(values)
+      setIsReviewFormOpen(false)
     },
   })
+
+  useEffect(() => {
+    formik.setValues({
+      fullName: fullname,
+      doctorName: doctorName,
+      clinic: clinic,
+      specialty: specialty,
+      rating: rating,
+      reviewText: reviewtext,
+      acceptTerms: false,
+    })
+  }, [fullname, doctorName, clinic, specialty, rating, reviewtext])
 
   return (
     <form
       className="flex overflow-hidden flex-col px-8 py-2 bg-white rounded-lg h-full max-w-[824px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5"
       onSubmit={formik.handleSubmit}
     >
-      <h1 className="self-center text-base font-semibold text-black">Yeni rəy əlavə et</h1>
+      <h1 className="self-center text-base font-semibold text-black">Rəyi redaktə et</h1>
       <div className="mt-3 max-md:mt-7 max-md:mr-1 max-md:max-w-full">
         <div className="flex gap-3 max-md:flex-col">
           <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
@@ -130,7 +134,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 value={formik.values.doctorName}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                disabled={isPreFilled}
+                disabled={true}
               />
               {formik.touched.doctorName && formik.errors.doctorName && (
                 <div className='text-red-500 text-xs'>{formik.errors.doctorName}</div>
@@ -159,7 +163,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               value={formik.values.clinic}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              disabled={isPreFilled}
+              disabled={true}
             />
             {formik.touched.clinic && formik.errors.clinic && (
               <div className='text-red-500 text-xs'>{formik.errors.clinic}</div>
@@ -172,7 +176,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               value={formik.values.specialty}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              disabled={isPreFilled}
+              disabled={true}
             />
             {formik.touched.specialty && formik.errors.specialty && (
               <div className='text-red-500 text-xs'>{formik.errors.specialty}</div>
@@ -216,9 +220,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       {formik.touched.acceptTerms && formik.errors.acceptTerms && (
         <div className="text-red-500 text-sm">{formik.errors.acceptTerms}</div>
       )}
-      <SubmitButton />
+      <IconExample />
     </form>
   )
 }
 
-export default ReviewForm
+export default ReviewFormForCheck

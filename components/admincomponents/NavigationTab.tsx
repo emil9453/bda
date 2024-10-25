@@ -1,13 +1,27 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import Link from 'next/link'
+import { useCallback, useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation';
 
 export default function NavigationTabs() {
-  const [activeTab, setActiveTab] = useState('doctorsAndClinics')
+  const pathname = usePathname();
+  const [activeTab, setActiveTab] = useState('doctorsAndClinics');
 
   const handleTabClick = useCallback((tabName: string) => {
-    setActiveTab(tabName)
-  }, [])
+    setActiveTab(tabName);
+  }, []);
+
+  useEffect(() => {
+  
+    if (pathname.includes('reviews')) {
+      setActiveTab('reviews');
+    } else if (pathname.includes('dictionary_management')) {
+      setActiveTab('dictionaryManagment');
+    } else {
+      setActiveTab('doctorsAndClinics');
+    }
+  }, [pathname]);
 
   return (
     <nav data-layername="add" className="flex flex-wrap gap-10 items-center self-start text-2xl">
@@ -20,7 +34,7 @@ export default function NavigationTabs() {
         }`}
         onClick={() => handleTabClick('doctorsAndClinics')}
       >
-        Doctors and clinics
+        <Link href={"/adminpage"}>Doctors and clinics</Link>
       </button>
       <button
         data-layername="reviews"
@@ -31,7 +45,7 @@ export default function NavigationTabs() {
         }`}
         onClick={() => handleTabClick('reviews')}
       >
-        Reviews
+        <Link href={"/adminpage/reviews"}>Reviews</Link>
       </button>
       <button
         data-layername="dictionaryManagment"
@@ -42,8 +56,8 @@ export default function NavigationTabs() {
         }`}
         onClick={() => handleTabClick('dictionaryManagment')}
       >
-        Dictionary management
+        <Link href={"/adminpage/dictionary_management"}>Dictionary management</Link>
       </button>
     </nav>
-  )
+  );
 }

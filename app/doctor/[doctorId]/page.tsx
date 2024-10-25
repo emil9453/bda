@@ -5,8 +5,8 @@ import location from '@/public/location/gridicons_location.png';
 import stars from '@/public/stars/stars.png';
 import { Mail, MapPin, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
-// import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import {  useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 export default function DoctorProfile({
   params,
@@ -70,11 +70,10 @@ export default function DoctorProfile({
   
 >
   <ReviewForm
-   onSubmit={(formData) => console.log("Form Submitted", formData)}
-   doctorName={doctor.fullName}
-   clinic={doctor.clinics[0]?.clinicName || ''}
-   specialty={doctor.speciality}
-   />
+          onSubmit={(formData) => console.log("Form Submitted", formData)}
+          doctorName={doctor.fullName}
+        
+          specialty={doctor.speciality} setIsReviewFormOpen={setIsReviewFormOpen } fullname={''} reviewtext={''}   />
 </div>
 
       <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -114,7 +113,7 @@ export default function DoctorProfile({
               <div className="w-[710px] flex h-[145px] p-[12px_10px] gap-[40px] rounded-tl-lg shadow-md">
                 <div className="w-[78px] h-[121px] pt-[10px] gap-[12px] items-center flex flex-col">
                   <p className="font-poppins text-xl font-semibold leading-9 text-left">
-                    {doctor.reviews.length > 0 ? doctor.reviews[0].rating : 'N/A'}
+                    {doctor?.reviews.length > 0 ? doctor.reviews[0].rating : 'N/A'}
                   </p>
                   <Star className="w-[35.6px] h-[31.72px] text-yellow-400" fill="currentColor" />
                 </div>
@@ -267,7 +266,10 @@ export default function DoctorProfile({
             </div>
           </div>
         </main>
+        <Toaster position='top-center'/>
       </div>
     </>
   );
 }
+
+

@@ -10,18 +10,18 @@ interface DoctorCardProps {
   }
 
 const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
-    const maxLength = 275; 
-  const shortenedDescription = doctor.serviceDescription.length > maxLength
-    ? doctor.serviceDescription.slice(0, maxLength) + '...'
-    : doctor.serviceDescription;
+    // const maxLength = 275; 
+  // const shortenedDescription = doctor.serviceDescription?.length > maxLength
+  //   ? doctor.serviceDescription.slice(0, maxLength) + '...'
+  //   : doctor.serviceDescription;
     return (
-      <div className="flex flex-wrap gap-2 items-start mt-24 w-full max-md:mt-10 max-md:max-w-full">
+      <div className="flex flex-wrap gap-2 items-start mt-24 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-sm w-[659px] h-[217px] max-md:mt-10 max-md:max-w-full">
         <div className="flex relative grow shrink gap-5 items-center min-w-[240px] w-[414px] max-md:max-w-full">
         <img
   loading="lazy"
   src={doctor.photoUrl}
   alt={`Portrait of Dr. ${doctor.fullName}`}
-  className="object-cover z-0 shrink-0 self-stretch my-auto aspect-[1.06] rounded-[466px] w-[183px]"
+  className="object-cover z-0 shrink-0 self-stretch  h-[150px] rounded-[8px]  w-[150px]"
 />
           <div className="flex z-0 flex-col items-start self-stretch pr-12 my-auto min-w-[240px] w-[314px]">
             <div className="font-semibold underline text-neutral-800">
@@ -37,7 +37,11 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
             <div className="flex justify-center items-center gap-2.5 mt-6 text-black">
               <div className="flex whitespace-nowrap">
                 <Image loading="lazy" alt='star' src={star} className="object-cover shrink-0 w-6 aspect-[1.06]"/>
-                <p className="my-auto text-base">{doctor.reviews.map(r=>r.rating)}</p>
+                <p className="my-auto text-base">
+  {doctor.reviews.length > 0
+    ? (doctor.reviews.reduce((acc, r) => acc + r.rating, 0) / doctor.reviews.length).toFixed(1)
+    : "No ratings"}
+</p>
               </div>
               <div className="flex  bottom-5 z-0 shrink-0 self-center w-3 h-3 bg-black rounded-full right-[193px]" />
               <p  className="my-auto basis-auto text-base w-28">{doctor.reviews.length} reviews</p>
@@ -46,7 +50,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
           
         </div>
         <div className="grow shrink text-ellipsis text-neutral-800 w-[646px] max-md:max-w-full">
-          <p className='font-serif text-base'>{shortenedDescription}</p>
+          
         </div>
       </div>
     );
