@@ -43,14 +43,14 @@ export default function AdminReviewTable() {
   // }
 
   const HandleClickOutside = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).id === "overlay") {
+    if ((e.target as HTMLElement).id === 'overlay') {
       setIsReviewFormOpen(false);
     }
-  }
+  };
 
   const fetchDoctors = async () => {
     try {
-      const response = await fetch('http://64.226.99.16:8090/api/v1/doctor/all', {
+      const response = await fetch('https://64.226.99.16:8090/api/v1/doctor/all', {
         method: 'GET',
       });
       if (!response.ok) {
@@ -127,15 +127,20 @@ export default function AdminReviewTable() {
                 {doctors.map(doctor => (
                   <React.Fragment key={doctor.doctorId}>
                     {doctor.reviews.map((review, index) => (
-                      <tr key={index} className='bg-blue-50'>
-                        <td className='py-4 px-2'>{review.fullName}</td>
-                        <td className='py-4 px-2'>{doctor.fullName}</td>
-                        <td className='py-4 px-2'>{doctor.clinics.map(c => c.clinicName).join(', ')}</td>
-                        <td className='py-4 px-2'>{review.comment}</td>
-                        <td className='py-4 px-2 text-center'>{review.rating}</td>
-                        <td className='py-4 px-2'>
+                      <tr key={index} className="bg-blue-50">
+                        <td className="py-4 px-2">{review.fullName}</td>
+                        <td className="py-4 px-2">{doctor.fullName}</td>
+                        <td className="py-4 px-2">
+                          {doctor.clinics.map(c => c.clinicName).join(', ')}
+                        </td>
+                        <td className="py-4 px-2">{review.comment}</td>
+                        <td className="py-4 px-2 text-center">{review.rating}</td>
+                        <td className="py-4 px-2">
                           <div className="flex items-center justify-center space-x-2">
-                            <button onClick={() => openReviewForm(doctor, review)} className="text-gray-600 hover:text-blue-600">
+                            <button
+                              onClick={() => openReviewForm(doctor, review)}
+                              className="text-gray-600 hover:text-blue-600"
+                            >
                               <Pencil size={18} />
                             </button>
                           </div>
