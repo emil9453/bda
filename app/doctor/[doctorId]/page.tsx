@@ -5,7 +5,7 @@ import location from '@/public/location/gridicons_location.png';
 import stars from '@/public/stars/stars.png';
 import { Mail, MapPin, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
-import {  useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 export default function DoctorProfile({
@@ -26,14 +26,14 @@ export default function DoctorProfile({
   };
 
   const HandleClickOutside = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).id === "overlay") {
+    if ((e.target as HTMLElement).id === 'overlay') {
       setIsReviewFormOpen(false);
     }
   };
 
   useEffect(() => {
     if (doctorId) {
-      fetch(`http://64.226.99.16:8090/api/v1/doctor/${doctorId}`)
+      fetch(`https://64.226.99.16/api/v1/doctor/${doctorId}`)
         .then(res => res.json())
         .then(data => setDoctor(data));
     }
@@ -51,10 +51,8 @@ export default function DoctorProfile({
 
   return (
     <>
-  
-
-       {/* Overlay */}
-       {isReviewFormOpen && (
+      {/* Overlay */}
+      {isReviewFormOpen && (
         <div
           id="overlay"
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
@@ -64,17 +62,19 @@ export default function DoctorProfile({
 
       {/* Sliding Review Form */}
       <div
-  className={`fixed top-0 right-0 overflow-scroll h-[600px] w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
-    isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
-  }`}
-  
->
-  <ReviewForm
-          onSubmit={(formData) => console.log("Form Submitted", formData)}
+        className={`fixed top-0 right-0 overflow-scroll h-[600px] w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+          isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <ReviewForm
+          onSubmit={formData => console.log('Form Submitted', formData)}
           doctorName={doctor.fullName}
-        
-          specialty={doctor.speciality} setIsReviewFormOpen={setIsReviewFormOpen } fullname={''} reviewtext={''}   />
-</div>
+          specialty={doctor.speciality}
+          setIsReviewFormOpen={setIsReviewFormOpen}
+          fullname={''}
+          reviewtext={''}
+        />
+      </div>
 
       <div className="min-h-screen bg-gray-100 flex flex-col">
         <main className="flex-grow container mx-auto p-4">
@@ -103,8 +103,11 @@ export default function DoctorProfile({
                   </div>
                   <div className="flex items-center mt-2"></div>
                 </div>
-                <div className='flex justify-end w-[280px]'>
-                  <button className="overflow-hidden text-stone-50 px-4 py-3 my-auto text-xl font-semibold bg-amber-500 rounded-lg" onClick={ToggleReviewForm}>
+                <div className="flex justify-end w-[280px]">
+                  <button
+                    className="overflow-hidden text-stone-50 px-4 py-3 my-auto text-xl font-semibold bg-amber-500 rounded-lg"
+                    onClick={ToggleReviewForm}
+                  >
                     + Yeni Rəy
                   </button>
                 </div>
@@ -140,8 +143,12 @@ export default function DoctorProfile({
                         'Noyabr',
                         'Dekabr',
                       ];
-                      const formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-                        {/*it should be hook*/}
+                      const formattedDate = `${date.getDate()} ${
+                        months[date.getMonth()]
+                      } ${date.getFullYear()}`;
+                      {
+                        /*it should be hook*/
+                      }
                       return <p key={index}>{formattedDate}</p>;
                     })}
 
@@ -266,10 +273,8 @@ export default function DoctorProfile({
             </div>
           </div>
         </main>
-        <Toaster position='top-center'/>
+        <Toaster position="top-center" />
       </div>
     </>
   );
 }
-
-
