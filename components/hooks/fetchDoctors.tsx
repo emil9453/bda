@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const DoctorList = () => {
-  const url = "http://64.226.99.16:8091/api/v1/doctor/all";
+  const url = 'https://64.226.99.16:8091/api/v1/doctor/all';
   const [doctors, setDoctors] = useState<[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 

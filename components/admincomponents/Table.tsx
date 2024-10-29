@@ -1,62 +1,58 @@
-'use client'
+'use client';
 
-import { useState,useEffect } from 'react'
-import { Pencil, Trash2 } from 'lucide-react'
-import Switch  from '@/components/admincomponents/togglebutton'
+import { useState, useEffect } from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
+import Switch from '@/components/admincomponents/togglebutton';
 
 interface Clinics {
-    clinicId: number,
-    clinicName:string,
-    location: string,
-    contactDetails: string,
-    city: string,
-    distance: string,
+  clinicId: number;
+  clinicName: string;
+  location: string;
+  contactDetails: string;
+  city: string;
+  distance: string;
 }
 
 interface Doctor {
-  doctorId: number
-  fullName: string
-  speciality: string
-  clinics: Clinics[]
-  days: string
-  address: string
+  doctorId: number;
+  fullName: string;
+  speciality: string;
+  clinics: Clinics[];
+  days: string;
+  address: string;
   active: boolean;
 }
 
-
-
-
-
 export default function DoctorTable() {
-
-
-  const [doctors, setDoctors] = useState<Doctor[]>([])
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
 
   const fetchDoctors = async () => {
     try {
-      const response = await fetch('http://64.226.99.16:8090/api/v1/doctor/all',{
-        method: "GET",
-      }); 
+      const response = await fetch('https://64.226.99.16:8090/api/v1/doctor/all', {
+        method: 'GET',
+      });
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const DocArray = await response.json(); 
-      setDoctors(DocArray); 
+      const DocArray = await response.json();
+      setDoctors(DocArray);
       console.log(DocArray);
     } catch (error) {
-      console.error("Error fetching doctors:", error);
+      console.error('Error fetching doctors:', error);
     }
   };
 
   useEffect(() => {
-    fetchDoctors(); 
-  }, []); 
+    fetchDoctors();
+  }, []);
 
   const handleToggle = (id: number) => {
-    setDoctors(doctors.map(doctor => 
-      doctor.doctorId === id ? { ...doctor, active: !doctor.active } : doctor
-    ))
-  }
+    setDoctors(
+      doctors.map(doctor =>
+        doctor.doctorId === id ? { ...doctor, active: !doctor.active } : doctor,
+      ),
+    );
+  };
 
   return (
     <div className="container mx-auto py-10">
@@ -76,9 +72,9 @@ export default function DoctorTable() {
             <tr key={doctor.doctorId} className={index % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
               <td className="border p-2">{doctor.fullName}</td>
               <td className="border p-2">{doctor.speciality}</td>
-              <td className="border p-2">{doctor.clinics.map(c=>c.clinicName)}</td>
+              <td className="border p-2">{doctor.clinics.map(c => c.clinicName)}</td>
               <td className="border p-2">{doctor.days}</td>
-              <td className="border p-2">{doctor.clinics.map(c=>c.city)}</td>
+              <td className="border p-2">{doctor.clinics.map(c => c.city)}</td>
               <td className="border p-2">
                 <div className="flex items-center justify-between space-x-2">
                   <button className="text-gray-600 hover:text-blue-600">
@@ -98,5 +94,5 @@ export default function DoctorTable() {
         </tbody>
       </table>
     </div>
-  )
+  );
 }
