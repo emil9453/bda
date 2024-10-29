@@ -5,7 +5,7 @@ import location from '@/public/location/gridicons_location.png';
 import stars from '@/public/stars/stars.png';
 import { Mail, MapPin, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
-import {  useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 export default function DoctorProfile({
@@ -26,7 +26,7 @@ export default function DoctorProfile({
   };
 
   const HandleClickOutside = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).id === "overlay") {
+    if ((e.target as HTMLElement).id === 'overlay') {
       setIsReviewFormOpen(false);
     }
   };
@@ -51,10 +51,8 @@ export default function DoctorProfile({
 
   return (
     <>
-  
-
-       {/* Overlay */}
-       {isReviewFormOpen && (
+      {/* Overlay */}
+      {isReviewFormOpen && (
         <div
           id="overlay"
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
@@ -64,17 +62,19 @@ export default function DoctorProfile({
 
       {/* Sliding Review Form */}
       <div
-  className={`fixed top-0 right-0 overflow-scroll h-[600px] w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
-    isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
-  }`}
-  
->
-  <ReviewForm
-          onSubmit={(formData) => console.log("Form Submitted", formData)}
+        className={`fixed top-0 right-0 overflow-scroll h-[600px] w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+          isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <ReviewForm
+          onSubmit={formData => console.log('Form Submitted', formData)}
           doctorName={doctor.fullName}
-        
-          specialty={doctor.speciality} setIsReviewFormOpen={setIsReviewFormOpen } fullname={''} reviewtext={''}   />
-</div>
+          specialty={doctor.speciality}
+          setIsReviewFormOpen={setIsReviewFormOpen}
+          fullname={''}
+          reviewtext={''}
+        />
+      </div>
 
       <div className="min-h-screen bg-gray-100 flex flex-col">
         <main className="flex-grow container mx-auto p-4">
@@ -103,8 +103,11 @@ export default function DoctorProfile({
                   </div>
                   <div className="flex items-center mt-2"></div>
                 </div>
-                <div className='flex justify-end w-[280px]'>
-                  <button className="overflow-hidden text-stone-50 px-4 py-3 my-auto text-xl font-semibold bg-amber-500 rounded-lg" onClick={ToggleReviewForm}>
+                <div className="flex justify-end w-[280px]">
+                  <button
+                    className="overflow-hidden text-stone-50 px-4 py-3 my-auto text-xl font-semibold bg-amber-500 rounded-lg"
+                    onClick={ToggleReviewForm}
+                  >
                     + Yeni Rəy
                   </button>
                 </div>
@@ -120,33 +123,40 @@ export default function DoctorProfile({
                 <div className="h-[105px] w-[2px] gap-0 border-t border-gray-500 bg-[#959595]"></div>
                 <div className="flex flex-col">
                   <p className="text-xl font-semibold leading-9 text-left">
-                    {`"${doctor.reviews.length > 0 ? doctor.reviews[0].comment : ''}"`}
+                    {`"${
+                      doctor.reviews.length > 0
+                        ? doctor.reviews[doctor.reviews.length - 1].comment
+                        : ''
+                    }"`}
                   </p>
                   <div className="flex items-center gap-2">
                     {/*it should be hook*/}
-                    {doctor.reviews.map((r, index) => {
-                      const date = new Date(r.reviewDate);
-                      const months = [
-                        'Yanvar',
-                        'Fevral',
-                        'Mart',
-                        'Aprel',
-                        'May',
-                        'İyun',
-                        'İyul',
-                        'Avqust',
-                        'Sentyabr',
-                        'Oktyabr',
-                        'Noyabr',
-                        'Dekabr',
-                      ];
-                      const formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-                        {/*it should be hook*/}
-                      return <p key={index}>{formattedDate}</p>;
-                    })}
+                    {doctor.reviews.length > 0 &&
+                      (() => {
+                        const lastReview = doctor.reviews[doctor.reviews.length - 1];
+                        const date = new Date(lastReview.reviewDate);
+                        const months = [
+                          'Yanvar',
+                          'Fevral',
+                          'Mart',
+                          'Aprel',
+                          'May',
+                          'İyun',
+                          'İyul',
+                          'Avqust',
+                          'Sentyabr',
+                          'Oktyabr',
+                          'Noyabr',
+                          'Dekabr',
+                        ];
+                        const formattedDate = `${date.getDate()} ${
+                          months[date.getMonth()]
+                        } ${date.getFullYear()}`;
+                        return <p>{formattedDate}</p>;
+                      })()}
 
                     <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px] "></div>
-                    <p>{doctor.reviews.map(r => r.fullName).join(', ')}</p>
+                    <p>{doctor.reviews[doctor.reviews.length-1].fullName}</p>
                   </div>
                 </div>
               </div>
@@ -266,10 +276,8 @@ export default function DoctorProfile({
             </div>
           </div>
         </main>
-        <Toaster position='top-center'/>
+        <Toaster position="top-center" />
       </div>
     </>
   );
 }
-
-

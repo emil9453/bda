@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 import { Pencil } from 'lucide-react';
 import React from 'react';
 import ReviewFormForCheck from '../AddReview/ReviewFormForCheck';
+import Image from 'next/image';
+import pending from '@/public/stasuses/pending.png';
+import aproved from '@/public/stasuses/approved.png';
+import rejected from '@/public/stasuses/rejected.png';
 
 interface Clinics {
   clinicId: number;
@@ -19,6 +23,7 @@ interface Reviews {
   comment: string;
   reviewDate: string;
   fullName: string;
+  status: string;
 }
 
 interface Doctor {
@@ -37,16 +42,17 @@ export default function AdminReviewTable() {
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedReview, setSelectedReview] = useState<Reviews | null>(null);
+  // const [reviewStatus, setReviewStatus] = useState<Reviews['status']>('Pending');
 
   // const ToggleReviewForm = () => {
   //   setIsReviewFormOpen(!isReviewFormOpen);
   // }
 
   const HandleClickOutside = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).id === "overlay") {
+    if ((e.target as HTMLElement).id === 'overlay') {
       setIsReviewFormOpen(false);
     }
-  }
+  };
 
   const fetchDoctors = async () => {
     try {
@@ -88,7 +94,7 @@ export default function AdminReviewTable() {
 
         {/* Sliding Review Form */}
         <div
-          className={`fixed top-0 right-0 overflow-scroll h-[600px] w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+          className={`fixed top-0 right-0 overflow-scroll h-full flex items-center justify-center w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
             isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
@@ -114,28 +120,48 @@ export default function AdminReviewTable() {
           <div className="container mx-auto py-10">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-[rgba(253,227,164,0.91)]">
-                  <th className="border p-4 text-left">Ad, soyad</th>
-                  <th className="border p-4 text-left">Həkim</th>
-                  <th className="border p-4 text-left">Klinika</th>
-                  <th className="border p-4 text-left">Rəylər</th>
-                  <th className="border p-4 text-left">Reytinq</th>
-                  <th className="border p-4 text-left">Tənzimləmələr</th>
+                <tr className="bg-[rgba(255,179,0,1)]">
+                  <th className="border-none p-4 text-left">Ad, soyad</th>
+                  <th className="border-none p-4 text-left">Həkim</th>
+                  <th className="border-none p-4 text-left">Klinika</th>
+                  <th className="border-none p-4 text-left">Rəylər</th>
+                  <th className="border-none p-4 text-left">Status</th>
+                  <th className="border-none p-4 text-left">Reytinq</th>
+                  <th className="border-none p-4 text-left">Tənzimləmələr</th>
                 </tr>
               </thead>
               <tbody>
                 {doctors.map(doctor => (
                   <React.Fragment key={doctor.doctorId}>
                     {doctor.reviews.map((review, index) => (
-                      <tr key={index} className='bg-blue-50'>
-                        <td className='py-4 px-2'>{review.fullName}</td>
-                        <td className='py-4 px-2'>{doctor.fullName}</td>
-                        <td className='py-4 px-2'>{doctor.clinics.map(c => c.clinicName).join(', ')}</td>
-                        <td className='py-4 px-2'>{review.comment}</td>
-                        <td className='py-4 px-2 text-center'>{review.rating}</td>
-                        <td className='py-4 px-2'>
+                      <tr key={index} className="bg-blue-50">
+                        <td className="py-4 px-2">{review.fullName}</td>
+                        <td className="py-4 px-2">{doctor.fullName}</td>
+                        <td className="py-4 px-2">
+                          {doctor.clinics.map(c => c.clinicName).join(', ')}
+                        </td>
+                        <td className="py-4 px-2">{review.comment}</td>
+                        <td className="py-4 px-2">
+                          {' '}
+                          <Image
+                          
+                            src={
+                              review.status === 'APPROVED'
+                                ? aproved
+                                : review.status === 'PENDING'
+                                ? pending
+                                : rejected
+                            }
+                            alt="status"
+                          />
+                        </td>
+                        <td className="py-4 px-2 text-center">{review.rating}</td>
+                        <td className="py-4 px-2">
                           <div className="flex items-center justify-center space-x-2">
-                            <button onClick={() => openReviewForm(doctor, review)} className="text-gray-600 hover:text-blue-600">
+                            <button
+                              onClick={() => openReviewForm(doctor, review)}
+                              className="text-gray-600 hover:text-blue-600"
+                            >
                               <Pencil size={18} />
                             </button>
                           </div>
