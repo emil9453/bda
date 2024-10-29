@@ -3,14 +3,13 @@ import SearchResults from '@/components/serchdoctorResults/SearchResults';
 import { Suspense } from 'react';
 
 export default async function DoctorSearchPage() {
-  // const response = await fetch('http://64.226.99.16:8090/api/v1/doctor/all');
+  // const response = await fetch('https://64.226.99.16/api/v1/doctor/all');
   // const DocArray = await response.json();
   // console.log(DocArray,'DocArray')
   return (
     <>
-     
       <Suspense fallback={<div>Loading...</div>}>
-        <SearchResults  /> {/*DocArray={DocArray}*/}
+        <SearchResults /> {/*DocArray={DocArray}*/}
       </Suspense>
     </>
   );

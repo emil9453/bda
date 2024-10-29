@@ -45,13 +45,13 @@ const SearchBar: React.FC = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState<any | null>(null);
   const [location, setLocation] = useState<string>('');
   const [clinic, setClinic] = useState<string>('');
-  const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]); 
+  const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]);
   const router = useRouter();
   const [DoctorArray, setDoctorsArray] = useState<Doctors[]>([]);
 
   const fetchDoctors = async () => {
     try {
-      const response = await fetch('http://64.226.99.16:8090/api/v1/doctor/all');
+      const response = await fetch('https://64.226.99.16/api/v1/doctor/all');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -209,6 +209,3 @@ const SearchBar: React.FC = () => {
 };
 
 export default SearchBar;
-
-
-
