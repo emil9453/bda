@@ -25,6 +25,7 @@ interface Reviews {
   reviewDate: string;
   fullName: string;
   status: string;
+  reviewId: number;
 }
 
 interface Doctor {
@@ -112,6 +113,7 @@ export default function AdminReviewTable() {
               fullname={selectedReview.fullName}
               reviewtext={selectedReview.comment}
               rating={selectedReview.rating}
+              reviewId={selectedReview.reviewId}
             />
           )}
         </div>

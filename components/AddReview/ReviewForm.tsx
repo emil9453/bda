@@ -27,6 +27,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   clinic = '',
   specialty = '',
   isPreFilled = false,
+  setIsReviewFormOpen,
 }) => {
   const validationSchema = Yup.object({
     fullName: Yup.string()
@@ -82,6 +83,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
             },
           );
           toast.success('Review uğurla gönderildi!');
+          setIsReviewFormOpen(false);
+          
         }
 
         // else {
@@ -96,7 +99,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       }
       onSubmit(values);
 
-      onSubmit(values);
+    
     },
   });
 

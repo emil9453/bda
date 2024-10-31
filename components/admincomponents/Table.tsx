@@ -59,12 +59,12 @@ export default function DoctorTable() {
       <table className="w-full ">
         <thead>
           <tr className="bg-[rgba(255,179,0,1)]">
-            <th className="border-none p-4 text-left">Ad, soyad</th>
-            <th className="border-none p-4 text-left">Ixtisas</th>
-            <th className="border-none p-4 text-left">Klinika</th>
-            <th className="border-none p-4 text-left">Günlər</th>
-            <th className="border-none p-4 text-left">Ünvan</th>
-            <th className="border-none p-4 text-left">Tənzimləmələr</th>
+            <th className="border-none p-4 text-center">Ad, soyad</th>
+            <th className="border-none p-4 text-center">Ixtisas</th>
+            <th className="border-none p-4 text-center">Klinika</th>
+            <th className="border-none p-4 text-center">Günlər</th>
+            <th className="border-none p-4 text-center">Ünvan</th>
+            <th className="border-none p-4 text-center">Tənzimləmələr</th>
           </tr>
         </thead>
         <tbody>
