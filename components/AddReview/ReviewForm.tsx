@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import InputField from './InputField';
 import RatingStars from './RatingStars';
 import SubmitButton from './SubmitButton';
+import { SERVER_URL } from '../constants';
 
 interface ReviewFormProps {
   onSubmit: (formData: any) => void;
@@ -77,6 +78,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               fullName: values.fullName,
               comment: values.reviewText,
               rating: values.rating,
+              parentReviewId: 0,
             },
           );
           toast.success('Review uğurla gönderildi!');

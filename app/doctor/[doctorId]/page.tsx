@@ -1,5 +1,6 @@
 'use client';
 import ReviewForm from '@/components/AddReview/ReviewForm';
+import { SERVER_URL } from '@/components/constants';
 import { Doctors } from '@/components/doctors';
 import location from '@/public/location/gridicons_location.png';
 import stars from '@/public/stars/stars.png';

@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Select from 'react-select';
-
+import { SERVER_URL } from '../constants';
 const specialtyOptions = [
   {
     value: '1',
@@ -51,7 +51,7 @@ const SearchBar: React.FC = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await fetch('https://64.226.99.16/api/v1/doctor/all');
+      const response = await fetch(`${SERVER_URL}/doctor/all`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

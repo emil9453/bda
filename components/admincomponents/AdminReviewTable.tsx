@@ -8,6 +8,7 @@ import Image from 'next/image';
 import pending from '@/public/stasuses/pending.png';
 import aproved from '@/public/stasuses/approved.png';
 import rejected from '@/public/stasuses/rejected.png';
+import { SERVER_URL } from '../constants';
 
 interface Clinics {
   clinicId: number;
@@ -56,7 +57,7 @@ export default function AdminReviewTable() {
 
   const fetchDoctors = async () => {
     try {
-      const response = await fetch('https://64.226.99.16/api/v1/doctor/all', {
+      const response = await fetch(`${SERVER_URL}/doctor/all`, {
         method: 'GET',
       });
       if (!response.ok) {
