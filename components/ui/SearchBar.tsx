@@ -1,13 +1,13 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { useJsApiLoader, StandaloneSearchBox } from '@react-google-maps/api';
 import { Doctors } from '@/components/doctors';
-import Select from 'react-select';
-import search from '@/public/search/search-normal.png';
-import locationIcon from '@/public/location/gridicons_location.png';
 import '@/public/customcss/custom.css';
+import locationIcon from '@/public/location/gridicons_location.png';
+import search from '@/public/search/search-normal.png';
+import { StandaloneSearchBox, useJsApiLoader } from '@react-google-maps/api';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import Select from 'react-select';
 
 const specialtyOptions = [
   {
@@ -51,7 +51,7 @@ const SearchBar: React.FC = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await fetch('http://64.226.99.16:8090/api/v1/doctor/all');
+      const response = await fetch('https://64.226.99.16/api/v1/doctor/all');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

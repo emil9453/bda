@@ -33,7 +33,7 @@ export default function DoctorProfile({
 
   useEffect(() => {
     if (doctorId) {
-      fetch(`https://64.226.99.16:8090/api/v1/doctor/${doctorId}`)
+      fetch(`${SERVER_URL}/doctor/${doctorId}`)
         .then(res => res.json())
         .then(data => setDoctor(data));
     }

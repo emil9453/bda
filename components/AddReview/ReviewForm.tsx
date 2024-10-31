@@ -1,13 +1,13 @@
 'use client';
 
-import React from 'react';
+import axios from 'axios';
 import { useFormik } from 'formik';
+import React from 'react';
+import toast from 'react-hot-toast';
 import * as Yup from 'yup';
 import InputField from './InputField';
 import RatingStars from './RatingStars';
 import SubmitButton from './SubmitButton';
-import axios from 'axios';
-import toast from 'react-hot-toast';
 
 interface ReviewFormProps {
   onSubmit: (formData: any) => void;
@@ -62,7 +62,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     validationSchema,
     onSubmit: async values => {
       try {
-        const response = await axios.get(`https://64.226.99.16:8090/api/v1/doctor/all`, {
+        const response = await axios.get(`${SERVER_URL}/doctor/all`, {
           params: {
             fullName: values.doctorName,
             speciality: values.specialty,
@@ -72,7 +72,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           const doctorId = response.data[0].doctorId;
           console.log(`D👻😐😐 Doctor id: ${doctorId}`);
           await axios.post(
-            `https://64.226.99.16:8090/api/v1/review/reviews?fullName=${values.doctorName}&clinicName=${values.clinic}%20Clinic&speciality=${values.specialty}`,
+            `${SERVER_URL}/review/reviews?fullName=${values.doctorName}&clinicName=${values.clinic}%20Clinic&speciality=${values.specialty}`,
             {
               fullName: values.fullName,
               comment: values.reviewText,

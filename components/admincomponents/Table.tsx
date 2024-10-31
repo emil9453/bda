@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Pencil, Trash2 } from 'lucide-react';
 import Switch from '@/components/admincomponents/togglebutton';
+import { Pencil, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface Clinics {
   clinicId: number;
@@ -28,7 +28,7 @@ export default function DoctorTable() {
 
   const fetchDoctors = async () => {
     try {
-      const response = await fetch('https://64.226.99.16:8090/api/v1/doctor/all', {
+      const response = await fetch('https://64.226.99.16/api/v1/doctor/all', {
         method: 'GET',
       });
       if (!response.ok) {

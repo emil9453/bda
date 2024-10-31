@@ -23,7 +23,7 @@
 //       sortBy: 'string'
 //     });
 //     try {
-//       const response = await axios.get('http://64.226.99.16:8090/api/v1/doctor/specification',{
+//       const response = await axios.get('https://64.226.99.16/api/v1/doctor/specification',{
 //         params: params
 //       }) ;
 //       const data = response.data
@@ -66,10 +66,10 @@
 //   return filteredDoctors;
 // }
 'use client';
-import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { Doctors } from '@/components/doctors';
 import axios from 'axios';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export function useFilteredDoctors() {
   const searchParams = useSearchParams();
@@ -95,7 +95,7 @@ export function useFilteredDoctors() {
 
     try {
      
-      const response = await axios.get('http://64.226.99.16:8090/api/v1/doctor/specification', {
+      const response = await axios.get('https://64.226.99.16/api/v1/doctor/specification', {
         params: params
       });
       
