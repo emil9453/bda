@@ -131,7 +131,6 @@ export default function DoctorProfile({
                   </p>
                   <div className="flex items-center gap-2">
                     {/*it should be hook*/}
-<<<<<<< HEAD
                     {doctor.reviews.length > 0 &&
                       (() => {
                         const lastReview = doctor.reviews[doctor.reviews.length - 1];
@@ -155,32 +154,6 @@ export default function DoctorProfile({
                         } ${date.getFullYear()}`;
                         return <p>{formattedDate}</p>;
                       })()}
-=======
-                    {doctor.reviews.map((r, index) => {
-                      const date = new Date(r.reviewDate);
-                      const months = [
-                        'Yanvar',
-                        'Fevral',
-                        'Mart',
-                        'Aprel',
-                        'May',
-                        'İyun',
-                        'İyul',
-                        'Avqust',
-                        'Sentyabr',
-                        'Oktyabr',
-                        'Noyabr',
-                        'Dekabr',
-                      ];
-                      const formattedDate = `${date.getDate()} ${
-                        months[date.getMonth()]
-                      } ${date.getFullYear()}`;
-                      {
-                        /*it should be hook*/
-                      }
-                      return <p key={index}>{formattedDate}</p>;
-                    })}
->>>>>>> e9aeaeb97389664bb8fded974366311096a993a9
 
                     <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px] "></div>
                     <p>{doctor.reviews[doctor.reviews.length-1].fullName}</p>

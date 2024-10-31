@@ -51,7 +51,7 @@ const SearchBar: React.FC = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await fetch('https://64.226.99.16:8090/api/v1/doctor/all');
+      const response = await fetch('http://64.226.99.16:8090/api/v1/doctor/all');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
