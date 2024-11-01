@@ -58,6 +58,8 @@ const config: Config = {
   		},
 		fontFamily: {
 			kyiv: ['var(--font-kyivtype)'],
+			poppins: ['var(--font-poppins)'],
+			publicSans: ['var(--font-publicSans)'],
 		}
   	}
   },
