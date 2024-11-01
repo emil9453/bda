@@ -8,25 +8,6 @@ import TableLoading from './TableLoading';
 import { SERVER_URL } from '../constants';
 import axios from 'axios';
 
-interface Clinics {
-  clinicId: number;
-  clinicName: string;
-  location: string;
-  contactDetails: string;
-  city: string;
-  distance: string;
-}
-
-interface Doctor {
-  doctorId: number;
-  fullName: string;
-  speciality: string;
-  clinics: Clinics[];
-  days: string;
-  address: string;
-  active: boolean;
-}
-
 export default function DoctorTable() {
   const {
     isPending,

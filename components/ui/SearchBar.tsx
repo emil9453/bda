@@ -5,19 +5,30 @@ import locationIcon from '@/public/location/gridicons_location.png';
 import search from '@/public/search/search-normal.png';
 import { StandaloneSearchBox, useJsApiLoader } from '@react-google-maps/api';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Select from 'react-select';
 import { SERVER_URL } from '../constants';
 
 
-const SearchBar: React.FC = () => {
-  const [doctorName, setDoctorName] = useState<string>('');
-  const [selectedSpecialty, setSelectedSpecialty] = useState<any | null>(null);
-  const [location, setLocation] = useState<string>('');
-  const [clinic, setClinic] = useState<string>('');
+const SearchBar: React.FC<{
+  defaultDoctorName?: string;
+  defaultSpecialty?: any | null;
+  defaultLocation?: string;
+  defaultClinic?: string;
+  refetch?: () => void;
+}> = ({
+  defaultDoctorName = '',
+  defaultSpecialty = null,
+  defaultLocation = '',
+  defaultClinic = '',
+  refetch = () => {},
+}) => {
+  const [doctorName, setDoctorName] = useState<string>(defaultDoctorName);
+  const [selectedSpecialty, setSelectedSpecialty] = useState<any | null>(defaultSpecialty);
+  const [location, setLocation] = useState<string>(defaultLocation);
+  const [clinic, setClinic] = useState<string>(defaultClinic);
   const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]);
-  const router = useRouter();
+  // const router = useRouter();
   const [DoctorArray, setDoctorsArray] = useState<Doctors[]>([]);
 
   const fetchDoctors = async () => {
@@ -56,14 +67,18 @@ const SearchBar: React.FC = () => {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     const query = new URLSearchParams({
       name: doctorName,
       specialties: selectedSpecialty?.label || '',
       location: location,
       clinic: clinic,
     }).toString();
-    router.push(`/search-results?${query}`);
+    //! This is not working, need to fix
+    // router.push(`/search-results?${query}`);
+    console.log(refetch);
+    // refetch();
+    window.location.replace(`/search-results?${query}`);
   };
 
   const handleSpecialtyChange = (selectedOption: any) => {
@@ -94,7 +109,7 @@ const SearchBar: React.FC = () => {
   }));
 
   return (
-    <div className="mx-auto w-[1097px]">
+    <div className="mx-auto w-[1097px] h-[75px]">
       <form
         onSubmit={e => {
           e.preventDefault();
@@ -144,6 +159,7 @@ const SearchBar: React.FC = () => {
               scrollbarWidth: "none"
             }),
           }}
+          defaultInputValue={defaultSpecialty}
           placeholder="İxtisas"
           options={specialtyOptions}
           value={selectedSpecialty}

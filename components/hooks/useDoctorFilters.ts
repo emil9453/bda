@@ -1,45 +1,43 @@
 'use client';
 
-import { Doctors } from '@/components/doctors';
-import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { SERVER_URL } from '../constants';
+import { getDoctorSpecs } from '@/lib/api';
+import { useQuery } from '@tanstack/react-query';
 
 export function useFilteredDoctors() {
   const searchParams = useSearchParams();
-  const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]);
 
-  const fetchDoctors = async () => {
-    const name = searchParams.get('name') || '';
-    const specialties = searchParams.get('specialties') || '';
-    const location = searchParams.get('location') || '';
-    const clinic = searchParams.get('clinic') || '';
+  const name = searchParams.get('name') || '';
+  const specialties = searchParams.get('specialties') || '';
+  const location = searchParams.get('location') || '';
+  const clinic = searchParams.get('clinic') || '';
 
-    console.log("Search parameters:", { name, specialties, location, clinic });
-
-    try {
-      const response = await axios.post(`${SERVER_URL}/doctor/specification`, {
+  const {
+    isLoading,
+    isRefetching,
+    error,
+    data: filteredDoctors,
+    refetch,
+  } = useQuery({
+    queryKey: ['doctors'],
+    queryFn: () =>
+      getDoctorSpecs({
         fullName: name,
         speciality: specialties,
+        location,
         clinicName: clinic,
-        location: location,
-        reviewCount: 0,
-        ratingCount: 0,
-        sortBy: ""
-      });
-      
-      const data = response.data;
-      setFilteredDoctors(data);
-      console.log("Filtered doctors:", data);
-    } catch (error) {
-      console.error('Error fetching doctors:', error);
-    }
+      }),
+  });
+
+  return {
+    filteredDoctors,
+    name,
+    specialties,
+    location,
+    clinic,
+    isLoading,
+    error,
+    refetch,
+    isRefetching,
   };
-
-  useEffect(() => {
-    fetchDoctors();
-  }, [searchParams]);
-
-  return filteredDoctors;
 }
