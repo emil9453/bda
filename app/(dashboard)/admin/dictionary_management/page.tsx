@@ -11,6 +11,7 @@ export default function DictionaryManagement(){
         <button className="w-[447px] h-[45px] rounded-sm px-1 text-white bg-[rgba(255,145,2,1)]" type="submit">Add Item</button>
         </div>
        </div>
+      {/* /////////// */}
         </>
     )
 }
