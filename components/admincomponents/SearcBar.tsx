@@ -64,7 +64,7 @@ export function SearchBar() {
 
       {/* Sliding Review Form */}
       <div
-        className={`fixed top-0 right-0 overflow-scroll h-[600px] w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+        className={`fixed top-0 right-0 overflow-scroll h-full w-[600px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
           isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
