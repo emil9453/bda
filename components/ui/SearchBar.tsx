@@ -9,36 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Select from 'react-select';
 import { SERVER_URL } from '../constants';
-// const specialtyOptions = [
-//   {
-//     value: '1',
-//     label: 'Pediatr',
-//   },
-//   {
-//     value: '2',
-//     label: 'Uşaq endokrinoloqu',
-    
-//   },
-//   {
-//     value: '3',
-//     label: 'Neotolog',
-    
-//   },
-//   {
-//     value: '4',
-//     label: 'Ginekoloq',
-//   },
-//   {
-//     value: '5',
-//     label: 'Həkim-ginekoloq',
-    
-//   },
-//   {
-//     value: '6',
-//     label: 'Mama-ginekoloq',
-   
-//   },
-// ];
+
 
 const SearchBar: React.FC = () => {
   const [doctorName, setDoctorName] = useState<string>('');
