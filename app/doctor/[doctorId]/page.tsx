@@ -6,17 +6,15 @@ import location from '@/public/location/gridicons_location.png';
 import stars from '@/public/stars/stars.png';
 import { Mail, MapPin, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 
-export default function DoctorProfile({
-  params,
-}: {
-  params: {
-    doctorId: string;
-  };
-}) {
-  const { doctorId } = params;
+interface PageProps {
+  params: Promise<{ doctorId: string }>;
+}
+
+export default function DoctorProfile({ params }: PageProps) {
+  const { doctorId } = use(params);
   const [doctor, setDoctor] = useState<Doctors | null>(null);
   const [activeTab, setActiveTab] = useState<'about' | 'reviews'>('about');
   const [activeClinic, setActiveClinic] = useState<number>(0);
@@ -157,7 +155,7 @@ export default function DoctorProfile({
                       })()}
 
                     <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px] "></div>
-                    <p>{doctor.reviews[doctor.reviews.length-1].fullName}</p>
+                    <p>{doctor.reviews[doctor.reviews.length - 1].fullName}</p>
                   </div>
                 </div>
               </div>
