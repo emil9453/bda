@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { useCallback, useEffect, useState } from 'react'
+import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 export default function NavigationTabs() {
@@ -13,7 +13,6 @@ export default function NavigationTabs() {
   }, []);
 
   useEffect(() => {
-  
     if (pathname.includes('reviews')) {
       setActiveTab('reviews');
     } else if (pathname.includes('dictionary_management')) {
@@ -34,7 +33,7 @@ export default function NavigationTabs() {
         }`}
         onClick={() => handleTabClick('doctorsAndClinics')}
       >
-        <Link href={"/adminpage"}>Doctors and clinics</Link>
+        <Link href={'/admin'}>Doctors and clinics</Link>
       </button>
       <button
         data-layername="reviews"
@@ -45,7 +44,7 @@ export default function NavigationTabs() {
         }`}
         onClick={() => handleTabClick('reviews')}
       >
-        <Link href={"/adminpage/reviews"}>Reviews</Link>
+        <Link href={'/admin/reviews'}>Reviews</Link>
       </button>
       <button
         data-layername="dictionaryManagment"
@@ -56,7 +55,7 @@ export default function NavigationTabs() {
         }`}
         onClick={() => handleTabClick('dictionaryManagment')}
       >
-        <Link href={"/adminpage/dictionary_management"}>Dictionary management</Link>
+        <Link href={'/admin/dictionary_management'}>Dictionary management</Link>
       </button>
     </nav>
   );
