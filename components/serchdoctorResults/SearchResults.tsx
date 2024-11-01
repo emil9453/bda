@@ -21,8 +21,6 @@ export default function SearchResults() {
 
   const shouldShowLoading = isLoading || isRefetching;
 
-  
-
   if (error) return <div>An error has occurred: {error.message}</div>;
 
   return (

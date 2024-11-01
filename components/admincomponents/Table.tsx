@@ -5,6 +5,8 @@ import { getAllDoctors } from '@/lib/api';
 import { useQuery } from '@tanstack/react-query';
 import { Pencil, Trash2 } from 'lucide-react';
 import TableLoading from './TableLoading';
+import { SERVER_URL } from '../constants';
+import axios from 'axios';
 
 export default function DoctorTable() {
   const {
@@ -56,7 +58,7 @@ export default function DoctorTable() {
                   <button className="text-gray-600 hover:text-blue-600">
                     <Pencil size={18} />
                   </button>
-                  <button className="text-gray-600 hover:text-red-600">
+                  <button onClick={()=>axios.delete(`${SERVER_URL}/doctor/${doctor.doctorId}`) } className="text-gray-600 hover:text-red-600">
                     <Trash2 size={18} />
                   </button>
                   <Switch
