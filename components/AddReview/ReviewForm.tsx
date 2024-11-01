@@ -84,7 +84,6 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           );
           toast.success('Review uğurla gönderildi!');
           setIsReviewFormOpen(false);
-          
         }
 
         // else {
@@ -98,14 +97,12 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
         alert('Xeta Bas verdi.');
       }
       onSubmit(values);
-
-    
     },
   });
 
   return (
     <form
-      className="flex overflow-hidden flex-col px-8 py-2 bg-white rounded-lg h-full max-w-[824px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5"
+      className="flex overflow-hidden flex-col px-8 py-2 bg-white rounded-lg h-full max-w-[824px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5 w-full"
       onSubmit={formik.handleSubmit}
     >
       <h1 className="self-center text-base font-semibold text-black">Yeni rəy əlavə et</h1>
