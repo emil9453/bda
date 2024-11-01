@@ -15,7 +15,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
   //   ? doctor.serviceDescription.slice(0, maxLength) + '...'
   //   : doctor.serviceDescription;
   return (
-    <div className="flex flex-wrap gap-2 items-start mt-24 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-sm w-[659px] h-[217px] max-md:mt-10 max-md:max-w-full">
+    <div className="flex flex-wrap gap-2 p-2 items-start mt-24 shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-sm w-[659px] h-[217px] max-md:mt-10 max-md:max-w-full">
       <div className="flex relative grow shrink gap-5 items-center min-w-[240px] w-[414px] max-md:max-w-full">
         <img
           loading="lazy"
@@ -24,7 +24,7 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor }) => {
           className="object-cover z-0 shrink-0 self-stretch  h-[150px] rounded-[8px]  w-[150px]"
         />
         <div className="flex z-0 flex-col items-start self-stretch pr-12 my-auto min-w-[240px] w-[314px]">
-          <div className="font-semibold underline text-neutral-800">
+          <div className="font-semibold  text-neutral-800">
             <Link href={`doctor/${doctor.doctorId}`}>{doctor.fullName}</Link>
           </div>
           <div className="mt-7 ml-2 text-neutral-800 max-md:ml-2.5">
