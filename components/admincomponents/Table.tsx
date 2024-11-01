@@ -6,25 +6,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Pencil, Trash2 } from 'lucide-react';
 import TableLoading from './TableLoading';
 
-interface Clinics {
-  clinicId: number;
-  clinicName: string;
-  location: string;
-  contactDetails: string;
-  city: string;
-  distance: string;
-}
-
-interface Doctor {
-  doctorId: number;
-  fullName: string;
-  speciality: string;
-  clinics: Clinics[];
-  days: string;
-  address: string;
-  active: boolean;
-}
-
 export default function DoctorTable() {
   const {
     isPending,
