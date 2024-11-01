@@ -9,36 +9,36 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Select from 'react-select';
 import { SERVER_URL } from '../constants';
-const specialtyOptions = [
-  {
-    value: '1',
-    label: 'Pediatr',
-  },
-  {
-    value: '2',
-    label: 'Uşaq endokrinoloqu',
-    parent: '1',
-  },
-  {
-    value: '3',
-    label: 'Neotolog',
-    parent: '1',
-  },
-  {
-    value: '4',
-    label: 'Ginekoloq',
-  },
-  {
-    value: '5',
-    label: 'Həkim-ginekoloq',
-    parent: '4',
-  },
-  {
-    value: '6',
-    label: 'Mama-ginekoloq',
-    parent: '4',
-  },
-];
+// const specialtyOptions = [
+//   {
+//     value: '1',
+//     label: 'Pediatr',
+//   },
+//   {
+//     value: '2',
+//     label: 'Uşaq endokrinoloqu',
+    
+//   },
+//   {
+//     value: '3',
+//     label: 'Neotolog',
+    
+//   },
+//   {
+//     value: '4',
+//     label: 'Ginekoloq',
+//   },
+//   {
+//     value: '5',
+//     label: 'Həkim-ginekoloq',
+    
+//   },
+//   {
+//     value: '6',
+//     label: 'Mama-ginekoloq',
+   
+//   },
+// ];
 
 const SearchBar: React.FC = () => {
   const [doctorName, setDoctorName] = useState<string>('');
@@ -117,6 +117,11 @@ const SearchBar: React.FC = () => {
     setFilteredDoctors([]);
   };
 
+  const specialtyOptions = DoctorArray.map(doc => ({
+    value: doc.speciality,
+    label: doc.speciality,
+  }));
+
   return (
     <div className="mx-auto w-[1097px]">
       <form
@@ -153,7 +158,7 @@ const SearchBar: React.FC = () => {
 
         <Select
           className="max-w-54 our-select before:content-[''] before:absolute before:w-[1px] before:h-full before:bg-[rgba(189,188,179,1)] before:left-0 
-    after:content-[''] after:absolute after:w-[1.5px] after:h-full after:bg-[rgba(189,188,179,1)] after:right-0 after:top-0
+    after:content-[''] after:absolute after:w-[1.5px] after:h-full hidden-scrollbar after:bg-[rgba(189,188,179,1)] after:right-0 after:top-0
     relative px-4 text-black"
           styles={{
             control: provided => ({
@@ -165,6 +170,7 @@ const SearchBar: React.FC = () => {
             container: provided => ({
               ...provided,
               minWidth: '150px',
+              scrollbarWidth: "none"
             }),
           }}
           placeholder="İxtisas"
@@ -172,8 +178,8 @@ const SearchBar: React.FC = () => {
           value={selectedSpecialty}
           onChange={handleSpecialtyChange}
           formatGroupLabel={data => <div style={{ fontWeight: 'bold' }}>{data.label}</div>}
-          formatOptionLabel={({ label, parent }) => (
-            <div style={{ paddingLeft: parent ? '20px' : '0' }}>{label}</div>
+          formatOptionLabel={({ label }) => (
+            <div>{label}</div>
           )}
         />
 

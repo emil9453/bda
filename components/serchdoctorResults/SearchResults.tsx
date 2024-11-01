@@ -15,6 +15,7 @@ export default function SearchResults() {
       {/* <FilterForCount/> */}
 
       {filteredDoctors.length > 0 ? <DoctorList doctors={filteredDoctors} /> : <NoDoctorsFound />}
+      
     </div>
   );
 }

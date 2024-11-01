@@ -90,7 +90,7 @@ export default function DoctorProfile({ params }: PageProps) {
                   <div className="flex items-end">
                     <h2 className="font-bold font-publicSans text-2xl leading-12">{doctor.fullName}</h2>
                   </div>
-                  <p className="text-[#262626] font-normal font-poppins text-lg leading-[30px] my-[31px]">
+                  <p className="text-[#262626] font-normal  text-lg leading-[30px] my-[31px]">
                     {doctor.speciality}
                   </p>
                   <div className="flex gap-1">
@@ -105,7 +105,7 @@ export default function DoctorProfile({ params }: PageProps) {
                 </div>
                 <div className="flex justify-end w-[280px]">
                   <button
-                    className="overflow-hidden flex items-center gap-2 text-stone-50 w-[105px] h-8 rounded-[8px] py-1 px-2 my-auto text-sm font-semibold bg-amber-500 rounded-lg"
+                    className="overflow-hidden flex items-center gap-2 text-stone-50 w-[105px] h-8 rounded-lg py-1 px-2 my-auto text-sm font-semibold bg-amber-500 "
                     onClick={ToggleReviewForm}
                   >
                     <Image src={plus} alt='plus'/> Yeni Rəy
@@ -113,7 +113,7 @@ export default function DoctorProfile({ params }: PageProps) {
                 </div>
               </div>
 
-              <div className="w-[710px] flex h-[145px] p-[12px_10px] gap-[40px] rounded-tl-lg shadow-md">
+              <div className="w-[710px] flex h-[145px] p-[12px_10px] gap-[40px] rounded-sm shadow-custom-shadow">
                 <div className="w-[78px] h-[121px] pt-[10px] gap-[12px] items-center flex flex-col">
                   <p className="font-poppins text-xl font-semibold leading-9 text-left">
                     {doctor?.reviews.length > 0 ? doctor.reviews[0].rating : 'N/A'}

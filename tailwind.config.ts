@@ -60,7 +60,10 @@ const config: Config = {
 			kyiv: ['var(--font-kyivtype)'],
 			poppins: ['var(--font-poppins)'],
 			publicSans: ['var(--font-publicSans)'],
-		}
+		},
+		boxShadow: {
+			'custom-shadow': '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
+		},
   	}
   },
   plugins: [require("tailwindcss-animate")],
