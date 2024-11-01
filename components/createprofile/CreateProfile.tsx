@@ -1,18 +1,17 @@
 import * as React from 'react';
 import { InputField } from './inputField';
 import { TextArea } from './TextArea';
+import UploadImage from './UploadImage';
 
 export const CreateProfile: React.FC = () => {
   return (
     <main className="flex overflow-hidden flex-col px-5 py-5 text-base bg-white max-w-[824px] max-md:px-5 max-md:py-24">
       <h1 className="self-center text-2xl font-semibold text-black">Yeni profil yarat</h1>
 
-      <img
-        loading="lazy"
-        src="https://cdn.builder.io/api/v1/image/assets/TEMP/8e1f5076-294d-4762-acb0-f27b1622717d?placeholderIfAbsent=true&apiKey=5ba75a88538f4558b4c858630355e7bb"
-        alt="Profile avatar"
-        className="object-contain self-center  rounded-full aspect-square bg-zinc-300 h-[90px] w-[90px] max-md:mt-10"
-      />
+    
+       <div className='flex justify-center my-2'>
+       <UploadImage/>
+       </div>
 
       <InputField label="Ad, soyad*" value="Rəşad Həsənov" />
 
