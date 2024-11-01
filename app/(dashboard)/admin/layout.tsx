@@ -1,6 +1,16 @@
 import NavigationTabs from '@/components/admincomponents/NavigationTab';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const cookieState = await cookies();
+  const userCookie = cookieState.get('user')?.value;
+
+  if (userCookie !== 'authenticated') {
+    redirect('/login');
+  }
+
   return (
     <>
       <header className="flex overflow-hidden flex-col pb-0 bg-white max-md:pb-24">
