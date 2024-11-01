@@ -195,7 +195,8 @@ export default function DoctorProfile({ params }: PageProps) {
 
               {activeTab === 'reviews' && (
                 <div className="flex flex-col h-[260px] overflow-scroll hidden-scrollbar">
-                  {doctor.reviews.map((r, index) => (
+                  {doctor.reviews.filter((r) => r.status === 'APPROVED')
+                  .map((r, index) => (
                     <div key={index} className="flex flex-col gap-[13px]">
                       <Image src={stars} alt="stars" />
                       <p>&quot; {r.comment} &quot;</p>

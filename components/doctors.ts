@@ -22,6 +22,7 @@ distance: null;
 }
 
 export type Reviews= {
+  status: string,
   rating: number;
   comment: string;
   reviewDate: string;
