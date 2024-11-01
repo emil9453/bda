@@ -5,6 +5,8 @@ import './globals.css';
 import { cookies } from 'next/headers';
 import { LogoutButton } from '@/components/admincomponents/LogoutButton';
 
+import ReactQueryProvider from '../lib/providers/ReactQueryProvider';
+
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
@@ -45,7 +47,7 @@ export default async function RootLayout({
           </Link>
           {userCookie && <LogoutButton />}
         </header>
-        {children}
+        <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>
   );

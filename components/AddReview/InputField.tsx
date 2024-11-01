@@ -22,7 +22,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, id, value, name, onChang
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        className="flex shrink-0 focus:outline-none w-40 self-stretch mt-1 border-b border-solid border-b-yellow-500 h-[32px]"
+        className="flex shrink-0 focus:outline-none w-full self-stretch mt-1 border-b border-solid border-b-yellow-500 h-[32px]"
         type="text"
         aria-label={label}
         

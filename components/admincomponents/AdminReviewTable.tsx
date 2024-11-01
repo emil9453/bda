@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Pencil } from 'lucide-react';
 import React from 'react';
 import ReviewFormForCheck from '../AddReview/ReviewFormForCheck';
@@ -8,7 +8,9 @@ import Image from 'next/image';
 import pending from '@/public/stasuses/pending.png';
 import aproved from '@/public/stasuses/approved.png';
 import rejected from '@/public/stasuses/rejected.png';
-import { SERVER_URL } from '../constants';
+import { useQuery } from '@tanstack/react-query';
+import { getAllDoctors } from '@/lib/api';
+import TableLoading from './TableLoading';
 
 interface Clinics {
   clinicId: number;
@@ -40,7 +42,15 @@ interface Doctor {
 }
 
 export default function AdminReviewTable() {
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const {
+    isPending,
+    error,
+    data: doctors,
+  } = useQuery({
+    queryKey: ['doctors'],
+    queryFn: getAllDoctors,
+  });
+
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedReview, setSelectedReview] = useState<Reviews | null>(null);
@@ -56,25 +66,15 @@ export default function AdminReviewTable() {
     }
   };
 
-  const fetchDoctors = async () => {
-    try {
-      const response = await fetch(`${SERVER_URL}/doctor/all`, {
-        method: 'GET',
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const DocArray = await response.json();
-      setDoctors(DocArray);
-      console.log(DocArray);
-    } catch (error) {
-      console.error('Error fetching doctors:', error);
-    }
-  };
+  if (isPending)
+    return (
+      <div className="px-20 mt-[100px]">
+        <h1 className="text-2xl mb-3">All Reviews</h1>
+        <TableLoading columns={6} rows={8} />
+      </div>
+    );
 
-  useEffect(() => {
-    fetchDoctors();
-  }, []);
+  if (error) return 'An error has occurred: ' + error.message;
 
   const openReviewForm = (doctor: Doctor, review: Reviews) => {
     setSelectedDoctor(doctor);
@@ -84,7 +84,7 @@ export default function AdminReviewTable() {
 
   return (
     <>
-      <main className="flex overflow-hidden flex-col pb-0 bg-white max-md:pb-24">
+      <main className="flex max-w-100 overflow-hidden flex-col pb-0 bg-white max-md:pb-24">
         {/* Overlay */}
         {isReviewFormOpen && (
           <div
@@ -96,7 +96,7 @@ export default function AdminReviewTable() {
 
         {/* Sliding Review Form */}
         <div
-          className={`fixed top-0 right-0 overflow-scroll h-full flex items-center justify-center w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+          className={`fixed top-0 right-0 overflow-scroll  h-full flex items-center justify-center w-[600px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
             isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
@@ -119,8 +119,8 @@ export default function AdminReviewTable() {
         </div>
 
         <section className="flex flex-col px-20 mb-4 mt-24 w-full max-md:px-5 max-md:mt-2 max-md:max-w-full">
-          <h2>All Reviews</h2>
-          <div className="container mx-auto py-10">
+          <h1 className="text-2xl">All Reviews</h1>
+          <div className="container max-w-full mx-auto py-10">
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-[rgba(255,179,0,1)]">
@@ -147,7 +147,6 @@ export default function AdminReviewTable() {
                         <td className="py-4 px-2">
                           {' '}
                           <Image
-                          
                             src={
                               review.status === 'APPROVED'
                                 ? aproved
