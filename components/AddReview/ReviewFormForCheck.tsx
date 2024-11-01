@@ -1,20 +1,21 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import axios from 'axios';
 import { useFormik } from 'formik';
+import React, { useEffect } from 'react';
+import toast from 'react-hot-toast';
 import * as Yup from 'yup';
+import IconExample from './CheckOrReject';
 import InputField from './InputField';
 import RatingStars from './RatingStars';
-import IconExample from './CheckOrReject';
-import axios from 'axios';
-import toast from 'react-hot-toast';
+import { SERVER_URL } from '../constants';
 
 interface ReviewFormProps {
   onSubmit: (formData: any) => void;
   doctorName?: string;
   clinic?: string;
   specialty?: string;
-
+  reviewId: number;
   setIsReviewFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
   fullname: string;
   reviewtext: string;
@@ -26,7 +27,7 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
   doctorName = '',
   clinic = '',
   specialty = '',
-
+  reviewId ,
   setIsReviewFormOpen,
   fullname = '',
   reviewtext = '',
@@ -62,12 +63,13 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
       specialty: specialty,
       rating: rating,
       reviewText: reviewtext,
-      acceptTerms: false,
+
+     
     },
     validationSchema,
     onSubmit: async values => {
       try {
-        const response = await axios.get(`https://64.226.99.16/api/v1/doctor/all`, {
+        const response = await axios.get(`${SERVER_URL}/doctor/all`, {
           params: {
             fullName: values.doctorName,
             speciality: values.specialty,
@@ -76,15 +78,8 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
         if (response.data.length > 0) {
           const doctorId = response.data[0].doctorId;
           console.log(`D👻😐😐 Doctor id: ${doctorId}`);
-          await axios.post(
-            `https://64.226.99.16/api/v1/review/reviews?fullName=${values.doctorName}&clinicName=${values.clinic}%20Clinic&speciality=${values.specialty}`,
-            {
-              fullName: values.fullName,
-              comment: values.reviewText,
-              rating: values.rating,
-            },
-          );
-          toast.success('Review uğurla gönderildi!');
+          
+          toast.success('Review uğurla təsdiqləndi!');
         }
       } catch (error) {
         console.error('Xeta Bas verdi:', error);
@@ -103,7 +98,7 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
       specialty: specialty,
       rating: rating,
       reviewText: reviewtext,
-      acceptTerms: false,
+      
     });
   }, [fullname, doctorName, clinic, specialty, rating, reviewtext]);
 
@@ -209,23 +204,11 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
       </div>
 
       <div className="flex items-start gap-1 self-start mt-3.5 text-base text-neutral-800">
-        <input
-          type="checkbox"
-          name="acceptTerms"
-          id="acceptTerms"
-          checked={formik.values.acceptTerms}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          className="object-contain shrink-0 aspect-square w-[14px]"
-        />
-        <p className="flex-auto text-xs my-auto max-md:max-w-full">
-          TopDoc istifadə edərəkən istifadə şərtlərimizlə razılaşırsınız.
-        </p>
+        
+        
       </div>
-      {formik.touched.acceptTerms && formik.errors.acceptTerms && (
-        <div className="text-red-500 text-sm">{formik.errors.acceptTerms}</div>
-      )}
-      <IconExample />
+      
+      <IconExample reviewId={reviewId} />
     </form>
   );
 };

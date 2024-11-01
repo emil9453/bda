@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Pencil, Trash2 } from 'lucide-react';
 import Switch from '@/components/admincomponents/togglebutton';
+import { Pencil, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface Clinics {
   clinicId: number;
@@ -56,26 +56,26 @@ export default function DoctorTable() {
 
   return (
     <div className="container mx-auto py-10">
-      <table className="w-full border-collapse">
+      <table className="w-full ">
         <thead>
-          <tr className="bg-[rgba(253,227,164,0.91)]">
-            <th className="border p-4 text-left">Ad, soyad</th>
-            <th className="border p-4 text-left">Ixtisas</th>
-            <th className="border p-4 text-left">Klinika</th>
-            <th className="border p-4 text-left">Günlər</th>
-            <th className="border p-4 text-left">Ünvan</th>
-            <th className="border p-4 text-left">Tənzimləmələr</th>
+          <tr className="bg-[rgba(255,179,0,1)]">
+            <th className="border-none p-4 text-center">Ad, soyad</th>
+            <th className="border-none p-4 text-center">Ixtisas</th>
+            <th className="border-none p-4 text-center">Klinika</th>
+            <th className="border-none p-4 text-center">Günlər</th>
+            <th className="border-none p-4 text-center">Ünvan</th>
+            <th className="border-none p-4 text-center">Tənzimləmələr</th>
           </tr>
         </thead>
         <tbody>
           {doctors.map((doctor, index) => (
             <tr key={doctor.doctorId} className={index % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
-              <td className="border p-2">{doctor.fullName}</td>
-              <td className="border p-2">{doctor.speciality}</td>
-              <td className="border p-2">{doctor.clinics.map(c => c.clinicName)}</td>
-              <td className="border p-2">{doctor.days}</td>
-              <td className="border p-2">{doctor.clinics.map(c => c.city)}</td>
-              <td className="border p-2">
+              <td className="border-none p-2">{doctor.fullName}</td>
+              <td className="border-none p-2">{doctor.speciality}</td>
+              <td className="border-none p-2">{doctor.clinics.map(c => c.clinicName)}</td>
+              <td className="border-none p-2">{doctor.days}</td>
+              <td className="border-none p-2">{doctor.clinics.map(c => c.city)}</td>
+              <td className="border-none p-2">
                 <div className="flex items-center justify-between space-x-2">
                   <button className="text-gray-600 hover:text-blue-600">
                     <Pencil size={18} />

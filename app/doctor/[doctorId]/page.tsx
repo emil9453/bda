@@ -1,21 +1,20 @@
 'use client';
 import ReviewForm from '@/components/AddReview/ReviewForm';
+import { SERVER_URL } from '@/components/constants';
 import { Doctors } from '@/components/doctors';
 import location from '@/public/location/gridicons_location.png';
 import stars from '@/public/stars/stars.png';
 import { Mail, MapPin, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 
-export default function DoctorProfile({
-  params,
-}: {
-  params: {
-    doctorId: string;
-  };
-}) {
-  const { doctorId } = params;
+interface PageProps {
+  params: Promise<{ doctorId: string }>;
+}
+
+export default function DoctorProfile({ params }: PageProps) {
+  const { doctorId } = use(params);
   const [doctor, setDoctor] = useState<Doctors | null>(null);
   const [activeTab, setActiveTab] = useState<'about' | 'reviews'>('about');
   const [activeClinic, setActiveClinic] = useState<number>(0);
@@ -33,7 +32,7 @@ export default function DoctorProfile({
 
   useEffect(() => {
     if (doctorId) {
-      fetch(`https://64.226.99.16/api/v1/doctor/${doctorId}`)
+      fetch(`${SERVER_URL}/doctor/${doctorId}`)
         .then(res => res.json())
         .then(data => setDoctor(data));
     }
@@ -123,37 +122,40 @@ export default function DoctorProfile({
                 <div className="h-[105px] w-[2px] gap-0 border-t border-gray-500 bg-[#959595]"></div>
                 <div className="flex flex-col">
                   <p className="text-xl font-semibold leading-9 text-left">
-                    {`"${doctor.reviews.length > 0 ? doctor.reviews[0].comment : ''}"`}
+                    {`"${
+                      doctor.reviews.length > 0
+                        ? doctor.reviews[doctor.reviews.length - 1].comment
+                        : ''
+                    }"`}
                   </p>
                   <div className="flex items-center gap-2">
                     {/*it should be hook*/}
-                    {doctor.reviews.map((r, index) => {
-                      const date = new Date(r.reviewDate);
-                      const months = [
-                        'Yanvar',
-                        'Fevral',
-                        'Mart',
-                        'Aprel',
-                        'May',
-                        'İyun',
-                        'İyul',
-                        'Avqust',
-                        'Sentyabr',
-                        'Oktyabr',
-                        'Noyabr',
-                        'Dekabr',
-                      ];
-                      const formattedDate = `${date.getDate()} ${
-                        months[date.getMonth()]
-                      } ${date.getFullYear()}`;
-                      {
-                        /*it should be hook*/
-                      }
-                      return <p key={index}>{formattedDate}</p>;
-                    })}
+                    {doctor.reviews.length > 0 &&
+                      (() => {
+                        const lastReview = doctor.reviews[doctor.reviews.length - 1];
+                        const date = new Date(lastReview.reviewDate);
+                        const months = [
+                          'Yanvar',
+                          'Fevral',
+                          'Mart',
+                          'Aprel',
+                          'May',
+                          'İyun',
+                          'İyul',
+                          'Avqust',
+                          'Sentyabr',
+                          'Oktyabr',
+                          'Noyabr',
+                          'Dekabr',
+                        ];
+                        const formattedDate = `${date.getDate()} ${
+                          months[date.getMonth()]
+                        } ${date.getFullYear()}`;
+                        return <p>{formattedDate}</p>;
+                      })()}
 
                     <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px] "></div>
-                    <p>{doctor.reviews.map(r => r.fullName).join(', ')}</p>
+                    <p>{doctor.reviews[doctor.reviews.length - 1].fullName}</p>
                   </div>
                 </div>
               </div>
