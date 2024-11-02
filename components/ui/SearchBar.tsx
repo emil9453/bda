@@ -5,48 +5,30 @@ import locationIcon from '@/public/location/gridicons_location.png';
 import search from '@/public/search/search-normal.png';
 import { StandaloneSearchBox, useJsApiLoader } from '@react-google-maps/api';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Select from 'react-select';
 import { SERVER_URL } from '../constants';
-const specialtyOptions = [
-  {
-    value: '1',
-    label: 'Pediatr',
-  },
-  {
-    value: '2',
-    label: 'Uşaq endokrinoloqu',
-    parent: '1',
-  },
-  {
-    value: '3',
-    label: 'Neotolog',
-    parent: '1',
-  },
-  {
-    value: '4',
-    label: 'Ginekoloq',
-  },
-  {
-    value: '5',
-    label: 'Həkim-ginekoloq',
-    parent: '4',
-  },
-  {
-    value: '6',
-    label: 'Mama-ginekoloq',
-    parent: '4',
-  },
-];
 
-const SearchBar: React.FC = () => {
-  const [doctorName, setDoctorName] = useState<string>('');
-  const [selectedSpecialty, setSelectedSpecialty] = useState<any | null>(null);
-  const [location, setLocation] = useState<string>('');
-  const [clinic, setClinic] = useState<string>('');
+
+const SearchBar: React.FC<{
+  defaultDoctorName?: string;
+  defaultSpecialty?: any | null;
+  defaultLocation?: string;
+  defaultClinic?: string;
+  refetch?: () => void;
+}> = ({
+  defaultDoctorName = '',
+  defaultSpecialty = null,
+  defaultLocation = '',
+  defaultClinic = '',
+  refetch = () => {},
+}) => {
+  const [doctorName, setDoctorName] = useState<string>(defaultDoctorName);
+  const [selectedSpecialty, setSelectedSpecialty] = useState<any | null>(defaultSpecialty);
+  const [location, setLocation] = useState<string>(defaultLocation);
+  const [clinic, setClinic] = useState<string>(defaultClinic);
   const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]);
-  const router = useRouter();
+  // const router = useRouter();
   const [DoctorArray, setDoctorsArray] = useState<Doctors[]>([]);
 
   const fetchDoctors = async () => {
@@ -85,14 +67,18 @@ const SearchBar: React.FC = () => {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     const query = new URLSearchParams({
       name: doctorName,
       specialties: selectedSpecialty?.label || '',
       location: location,
       clinic: clinic,
     }).toString();
-    router.push(`/search-results?${query}`);
+    //! This is not working, need to fix
+    // router.push(`/search-results?${query}`);
+    console.log(refetch);
+    // refetch();
+    window.location.replace(`/search-results?${query}`);
   };
 
   const handleSpecialtyChange = (selectedOption: any) => {
@@ -117,8 +103,13 @@ const SearchBar: React.FC = () => {
     setFilteredDoctors([]);
   };
 
+  const specialtyOptions = DoctorArray.map(doc => ({
+    value: doc.speciality,
+    label: doc.speciality,
+  }));
+
   return (
-    <div className="mx-auto w-[1097px]">
+    <div className="mx-auto w-[1097px] h-[75px]">
       <form
         onSubmit={e => {
           e.preventDefault();
@@ -153,7 +144,7 @@ const SearchBar: React.FC = () => {
 
         <Select
           className="max-w-54 our-select before:content-[''] before:absolute before:w-[1px] before:h-full before:bg-[rgba(189,188,179,1)] before:left-0 
-    after:content-[''] after:absolute after:w-[1.5px] after:h-full after:bg-[rgba(189,188,179,1)] after:right-0 after:top-0
+    after:content-[''] after:absolute after:w-[1.5px] after:h-full hidden-scrollbar after:bg-[rgba(189,188,179,1)] after:right-0 after:top-0
     relative px-4 text-black"
           styles={{
             control: provided => ({
@@ -165,15 +156,17 @@ const SearchBar: React.FC = () => {
             container: provided => ({
               ...provided,
               minWidth: '150px',
+              scrollbarWidth: "none"
             }),
           }}
+          defaultInputValue={defaultSpecialty}
           placeholder="İxtisas"
           options={specialtyOptions}
           value={selectedSpecialty}
           onChange={handleSpecialtyChange}
           formatGroupLabel={data => <div style={{ fontWeight: 'bold' }}>{data.label}</div>}
-          formatOptionLabel={({ label, parent }) => (
-            <div style={{ paddingLeft: parent ? '20px' : '0' }}>{label}</div>
+          formatOptionLabel={({ label }) => (
+            <div>{label}</div>
           )}
         />
 

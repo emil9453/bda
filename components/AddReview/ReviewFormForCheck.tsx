@@ -27,7 +27,7 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
   doctorName = '',
   clinic = '',
   specialty = '',
-  reviewId ,
+  reviewId,
   setIsReviewFormOpen,
   fullname = '',
   reviewtext = '',
@@ -63,8 +63,6 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
       specialty: specialty,
       rating: rating,
       reviewText: reviewtext,
-
-     
     },
     validationSchema,
     onSubmit: async values => {
@@ -78,7 +76,7 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
         if (response.data.length > 0) {
           const doctorId = response.data[0].doctorId;
           console.log(`D👻😐😐 Doctor id: ${doctorId}`);
-          
+
           toast.success('Review uğurla təsdiqləndi!');
         }
       } catch (error) {
@@ -98,13 +96,12 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
       specialty: specialty,
       rating: rating,
       reviewText: reviewtext,
-      
     });
   }, [fullname, doctorName, clinic, specialty, rating, reviewtext]);
 
   return (
     <form
-      className="flex overflow-hidden flex-col px-8 py-2 bg-white rounded-lg h-full max-w-[824px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5"
+      className="flex overflow-hidden flex-col px-8 py-2 bg-white rounded-lg h-full max-w-[824px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5  w-full"
       onSubmit={formik.handleSubmit}
     >
       <h1 className="self-center text-base font-semibold text-black">Rəyi redaktə et</h1>
@@ -203,11 +200,8 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
         )}
       </div>
 
-      <div className="flex items-start gap-1 self-start mt-3.5 text-base text-neutral-800">
-        
-        
-      </div>
-      
+      <div className="flex items-start gap-1 self-start mt-3.5 text-base text-neutral-800"></div>
+
       <IconExample reviewId={reviewId} />
     </form>
   );

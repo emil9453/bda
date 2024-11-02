@@ -8,6 +8,7 @@ import { Mail, MapPin, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
 import { use, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
+import plus from "@/public/plusSvg/PlusCircle.svg"
 
 interface PageProps {
   params: Promise<{ doctorId: string }>;
@@ -87,9 +88,9 @@ export default function DoctorProfile({ params }: PageProps) {
                 />
                 <div>
                   <div className="flex items-end">
-                    <h2 className="font-semibold text-2xl leading-12">{doctor.fullName}</h2>
+                    <h2 className="font-bold font-publicSans text-2xl leading-12">{doctor.fullName}</h2>
                   </div>
-                  <p className="text-[#262626] font-normal text-lg leading-[30px] my-[31px]">
+                  <p className="text-[#262626] font-normal  text-lg leading-[30px] my-[31px]">
                     {doctor.speciality}
                   </p>
                   <div className="flex gap-1">
@@ -104,15 +105,15 @@ export default function DoctorProfile({ params }: PageProps) {
                 </div>
                 <div className="flex justify-end w-[280px]">
                   <button
-                    className="overflow-hidden text-stone-50 px-4 py-3 my-auto text-xl font-semibold bg-amber-500 rounded-lg"
+                    className="overflow-hidden flex items-center gap-2 text-stone-50 w-[105px] h-8 rounded-lg py-1 px-2 my-auto text-sm font-semibold bg-amber-500 "
                     onClick={ToggleReviewForm}
                   >
-                    + Yeni Rəy
+                    <Image src={plus} alt='plus'/> Yeni Rəy
                   </button>
                 </div>
               </div>
 
-              <div className="w-[710px] flex h-[145px] p-[12px_10px] gap-[40px] rounded-tl-lg shadow-md">
+              <div className="w-[710px] flex h-[145px] p-[12px_10px] gap-[40px] rounded-sm shadow-custom-shadow">
                 <div className="w-[78px] h-[121px] pt-[10px] gap-[12px] items-center flex flex-col">
                   <p className="font-poppins text-xl font-semibold leading-9 text-left">
                     {doctor?.reviews.length > 0 ? doctor.reviews[0].rating : 'N/A'}
@@ -163,7 +164,7 @@ export default function DoctorProfile({ params }: PageProps) {
               <div className="flex my-6 text-sm">
                 <button
                   className={`mx-1 py-1 w-[120px] h-[44px] rounded px-2 ${
-                    activeTab === 'about' ? 'bg-orange-400 text-white' : 'bg-gray-200'
+                    activeTab === 'about' ? 'bg-orange-400 text-white' : 'bg-white'
                   }`}
                   onClick={() => setActiveTab('about')}
                 >
@@ -171,7 +172,7 @@ export default function DoctorProfile({ params }: PageProps) {
                 </button>
                 <button
                   className={`py-1 w-[120px] h-[44px] rounded px-3 ${
-                    activeTab === 'reviews' ? 'bg-orange-400 text-white' : 'bg-gray-200'
+                    activeTab === 'reviews' ? 'bg-orange-400 text-white' : 'bg-white'
                   }`}
                   onClick={() => setActiveTab('reviews')}
                 >
@@ -193,8 +194,9 @@ export default function DoctorProfile({ params }: PageProps) {
               )}
 
               {activeTab === 'reviews' && (
-                <div className="flex flex-col">
-                  {doctor.reviews.map((r, index) => (
+                <div className="flex flex-col h-[260px] overflow-scroll hidden-scrollbar">
+                  {doctor.reviews.filter((r) => r.status === 'APPROVED')
+                  .map((r, index) => (
                     <div key={index} className="flex flex-col gap-[13px]">
                       <Image src={stars} alt="stars" />
                       <p>&quot; {r.comment} &quot;</p>

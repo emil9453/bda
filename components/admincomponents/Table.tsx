@@ -1,61 +1,38 @@
 'use client';
 
 import Switch from '@/components/admincomponents/togglebutton';
+import { getAllDoctors } from '@/lib/api';
+import { useQuery } from '@tanstack/react-query';
 import { Pencil, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-
-interface Clinics {
-  clinicId: number;
-  clinicName: string;
-  location: string;
-  contactDetails: string;
-  city: string;
-  distance: string;
-}
-
-interface Doctor {
-  doctorId: number;
-  fullName: string;
-  speciality: string;
-  clinics: Clinics[];
-  days: string;
-  address: string;
-  active: boolean;
-}
+import TableLoading from './TableLoading';
+import { SERVER_URL } from '../constants';
+import axios from 'axios';
 
 export default function DoctorTable() {
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const {
+    isPending,
+    error,
+    data: doctors,
+  } = useQuery({
+    queryKey: ['doctors'],
+    queryFn: getAllDoctors,
+  });
 
-  const fetchDoctors = async () => {
-    try {
-      const response = await fetch('https://64.226.99.16/api/v1/doctor/all', {
-        method: 'GET',
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const DocArray = await response.json();
-      setDoctors(DocArray);
-      console.log(DocArray);
-    } catch (error) {
-      console.error('Error fetching doctors:', error);
-    }
-  };
+  if (isPending)
+    return (
+      <div className="mt-5">
+        <TableLoading columns={6} rows={8} />
+      </div>
+    );
 
-  useEffect(() => {
-    fetchDoctors();
-  }, []);
+  if (error) return 'An error has occurred: ' + error.message;
 
   const handleToggle = (id: number) => {
-    setDoctors(
-      doctors.map(doctor =>
-        doctor.doctorId === id ? { ...doctor, active: !doctor.active } : doctor,
-      ),
-    );
+    alert(id);
   };
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container max-w-full mx-auto py-10">
       <table className="w-full ">
         <thead>
           <tr className="bg-[rgba(255,179,0,1)]">
@@ -67,6 +44,7 @@ export default function DoctorTable() {
             <th className="border-none p-4 text-center">Tənzimləmələr</th>
           </tr>
         </thead>
+        {isPending && <TableLoading columns={6} rows={8} />}
         <tbody>
           {doctors.map((doctor, index) => (
             <tr key={doctor.doctorId} className={index % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
@@ -80,7 +58,7 @@ export default function DoctorTable() {
                   <button className="text-gray-600 hover:text-blue-600">
                     <Pencil size={18} />
                   </button>
-                  <button className="text-gray-600 hover:text-red-600">
+                  <button onClick={()=>axios.delete(`${SERVER_URL}/doctor/${doctor.doctorId}`) } className="text-gray-600 hover:text-red-600">
                     <Trash2 size={18} />
                   </button>
                   <Switch

@@ -5,6 +5,8 @@ import './globals.css';
 import { cookies } from 'next/headers';
 import { LogoutButton } from '@/components/admincomponents/LogoutButton';
 
+import ReactQueryProvider from '../lib/providers/ReactQueryProvider';
+
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
@@ -20,6 +22,16 @@ const kyivType = localFont({
   weight: '100 900',
   variable: '--font-kyivtype',
 });
+const poppins = localFont({
+  src: './fonts/Poppins-Bold.ttf',
+  weight: '100 900',
+  variable: '--font-poppins',
+})
+const publicSans = localFont({
+  src: './fonts/PublicSans-Bold.ttf',
+  weight: '100 900',
+  variable: '--font-publicSans'
+})
 
 export const metadata: Metadata = {
   title: 'Topdoc',
@@ -37,7 +49,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${kyivType.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${kyivType.variable} ${poppins.variable} ${publicSans.variable} ${geistMono.variable} antialiased`}
       >
         <header className="overflow-hidden flex justify-between px-12 py-3.5 text-4xl font-bold text-black whitespace-nowrap bg-[rgba(255,174,53,1)] max-md:px-5">
           <Link href={'/'} className="font-kyiv">
@@ -45,7 +57,7 @@ export default async function RootLayout({
           </Link>
           {userCookie && <LogoutButton />}
         </header>
-        {children}
+        <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>
   );
