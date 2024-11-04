@@ -102,10 +102,6 @@ export default function AdminReviewTable() {
         >
           {selectedDoctor && selectedReview && (
             <ReviewFormForCheck
-              onSubmit={(formData: any) => {
-                console.log('Form Submitted', formData);
-                setIsReviewFormOpen(false);
-              }}
               doctorName={selectedDoctor.fullName}
               clinic={selectedDoctor.clinics.map(c => c.clinicName).join(', ')}
               specialty={selectedDoctor.speciality}

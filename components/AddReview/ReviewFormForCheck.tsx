@@ -1,17 +1,14 @@
 'use client';
 
-import axios from 'axios';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
-import toast from 'react-hot-toast';
 import * as Yup from 'yup';
-import IconExample from './CheckOrReject';
+import CheckOrReject from './CheckOrReject';
 import InputField from './InputField';
 import RatingStars from './RatingStars';
-import { SERVER_URL } from '../constants';
 
 interface ReviewFormProps {
-  onSubmit: (formData: any) => void;
+  onSubmit?: (formData: any) => void;
   doctorName?: string;
   clinic?: string;
   specialty?: string;
@@ -66,25 +63,7 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
     },
     validationSchema,
     onSubmit: async values => {
-      try {
-        const response = await axios.get(`${SERVER_URL}/doctor/all`, {
-          params: {
-            fullName: values.doctorName,
-            speciality: values.specialty,
-          },
-        });
-        if (response.data.length > 0) {
-          const doctorId = response.data[0].doctorId;
-          console.log(`D👻😐😐 Doctor id: ${doctorId}`);
-
-          toast.success('Review uğurla təsdiqləndi!');
-        }
-      } catch (error) {
-        console.error('Xeta Bas verdi:', error);
-        alert('Xeta Bas verdi.');
-      }
-      onSubmit(values);
-      setIsReviewFormOpen(false);
+      onSubmit?.(values);
     },
   });
 
@@ -202,7 +181,7 @@ const ReviewFormForCheck: React.FC<ReviewFormProps> = ({
 
       <div className="flex items-start gap-1 self-start mt-3.5 text-base text-neutral-800"></div>
 
-      <IconExample reviewId={reviewId} />
+      <CheckOrReject reviewId={reviewId} setIsReviewFormOpen={setIsReviewFormOpen} />
     </form>
   );
 };

@@ -10,7 +10,7 @@ export const LogoutButton = () => {
 
   return (
     pathname != '/' && (
-      <Link className="flex text-sm pt-2" href={'/logout'}>
+      <Link className="flex text-sm pt-2" prefetch={false} href={'/logout'}>
         <LogOut className="h-5 w-5 mr-2" />
         Logout
       </Link>

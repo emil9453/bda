@@ -9,8 +9,9 @@ export const proccessReview = async ({ reviewId, status }) => {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to update doctor status');
+    return response.text().then(message => {
+      throw new Error(message);
+    });
   }
   window.location.reload();
-  return response.json();
 };
