@@ -8,7 +8,7 @@ import { Mail, MapPin, Phone, Star } from 'lucide-react';
 import Image from 'next/image';
 import { use, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-import plus from "@/public/plusSvg/PlusCircle.svg"
+import plus from '@/public/plusSvg/PlusCircle.svg';
 
 interface PageProps {
   params: Promise<{ doctorId: string }>;
@@ -62,7 +62,7 @@ export default function DoctorProfile({ params }: PageProps) {
 
       {/* Sliding Review Form */}
       <div
-        className={`fixed top-0 right-0 overflow-scroll h-[600px] w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+        className={`fixed top-0 right-0 overflow-scroll h-full w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
           isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -88,7 +88,9 @@ export default function DoctorProfile({ params }: PageProps) {
                 />
                 <div>
                   <div className="flex items-end">
-                    <h2 className="font-bold font-publicSans text-2xl leading-12">{doctor.fullName}</h2>
+                    <h2 className="font-bold font-publicSans text-2xl leading-12">
+                      {doctor.fullName}
+                    </h2>
                   </div>
                   <p className="text-[#262626] font-normal  text-lg leading-[30px] my-[31px]">
                     {doctor.speciality}
@@ -108,7 +110,7 @@ export default function DoctorProfile({ params }: PageProps) {
                     className="overflow-hidden flex items-center gap-2 text-stone-50 w-[105px] h-8 rounded-lg py-1 px-2 my-auto text-sm font-semibold bg-amber-500 "
                     onClick={ToggleReviewForm}
                   >
-                    <Image src={plus} alt='plus'/> Yeni Rəy
+                    <Image src={plus} alt="plus" /> Yeni Rəy
                   </button>
                 </div>
               </div>
@@ -195,17 +197,18 @@ export default function DoctorProfile({ params }: PageProps) {
 
               {activeTab === 'reviews' && (
                 <div className="flex flex-col h-[260px] overflow-scroll hidden-scrollbar">
-                  {doctor.reviews.filter((r) => r.status === 'APPROVED')
-                  .map((r, index) => (
-                    <div key={index} className="flex flex-col gap-[13px]">
-                      <Image src={stars} alt="stars" />
-                      <p>&quot; {r.comment} &quot;</p>
-                      <div className="flex justify-between text-sm text-gray-600">
-                        <p>{r.fullName}</p>
-                        <p>{new Date(r.reviewDate).toLocaleDateString()}</p>
+                  {doctor.reviews
+                    .filter(r => r.status === 'APPROVED')
+                    .map((r, index) => (
+                      <div key={index} className="flex flex-col gap-[13px]">
+                        <Image src={stars} alt="stars" />
+                        <p>&quot; {r.comment} &quot;</p>
+                        <div className="flex justify-between text-sm text-gray-600">
+                          <p>{r.fullName}</p>
+                          <p>{new Date(r.reviewDate).toLocaleDateString()}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               )}
             </div>
