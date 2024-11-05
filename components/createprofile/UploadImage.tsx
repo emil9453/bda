@@ -2,9 +2,15 @@
 
 import * as React from "react"
 import { UploadIcon } from "lucide-react"
+import Image from "next/image"
 
-export default function UploadImage() {
+interface UploadImageProps {
+  onImageUpload: (base64Image: string) => void;
+}
+
+export default function UploadImage({ onImageUpload }: UploadImageProps) {
   const [isDragging, setIsDragging] = React.useState(false)
+  const [uploadedImage, setUploadedImage] = React.useState<string | null>(null)
   const inputRef = React.useRef<HTMLInputElement>(null)
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -21,8 +27,7 @@ export default function UploadImage() {
     e.preventDefault()
     setIsDragging(false)
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      // Handle the dropped file here
-      console.log(e.dataTransfer.files[0])
+      handleFile(e.dataTransfer.files[0])
     }
   }
 
@@ -32,9 +37,20 @@ export default function UploadImage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      // Handle the selected file here
-      console.log(e.target.files[0])
+      handleFile(e.target.files[0])
     }
+  }
+
+  const handleFile = (file: File) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        const base64Image = e.target.result as string
+        setUploadedImage(base64Image)
+        onImageUpload(base64Image)
+      }
+    }
+    reader.readAsDataURL(file)
   }
 
   return (
@@ -45,7 +61,7 @@ export default function UploadImage() {
       onDrop={handleDrop}
       className={`
         relative flex h-40 w-40 cursor-pointer flex-col items-center justify-center
-        rounded-full bg-muted transition-colors
+        rounded-full bg-muted transition-colors overflow-hidden
         ${isDragging ? 'border-2 border-dashed border-primary' : ''}
       `}
     >
@@ -56,11 +72,21 @@ export default function UploadImage() {
         onChange={handleChange}
         accept="image/*"
       />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-background">
-          <UploadIcon className="h-5 w-5" />
+      {uploadedImage ? (
+        <Image
+          src={uploadedImage}
+          alt="Uploaded image"
+          fill
+          sizes="160px"
+          className="object-cover rounded-full"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-background">
+            <UploadIcon className="h-5 w-5" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
