@@ -83,7 +83,7 @@ const TopDocPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <SearchBar />
+        <SearchBar onSearch={query => window.location.replace(`search-results?${query}`)} />
         {/* <h2 className="self-center mt-36 text-2xl font-semibold text-black max-md:mt-10">
           The most popular reviews
         </h2>
