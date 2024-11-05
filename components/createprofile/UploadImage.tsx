@@ -5,7 +5,7 @@ import { UploadIcon } from "lucide-react"
 import Image from "next/image"
 
 interface UploadImageProps {
-  onImageUpload: (base64Image: string) => void;
+  onImageUpload: (file: File) => void;
 }
 
 export default function UploadImage({ onImageUpload }: UploadImageProps) {
@@ -42,15 +42,9 @@ export default function UploadImage({ onImageUpload }: UploadImageProps) {
   }
 
   const handleFile = (file: File) => {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      if (e.target?.result) {
-        const base64Image = e.target.result as string
-        setUploadedImage(base64Image)
-        onImageUpload(base64Image)
-      }
-    }
-    reader.readAsDataURL(file)
+    const imageUrl = URL.createObjectURL(file)
+    setUploadedImage(imageUrl)
+    onImageUpload(file)
   }
 
   return (

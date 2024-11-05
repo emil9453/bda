@@ -14,14 +14,14 @@ export const CreateProfile: React.FC = () => {
     location: '',
     serviceDescription: '',
   });
-  const [photoUrl, setPhotoUrl] = React.useState<string | null>(null);
+  const [photoFile, setPhotoFile] = React.useState<File | null>(null);
 
   const handleInputChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleImageUpload = (base64Image: string) => {
-    setPhotoUrl(base64Image);
+  const handleImageUpload = (file: File) => {
+    setPhotoFile(file);
   };
 
   const handleSubmit = async () => {
@@ -30,10 +30,29 @@ export const CreateProfile: React.FC = () => {
       reviewCount: 0,
       ratingCount: 0,
       sortBy: "string",
-      photoUrl: photoUrl || "string",
+      photoUrl: "string", // We'll update this after uploading the image
     };
 
     try {
+      // First, upload the image if it exists
+      if (photoFile) {
+        const imageFormData = new FormData();
+        imageFormData.append('photo', photoFile);
+
+        const imageUploadResponse = await fetch(`${SERVER_URL}/doctor`, {
+          method: 'POST',
+          body: imageFormData,
+        });
+
+        if (!imageUploadResponse.ok) {
+          throw new Error('Image upload failed');
+        }
+
+        const imageResult = await imageUploadResponse.json();
+        payload.photoUrl = imageResult.url; // Assuming the server returns the URL of the uploaded image
+      }
+
+      // Now send the main payload
       const response = await fetch(`${SERVER_URL}/doctor`, {
         method: 'POST',
         headers: {
