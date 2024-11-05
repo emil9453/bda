@@ -1,4 +1,5 @@
 'use client';
+
 import { Doctors } from '@/components/doctors';
 import '@/public/customcss/custom.css';
 import locationIcon from '@/public/location/gridicons_location.png';
@@ -29,9 +30,11 @@ const SearchBar: React.FC<{
   const [doctorName, setDoctorName] = useState<string>(defaultDoctorName);
   const [selectedSpecialty, setSelectedSpecialty] = useState<any | null>(defaultSpecialty);
   const [location, setLocation] = useState<string>(defaultLocation);
-  const [clinic, setClinic] = useState<string>(defaultClinic);
+  const [clinics, setClinics] = useState<{ list: any[]; selected: any | null }>({
+    list: [],
+    selected: null,
+  });
   const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]);
-  // const router = useRouter();
   const [DoctorArray, setDoctorsArray] = useState<Doctors[]>([]);
 
   const fetchDoctors = async () => {
@@ -42,14 +45,27 @@ const SearchBar: React.FC<{
       }
       const DocArray = await response.json();
       setDoctorsArray(DocArray);
-      console.log(DocArray);
     } catch (error) {
       console.error('Error fetching doctors:', error);
     }
   };
 
+  const fetchedClinics = async () => {
+    try {
+      const response = await fetch('https://64.226.99.16/api/clinics');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const fetchedArray = await response.json();
+      setClinics(prevState => ({ ...prevState, list: fetchedArray }));
+    } catch (error) {
+      console.error('Error fetching clinics', error);
+    }
+  };
+
   useEffect(() => {
     fetchDoctors();
+    fetchedClinics();
   }, []);
 
   // Google Map Location
@@ -71,26 +87,24 @@ const SearchBar: React.FC<{
   };
 
   const handleSearch = async () => {
-    // update the query string
     const query = new URLSearchParams();
     query.set('name', doctorName);
     query.set('specialties', selectedSpecialty?.value || '');
     query.set('location', location);
-    query.set('clinic', clinic);
+    query.set('clinic', clinics.selected?.label || '');
     query.set('rating', rating ?? '');
     query.set('review', review ?? '');
 
     window.history.pushState({}, '', `?${query.toString()}`);
-
-    //! This is not working, need to fix
-    // router.push(`/search-results?${query}`);
-    // console.log(refetch);
     refetch();
-    // window.location.replace(`/search-results?${query}`);
   };
 
   const handleSpecialtyChange = (selectedOption: any) => {
     setSelectedSpecialty(selectedOption);
+  };
+
+  const handleClinicChange = (selectedOption: any) => {
+    setClinics(prevState => ({ ...prevState, selected: selectedOption }));
   };
 
   const handleDoctorNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,6 +129,28 @@ const SearchBar: React.FC<{
     value: doc.speciality,
     label: doc.speciality,
   }));
+
+  const clinicOptions = clinics.list.map(clinic => ({
+    value: clinic.clinicId,
+    label: clinic.clinicName,
+  }));
+
+  const selectStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      border: 'none',
+      boxShadow: 'none',
+      minWidth: '150px',
+    }),
+    indicatorSeparator: () => ({
+      display: 'none',
+    }),
+    container: (provided: any) => ({
+      ...provided,
+      minWidth: '150px',
+      scrollbarWidth: 'none',
+    }),
+  };
 
   return (
     <div className="mx-auto  h-[75px]">
@@ -154,19 +190,8 @@ const SearchBar: React.FC<{
           className="max-w-54 our-select flex-1 before:content-[''] before:absolute before:w-[1px] before:h-full before:bg-[rgba(189,188,179,1)] before:left-0 
     after:content-[''] after:absolute after:w-[1.5px] after:h-full hidden-scrollbar after:bg-[rgba(189,188,179,1)] after:right-0 after:top-0
     relative px-4 text-black"
-          styles={{
-            control: provided => ({
-              ...provided,
-              border: 'none',
-              boxShadow: 'none',
-              minWidth: '150px',
-            }),
-            container: provided => ({
-              ...provided,
-              minWidth: '150px',
-              scrollbarWidth: 'none',
-            }),
-          }}
+          styles={selectStyles}
+          isClearable
           defaultInputValue={defaultSpecialty}
           placeholder="İxtisas"
           options={specialtyOptions}
@@ -176,16 +201,20 @@ const SearchBar: React.FC<{
           formatOptionLabel={({ label }) => <div>{label}</div>}
         />
 
-        <div className="relative max-w-54 flex-1">
-          <input
-            className="relative max-w-32 px-4 focus:outline-none text-black"
-            type="search"
-            placeholder="Klinika"
-            value={clinic}
-            onChange={e => setClinic(e.target.value)}
-          />
-          <span className="absolute right-0 -top-1.5 w-[1px] h-[40px] bg-[rgba(189,188,179,1)]"></span>
-        </div>
+        <Select
+          className="max-w-54 our-select  before:h-full before:bg-[rgba(189,188,179,1)] before:left-0 
+    after:content-[''] after:absolute after:w-[1.5px] after:h-full hidden-scrollbar after:bg-[rgba(189,188,179,1)] after:right-0 after:top-0
+    relative px-4 text-black"
+          styles={selectStyles}
+          defaultInputValue={defaultClinic}
+          placeholder="Klinika"
+          isClearable
+          options={clinicOptions}
+          value={clinics.selected}
+          onChange={handleClinicChange}
+          formatGroupLabel={data => <div style={{ fontWeight: 'bold' }}>{data.label}</div>}
+          formatOptionLabel={({ label }) => <div>{label}</div>}
+        />
 
         <div className="flex flex-1">
           <Image src={locationIcon} className="mr-2" alt="location" />
