@@ -9,19 +9,22 @@ import { useEffect, useRef, useState } from 'react';
 import Select from 'react-select';
 import { SERVER_URL } from '../constants';
 
-
 const SearchBar: React.FC<{
   defaultDoctorName?: string;
   defaultSpecialty?: any | null;
   defaultLocation?: string;
   defaultClinic?: string;
   refetch?: () => void;
+  rating?: string | null;
+  review?: string | null;
 }> = ({
   defaultDoctorName = '',
   defaultSpecialty = null,
   defaultLocation = '',
   defaultClinic = '',
   refetch = () => {},
+  rating = '',
+  review = '',
 }) => {
   const [doctorName, setDoctorName] = useState<string>(defaultDoctorName);
   const [selectedSpecialty, setSelectedSpecialty] = useState<any | null>(defaultSpecialty);
@@ -68,17 +71,22 @@ const SearchBar: React.FC<{
   };
 
   const handleSearch = async () => {
-    const query = new URLSearchParams({
-      name: doctorName,
-      specialties: selectedSpecialty?.label || '',
-      location: location,
-      clinic: clinic,
-    }).toString();
+    // update the query string
+    const query = new URLSearchParams();
+    query.set('name', doctorName);
+    query.set('specialties', selectedSpecialty?.value || '');
+    query.set('location', location);
+    query.set('clinic', clinic);
+    query.set('rating', rating ?? '');
+    query.set('review', review ?? '');
+
+    window.history.pushState({}, '', `?${query.toString()}`);
+
     //! This is not working, need to fix
     // router.push(`/search-results?${query}`);
-    console.log(refetch);
-    // refetch();
-    window.location.replace(`/search-results?${query}`);
+    // console.log(refetch);
+    refetch();
+    // window.location.replace(`/search-results?${query}`);
   };
 
   const handleSpecialtyChange = (selectedOption: any) => {
@@ -109,16 +117,16 @@ const SearchBar: React.FC<{
   }));
 
   return (
-    <div className="mx-auto w-[1097px] h-[75px]">
+    <div className="mx-auto  h-[75px]">
       <form
         onSubmit={e => {
           e.preventDefault();
           handleSearch();
         }}
-        className="flex overflow-visible justify-between mx-auto gap-5 items-center self-stretch height-[74px] pl-8 mt-16 w-full text-xl text-black rounded-lg border border-white shadow-md border-solid max-md:pl-5 max-md:mt-10 max-md:max-w-full"
+        className="flex overflow-visible mx-auto gap-5 items-center self-stretch height-[74px] pl-8 mt-16 w-full text-xl text-black rounded-lg border border-white shadow-md border-solid max-md:pl-5 max-md:mt-10 max-md:max-w-full"
       >
         <input
-          className="focus:outline-none relative"
+          className="focus:outline-none relative flex-1"
           type="search"
           placeholder="Həkimin adı,Soyadı"
           value={doctorName}
@@ -143,7 +151,7 @@ const SearchBar: React.FC<{
         )}
 
         <Select
-          className="max-w-54 our-select before:content-[''] before:absolute before:w-[1px] before:h-full before:bg-[rgba(189,188,179,1)] before:left-0 
+          className="max-w-54 our-select flex-1 before:content-[''] before:absolute before:w-[1px] before:h-full before:bg-[rgba(189,188,179,1)] before:left-0 
     after:content-[''] after:absolute after:w-[1.5px] after:h-full hidden-scrollbar after:bg-[rgba(189,188,179,1)] after:right-0 after:top-0
     relative px-4 text-black"
           styles={{
@@ -156,7 +164,7 @@ const SearchBar: React.FC<{
             container: provided => ({
               ...provided,
               minWidth: '150px',
-              scrollbarWidth: "none"
+              scrollbarWidth: 'none',
             }),
           }}
           defaultInputValue={defaultSpecialty}
@@ -165,12 +173,10 @@ const SearchBar: React.FC<{
           value={selectedSpecialty}
           onChange={handleSpecialtyChange}
           formatGroupLabel={data => <div style={{ fontWeight: 'bold' }}>{data.label}</div>}
-          formatOptionLabel={({ label }) => (
-            <div>{label}</div>
-          )}
+          formatOptionLabel={({ label }) => <div>{label}</div>}
         />
 
-        <div className="relative max-w-54">
+        <div className="relative max-w-54 flex-1">
           <input
             className="relative max-w-32 px-4 focus:outline-none text-black"
             type="search"
@@ -181,17 +187,26 @@ const SearchBar: React.FC<{
           <span className="absolute right-0 -top-1.5 w-[1px] h-[40px] bg-[rgba(189,188,179,1)]"></span>
         </div>
 
-        {isLoaded && (
-          <>
-            <Image src={locationIcon} alt="location" />
-            <StandaloneSearchBox
-              onLoad={ref => (inputRef.current = ref)}
-              onPlacesChanged={handleOnPlaceChanged}
-            >
-              <input className="max-w-56 focus:outline-none" type="text" placeholder="Məkan" />
-            </StandaloneSearchBox>
-          </>
-        )}
+        <div className="flex flex-1">
+          <Image src={locationIcon} className="mr-2" alt="location" />
+          {isLoaded && (
+            <>
+              <StandaloneSearchBox
+                onLoad={ref => (inputRef.current = ref)}
+                onPlacesChanged={handleOnPlaceChanged}
+              >
+                <input
+                  className="max-w-56 focus:outline-none flex-1"
+                  type="text"
+                  placeholder="Məkan"
+                />
+              </StandaloneSearchBox>
+            </>
+          )}
+          {!isLoaded && (
+            <input className="max-w-56 focus:outline-none flex-1" type="text" placeholder="Məkan" />
+          )}
+        </div>
 
         <button type="submit" className="px-4 py-4 flex rounded-lg bg-orange-500">
           <Image src={search} alt="search" />

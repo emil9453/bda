@@ -1,24 +1,26 @@
 import { Doctors } from '@/components/doctors';
 import DoctorCard from '@/components/ui/doctorCard';
 
-
 interface DoctorListProps {
   doctors: Doctors[];
 }
 
 export default function DoctorList({ doctors }: DoctorListProps) {
   return (
-    <div className="flex overflow-hidden pb-60 bg-white max-md:pb-24">
-      <main className="flex flex-col px-20 mt-12 w-full text-2xl max-md:px-5 max-md:mt-10 max-md:max-w-full">
-        <h2 className="self-start mt-12 ml-24 text-3xl font-semibold text-zinc-950 max-md:mt-10 max-md:ml-2.5">
-          {doctors.length} Nəticə Tapıldı
-        </h2>
-        {doctors.map((doctor, index) => (
-          <DoctorCard key={index} doctor={doctor} />
-        ))}
-        
+    <div className=" overflow-hidden pb-60 bg-white max-md:pb-24">
+      <main className="flex  mt-5 w-full text-2xl max-md:px-5 max-md:mt-10 max-md:max-w-full">
+        <div className="flex-1 pl-5">
+          {doctors.map((doctor, index) => (
+            <DoctorCard key={index} doctor={doctor} />
+          ))}
+        </div>
+
+        <div className="flex-1">
+          <video autoPlay loop muted playsInline>
+            <source src="/doctor-search.webm" type="video/mp4" />
+          </video>
+        </div>
       </main>
-      
     </div>
   );
 }
