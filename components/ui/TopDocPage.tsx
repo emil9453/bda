@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReviewForm from '../AddReview/ReviewForm';
 import SearchBar from './SearchBar';
 import plus from '@/public/plusSvg/PlusCircle.svg';
@@ -9,9 +9,38 @@ import injection from '@/public/injection/injection.png';
 import thermometer from '@/public/thermometer/thermometer.png';
 import { Toaster } from 'react-hot-toast';
 import Cardiologist from '@/public/cardiologist/5 - Cardiologist.png';
+import { SERVER_URL } from '../constants';
+import ReviewCard from './ReviewCard';
 
 const TopDocPage: React.FC = () => {
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+  const [reviews,setReviews] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchReviews = async () => {
+    try {
+      setIsLoading(true)
+      const response = await fetch(`${SERVER_URL}/review/all`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch reviews')
+      }
+      const fetchedReviews = await response.json()
+      if (Array.isArray(fetchedReviews)) {
+        setReviews(fetchedReviews)
+      } else {
+        throw new Error('Fetched data is not an array')
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchReviews()
+  }, [])
 
   const ToggleReviewForm = () => {
     setIsReviewFormOpen(!isReviewFormOpen);
@@ -84,14 +113,20 @@ const TopDocPage: React.FC = () => {
           </div>
         </div>
         <SearchBar onSearch={query => window.location.replace(`search-results?${query}`)} />
-        {/* <h2 className="self-center mt-36 text-2xl font-semibold text-black max-md:mt-10">
-          The most popular reviews
-        </h2>
-        {ReviewArray.map((review, index) => (
-          <ReviewCard key={index} {...review} />
-        ))} */}
+       
       </section>
-      <div className="h-[435px] w-full mt-28 flex justify-end">
+      <div className="h-[435px] gap-44 w-full mt-28 mb-8 flex justify-end">
+      <div className='w-96'>
+      {isLoading ? (
+          <p>Loading reviews...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : reviews.length > 0 ? (
+          reviews.filter(r=>r.status === "APPROVED").slice(-3).map((review, index) => <ReviewCard key={index} {...review} />)
+        ) : (
+          <p>No reviews available.</p>
+        )}
+      </div>
         <Image src={Cardiologist} alt="cardiolog" />
       </div>
       <Toaster position="top-center" />

@@ -72,6 +72,7 @@ export default function DoctorProfile({ params }: PageProps) {
           specialty={doctor.speciality}
           setIsReviewFormOpen={setIsReviewFormOpen}
           fullname={''}
+          clinic={doctor.clinics.map(c=>c.clinicName).join("/")}
           reviewtext={''}
         />
       </div>

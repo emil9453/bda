@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import Select from 'react-select';
 import { SERVER_URL } from '../constants';
+import { useMemo } from 'react';
 
 const SearchBar: React.FC<{
   defaultDoctorName?: string;
@@ -131,10 +132,13 @@ const SearchBar: React.FC<{
     setFilteredDoctors([]);
   };
 
-  const specialtyOptions = DoctorArray.map(doc => ({
-    value: doc.speciality,
-    label: doc.speciality,
-  }));
+  const specialtyOptions = useMemo(() => {
+    const uniqueSpecialties = Array.from(new Set(DoctorArray.map(doc => doc.speciality)));
+    return uniqueSpecialties.map(specialty => ({
+      value: specialty,
+      label: specialty,
+    }));
+  }, [DoctorArray]);
 
   const clinicOptions = clinics.list.map(clinic => ({
     value: clinic.clinicId,

@@ -13,6 +13,7 @@ export const CreateProfile: React.FC = () => {
     clinicName: 'Klinika',
     location: '',
     serviceDescription: '',
+   
   });
   const [photoFile, setPhotoFile] = React.useState<File | null>(null);
 
