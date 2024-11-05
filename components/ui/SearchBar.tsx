@@ -18,6 +18,7 @@ const SearchBar: React.FC<{
   refetch?: () => void;
   rating?: string | null;
   review?: string | null;
+  onSearch?: (query: string) => void;
 }> = ({
   defaultDoctorName = '',
   defaultSpecialty = null,
@@ -26,6 +27,7 @@ const SearchBar: React.FC<{
   refetch = () => {},
   rating = '',
   review = '',
+  onSearch,
 }) => {
   const [doctorName, setDoctorName] = useState<string>(defaultDoctorName);
   const [selectedSpecialty, setSelectedSpecialty] = useState<any | null>(defaultSpecialty);
@@ -96,6 +98,10 @@ const SearchBar: React.FC<{
     query.set('review', review ?? '');
 
     window.history.pushState({}, '', `?${query.toString()}`);
+    if(onSearch) {
+      onSearch(query.toString());
+      return;
+    }
     refetch();
   };
 
