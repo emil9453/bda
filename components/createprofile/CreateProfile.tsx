@@ -1,79 +1,73 @@
 'use client'
 
-import * as React from 'react';
-import { InputField } from './inputField';
-import { TextArea } from './TextArea';
-import UploadImage from './UploadImage';
-import { SERVER_URL } from '../constants';
+import * as React from 'react'
+import { InputField } from './inputField'
+import { TextArea } from './TextArea'
+import UploadImage from './UploadImage'
+import { SERVER_URL } from '../constants'
+
+
+
 
 export const CreateProfile: React.FC = () => {
-  const [formData, setFormData] = React.useState({
+  const [profileData, setProfileData] = React.useState({
     fullName: 'Rəşad Həsənov',
     speciality: 'Ixtisas',
     clinicName: 'Klinika',
     location: '',
     serviceDescription: '',
-   
-  });
-  const [photoFile, setPhotoFile] = React.useState<File | null>(null);
+  })
+  const [photoFile, setPhotoFile] = React.useState<File | null>(null)
+  
 
   const handleInputChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+    setProfileData(prev => ({ ...prev, [name]: value }))
+  }
 
   const handleImageUpload = (file: File) => {
-    setPhotoFile(file);
-  };
+    setPhotoFile(file)
+  }
 
   const handleSubmit = async () => {
+    
+
     const payload = {
-      ...formData,
+      ...profileData,
       reviewCount: 0,
       ratingCount: 0,
-      sortBy: "string",
-      photoUrl: "string", // We'll update this after uploading the image
-    };
+      sortBy: "",
+      photoUrl: "string" // We'll update this after uploading the image
+    }
+
+   
+
+    const formData = new FormData()
+    formData.append('request',
+       new Blob([JSON.stringify(payload)],
+        { type: 'application/json' }))
+    if (photoFile) {
+      formData.append('photoUrl', photoFile)
+    }
 
     try {
-      // First, upload the image if it exists
-      if (photoFile) {
-        const imageFormData = new FormData();
-        imageFormData.append('photo', photoFile);
-
-        const imageUploadResponse = await fetch(`${SERVER_URL}/doctor`, {
-          method: 'POST',
-          body: imageFormData,
-        });
-
-        if (!imageUploadResponse.ok) {
-          throw new Error('Image upload failed');
-        }
-
-        const imageResult = await imageUploadResponse.json();
-        payload.photoUrl = imageResult.url; // Assuming the server returns the URL of the uploaded image
-      }
-
-      // Now send the main payload
       const response = await fetch(`${SERVER_URL}/doctor`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+        body: formData,
+      })
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Profile creation failed', )
       }
 
-      const result = await response.json();
-      console.log('Profile created:', result);
-      // Handle success (e.g., show a success message, redirect, etc.)
+      const result = await response.json()
+      console.log('Profile created:', result)
+      
     } catch (error) {
-      console.error('Error creating profile:', error);
-      // Handle error (e.g., show an error message)
+      console.error('Error creating profile:', error)
+      
     }
-  };
+    console.log(profileData,photoFile)
+  }
 
   return (
     <main className="flex overflow-hidden flex-col px-5 py-5 text-base bg-white max-w-[824px] max-md:px-5 max-md:py-24">
@@ -85,43 +79,45 @@ export const CreateProfile: React.FC = () => {
 
       <InputField 
         label="Ad, soyad*" 
-        value={formData.fullName} 
+        value={profileData.fullName} 
         onChange={(value) => handleInputChange('fullName', value)} 
       />
 
       <div className="flex gap-2 mt-1 justify-between">
-        <div className="flex flex-col">
+        <div className="flex flex-col flex-1">
           <InputField 
             label="Ixtisas*" 
-            value={formData.speciality} 
+            value={profileData.speciality} 
             onChange={(value) => handleInputChange('speciality', value)} 
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col flex-1">
           <InputField 
             label="Klinika*" 
-            value={formData.clinicName} 
+            value={profileData.clinicName} 
             onChange={(value) => handleInputChange('clinicName', value)} 
           />
         </div>
       </div>
       <InputField 
         label="Məkan*" 
-        value={formData.location} 
+        value={profileData.location} 
         onChange={(value) => handleInputChange('location', value)} 
       />
       <TextArea 
         label="Haqqında*" 
-        value={formData.serviceDescription} 
+        value={profileData.serviceDescription} 
         onChange={(value) => handleInputChange('serviceDescription', value)} 
       />
 
-      <button 
-        className="h-[52px] px-[121px] py-[17px] border-none gap-0 rounded-[6px] my-4 w-full mx-auto bg-[rgba(252,151,54,1)]"
+      <button
+        className="h-[52px] px-[121px] py-[17px] rounded-[6px] my-4 w-full mx-auto bg-[rgba(252,151,54,1)] hover:bg-[rgba(252,151,54,0.8)]"
         onClick={handleSubmit}
       >
         Yarat
       </button>
+
+      
     </main>
-  );
-};
+  )
+}
