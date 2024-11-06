@@ -28,7 +28,9 @@ export default function DoctorTable() {
   if (error) return 'An error has occurred: ' + error.message;
 
   const handleToggle = (id: number) => {
-    alert(id);
+    axios.put(`${SERVER_URL}/doctor/${id}/toggle-status`);
+    
+    
   };
 
   return (
@@ -62,7 +64,7 @@ export default function DoctorTable() {
                     <Trash2 size={18} />
                   </button>
                   <Switch
-                    isChecked={doctor.active}
+                    isChecked={doctor.isActive == true ? true :false}
                     onChange={() => handleToggle(doctor.doctorId)}
                   />
                 </div>
