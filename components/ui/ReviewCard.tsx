@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import fullstar from '@/public/star/material-symbols-light_star.png';
-import { SERVER_URL } from '../constants';
 import { Doctors } from '../doctors';
 
 interface ReviewCardProps {
@@ -12,6 +11,7 @@ interface ReviewCardProps {
   reviewDate: string;
   fullName: string;
   doctorFullName: string;
+  doctors: Doctors[];
 }
 
 const ReviewCard: React.FC<ReviewCardProps> = ({
@@ -20,35 +20,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   reviewDate,
   fullName,
   doctorFullName,
+  doctors,
 }) => {
-  const [doctors, setDoctors] = useState<Doctors[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchDoctors = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(`${SERVER_URL}/doctor/all`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch doctors');
-      }
-      const fetchedDoctors = await response.json();
-      if (Array.isArray(fetchedDoctors)) {
-        setDoctors(fetchedDoctors);
-      } else {
-        throw new Error('Fetched data is not an array');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDoctors();
-  }, []);
-
   // In Api,DoctorfullName is null,for this reson,i can't show doctor images
 
   const formatDate = (dateString: string) => {
@@ -74,12 +47,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 
   const doctorPhotoUrl = doctors.find(d => d.fullName === doctorFullName)?.photoUrl;
 
-
   return (
     <article className="flex flex-wrap gap-3.5 items-center w-[49rem] mt-10 ml-5 max-md:mt-10">
-      {isLoading && <div>Loading...</div>}
-      {error && <div>Error: {error}</div>}
-      {!isLoading && !error && (
+      {
         <>
           {doctorPhotoUrl ? (
             <img
@@ -119,7 +89,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             </div>
           </div>
         </>
-      )}
+      }
     </article>
   );
 };
