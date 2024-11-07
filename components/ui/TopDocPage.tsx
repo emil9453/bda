@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ReviewForm from '../AddReview/ReviewForm';
 import SearchBar from './SearchBar';
 import plus from '@/public/plusSvg/PlusCircle.svg';
@@ -9,38 +9,18 @@ import injection from '@/public/injection/injection.png';
 import thermometer from '@/public/thermometer/thermometer.png';
 import { Toaster } from 'react-hot-toast';
 import Cardiologist from '@/public/cardiologist/5 - Cardiologist.png';
-import { SERVER_URL } from '../constants';
 import ReviewCard from './ReviewCard';
+import { getAllReviews } from '@/lib/api/getAllReviews';
+import { useQuery } from '@tanstack/react-query';
 
 const TopDocPage: React.FC = () => {
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
-  const [reviews,setReviews] = useState<any>([]);
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [doctors, setDoctors] = useState<any>([]);
 
-  const fetchReviews = async () => {
-    try {
-      setIsLoading(true)
-      const response = await fetch(`${SERVER_URL}/review/all`)
-      if (!response.ok) {
-        throw new Error('Failed to fetch reviews')
-      }
-      const fetchedReviews = await response.json()
-      if (Array.isArray(fetchedReviews)) {
-        setReviews(fetchedReviews)
-      } else {
-        throw new Error('Fetched data is not an array')
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchReviews()
-  }, [])
+  const { data: reviews } = useQuery({
+    queryKey: ['reviews'],
+    queryFn: getAllReviews,
+  });
 
   const ToggleReviewForm = () => {
     setIsReviewFormOpen(!isReviewFormOpen);
@@ -112,21 +92,19 @@ const TopDocPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <SearchBar onSearch={query => window.location.replace(`search-results?${query}`)} />
-       
+        <SearchBar
+          onDoctorsFetch={fetchedDoctors => setDoctors(fetchedDoctors)}
+          onSearch={query => window.location.replace(`search-results?${query}`)}
+        />
       </section>
-      <div className="h-[435px] gap-44 w-full mt-28 mb-8 flex justify-end">
-      <div className='w-96'>
-      {isLoading ? (
-          <p>Loading reviews...</p>
-        ) : error ? (
-          <p>Error: {error}</p>
-        ) : reviews.length > 0 ? (
-          reviews.filter(r=>r.status === "APPROVED").slice(-3).map((review, index) => <ReviewCard key={index} {...review} />)
-        ) : (
-          <p>No reviews available.</p>
-        )}
-      </div>
+      <div className="h-[435px] gap-44 w-full mt-28 mb-8 flex justify-center">
+        <div className="w-96">
+          {doctors &&
+            reviews
+              ?.filter(r => r.status === 'APPROVED')
+              .slice(-3)
+              .map((review, index) => <ReviewCard doctors={doctors} key={index} {...review} />)}
+        </div>
         <Image src={Cardiologist} alt="cardiolog" />
       </div>
       <Toaster position="top-center" />

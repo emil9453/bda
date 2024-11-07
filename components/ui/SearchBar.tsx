@@ -20,6 +20,7 @@ const SearchBar: React.FC<{
   rating?: string | null;
   review?: string | null;
   onSearch?: (query: string) => void;
+  onDoctorsFetch?: (doctors: Doctors[]) => void;
 }> = ({
   defaultDoctorName = '',
   defaultSpecialty = null,
@@ -29,6 +30,7 @@ const SearchBar: React.FC<{
   rating = '',
   review = '',
   onSearch,
+  onDoctorsFetch,
 }) => {
   const [doctorName, setDoctorName] = useState<string>(defaultDoctorName);
   const [selectedSpecialty, setSelectedSpecialty] = useState<any | null>(defaultSpecialty);
@@ -47,6 +49,9 @@ const SearchBar: React.FC<{
         throw new Error('Network response was not ok');
       }
       const DocArray = await response.json();
+      if (onDoctorsFetch) {
+        onDoctorsFetch(DocArray);
+      }
       setDoctorsArray(DocArray);
     } catch (error) {
       console.error('Error fetching doctors:', error);
