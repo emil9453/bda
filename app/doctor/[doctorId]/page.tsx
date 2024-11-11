@@ -1,3 +1,7 @@
+
+
+
+
 'use client';
 import ReviewForm from '@/components/AddReview/ReviewForm';
 import { SERVER_URL } from '@/components/constants';
@@ -51,7 +55,6 @@ export default function DoctorProfile({ params }: PageProps) {
 
   return (
     <>
-      {/* Overlay */}
       {isReviewFormOpen && (
         <div
           id="overlay"
@@ -60,9 +63,8 @@ export default function DoctorProfile({ params }: PageProps) {
         ></div>
       )}
 
-      {/* Sliding Review Form */}
       <div
-        className={`fixed top-0 right-0 overflow-scroll h-full w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+        className={`fixed top-0 right-0 overflow-scroll h-full w-2/3 sm:w-[400px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
           isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -79,94 +81,79 @@ export default function DoctorProfile({ params }: PageProps) {
 
       <div className="min-h-screen bg-gray-100 flex flex-col">
         <main className="flex-grow container mx-auto p-4">
-          <div className="bg-white rounded-lg shadow-md justify-between p-6 flex flex-col md:flex-row gap-6">
-            <div className="md:w-3/5">
-              <div className="flex items-start space-x-4 mb-6">
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
+            <div className="lg:w-3/5">
+              <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
                 <img
                   src={doctor.photoUrl}
                   alt={doctor.fullName}
-                  className="w-[150px] h-[150px] rounded-sm"
+                  className="w-full sm:w-[150px] h-[150px] rounded-sm object-cover"
                 />
-                <div>
-                  <div className="flex items-end">
-                    <h2 className="font-bold font-publicSans text-2xl leading-12">
+                <div className="flex-grow">
+                  <div className="flex flex-col sm:flex-row sm:items-end justify-between">
+                    <h2 className="font-bold font-publicSans text-xl sm:text-2xl leading-tight mb-2 sm:mb-0">
                       {doctor.fullName}
                     </h2>
+                    <button
+                      className="overflow-hidden flex items-center gap-2 text-stone-50 w-full sm:w-[105px] h-8 rounded-lg py-1 px-2 my-2 sm:my-auto text-sm font-semibold bg-amber-500"
+                      onClick={ToggleReviewForm}
+                    >
+                      <Image src={plus} alt="plus" width={20} height={20} /> Yeni Rəy
+                    </button>
                   </div>
-                  <p className="text-[#262626] font-normal  text-lg leading-[30px] my-[31px]">
+                  <p className="text-[#262626] font-normal text-base sm:text-lg leading-tight my-2 sm:my-[31px]">
                     {doctor.speciality}
                   </p>
-                  <div className="flex gap-1">
-                    <Image src={location} alt="location" />
+                  <div className="flex gap-1 items-center">
+                    <Image src={location} alt="location" width={20} height={20} />
                     <p className="text-sm text-gray-500">
                       {doctor.clinics
                         ? doctor.clinics.map(c => c.clinicName).join(' / ')
                         : 'No clinics available'}
                     </p>
                   </div>
-                  <div className="flex items-center mt-2"></div>
-                </div>
-                <div className="flex justify-end w-[280px]">
-                  <button
-                    className="overflow-hidden flex items-center gap-2 text-stone-50 w-[105px] h-8 rounded-lg py-1 px-2 my-auto text-sm font-semibold bg-amber-500 "
-                    onClick={ToggleReviewForm}
-                  >
-                    <Image src={plus} alt="plus" /> Yeni Rəy
-                  </button>
                 </div>
               </div>
 
-              <div className="w-[710px] flex h-[145px] p-[12px_10px] gap-[40px] rounded-sm shadow-custom-shadow">
-                <div className="w-[78px] h-[121px] pt-[10px] gap-[12px] items-center flex flex-col">
-                  <p className="font-poppins text-xl font-semibold leading-9 text-left">
+              <div className="w-full sm:w-[710px] flex flex-col sm:flex-row h-auto sm:h-[145px] p-4 sm:p-[12px_10px] gap-4 sm:gap-[40px] rounded-sm shadow-custom-shadow">
+                <div className="flex sm:flex-col items-center gap-2 sm:gap-[12px]">
+                  <p className="font-poppins text-xl font-semibold leading-9 text-center">
                     {doctor?.reviews.length > 0 ? doctor.reviews[0].rating : 'N/A'}
                   </p>
                   <Star className="w-[35.6px] h-[31.72px] text-yellow-400" fill="currentColor" />
                 </div>
-                <div className="h-[105px] w-[2px] gap-0 border-t border-gray-500 bg-[#959595]"></div>
+                <div className="hidden sm:block h-[105px] w-[2px] gap-0 border-t border-gray-500 bg-[#959595]"></div>
                 <div className="flex flex-col">
-                  <p className="text-xl font-semibold leading-9 text-left">
+                  <p className="text-lg sm:text-xl font-semibold leading-tight sm:leading-9 text-left">
                     {`"${
                       doctor.reviews.length > 0
                         ? doctor.reviews[doctor.reviews.length - 1].comment
                         : ''
                     }"`}
                   </p>
-                  <div className="flex items-center gap-2">
-                    {/*it should be hook*/}
+                  <div className="flex items-center gap-2 mt-2">
                     {doctor.reviews.length > 0 &&
                       (() => {
                         const lastReview = doctor.reviews[doctor.reviews.length - 1];
                         const date = new Date(lastReview.reviewDate);
                         const months = [
-                          'Yanvar',
-                          'Fevral',
-                          'Mart',
-                          'Aprel',
-                          'May',
-                          'İyun',
-                          'İyul',
-                          'Avqust',
-                          'Sentyabr',
-                          'Oktyabr',
-                          'Noyabr',
-                          'Dekabr',
+                          'Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'İyun',
+                          'İyul', 'Avqust', 'Sentyabr', 'Oktyabr', 'Noyabr', 'Dekabr'
                         ];
                         const formattedDate = `${date.getDate()} ${
                           months[date.getMonth()]
                         } ${date.getFullYear()}`;
-                        return <p>{formattedDate}</p>;
+                        return <p className="text-sm">{formattedDate}</p>;
                       })()}
-
-                    <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px] "></div>
-                    <p>{doctor.reviews[doctor.reviews.length - 1].fullName}</p>
+                    <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px]"></div>
+                    <p className="text-sm">{doctor.reviews[doctor.reviews.length - 1].fullName}</p>
                   </div>
                 </div>
               </div>
 
               <div className="flex my-6 text-sm">
                 <button
-                  className={`mx-1 py-1 w-[120px] h-[44px] rounded px-2 ${
+                  className={`mx-1 py-1 w-full sm:w-[120px] h-[44px] rounded px-2 ${
                     activeTab === 'about' ? 'bg-orange-400 text-white' : 'bg-white'
                   }`}
                   onClick={() => setActiveTab('about')}
@@ -174,7 +161,7 @@ export default function DoctorProfile({ params }: PageProps) {
                   Haqqında
                 </button>
                 <button
-                  className={`py-1 w-[120px] h-[44px] rounded px-3 ${
+                  className={`py-1 w-full sm:w-[120px] h-[44px] rounded px-3 ${
                     activeTab === 'reviews' ? 'bg-orange-400 text-white' : 'bg-white'
                   }`}
                   onClick={() => setActiveTab('reviews')}
@@ -201,10 +188,10 @@ export default function DoctorProfile({ params }: PageProps) {
                   {doctor.reviews
                     .filter(r => r.status === 'APPROVED')
                     .map((r, index) => (
-                      <div key={index} className="flex flex-col gap-[13px]">
-                        <Image src={stars} alt="stars" />
-                        <p>&quot; {r.comment} &quot;</p>
-                        <div className="flex justify-between text-sm text-gray-600">
+                      <div key={index} className="flex flex-col gap-[13px] mb-4">
+                        <Image src={stars} alt="stars" width={100} height={20} />
+                        <p className="text-sm sm:text-base">&quot; {r.comment} &quot;</p>
+                        <div className="flex justify-between text-xs sm:text-sm text-gray-600">
                           <p>{r.fullName}</p>
                           <p>{new Date(r.reviewDate).toLocaleDateString()}</p>
                         </div>
@@ -214,13 +201,13 @@ export default function DoctorProfile({ params }: PageProps) {
               )}
             </div>
 
-            <div className="md:w-2/5 border w-[460px] h-[694px] p-[45px] border-[#FFB300]">
+            <div className="lg:w-2/5 border w-full lg:w-[460px] h-auto lg:h-[694px] p-4 lg:p-[45px] border-[#FFB300]">
               <h3 className="font-bold mb-2">Klinikalar</h3>
               <div className="flex flex-wrap gap-2 mb-4">
                 {doctor.clinics?.map((clinic, index) => (
                   <button
                     key={index}
-                    className={`py-2 w-[174px] h-[40px] px-4 rounded ${
+                    className={`py-2 w-full sm:w-[174px] h-[40px] px-4 rounded ${
                       activeClinic === index ? 'bg-orange-400 text-white' : 'bg-gray-200'
                     }`}
                     onClick={() => setActiveClinic(index)}
@@ -232,7 +219,7 @@ export default function DoctorProfile({ params }: PageProps) {
 
               {doctor.clinics?.length > 0 && (
                 <div>
-                  <div className="w-[218px]">
+                  <div className="w-full sm:w-[218px]">
                     <p className="flex items-center mb-2">
                       <MapPin className="w-4 h-4 mr-2" /> {doctor.clinics[activeClinic]?.city}
                     </p>
@@ -246,7 +233,7 @@ export default function DoctorProfile({ params }: PageProps) {
                   </div>
 
                   <h4 className="font-bold mb-2">İş günləri</h4>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2">
                     <div className="bg-gray-100 p-2 rounded">
                       <p className="font-bold">B.e</p>
                       <p className="text-sm">18:00-17:00</p>

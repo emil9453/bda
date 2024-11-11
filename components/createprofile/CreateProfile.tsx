@@ -5,6 +5,14 @@ import { InputField } from './inputField';
 import { TextArea } from './TextArea';
 import UploadImage from './UploadImage';
 import { SERVER_URL } from '../constants';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker-cssmodules.css"
+
+interface CustomInputProps {
+  value?: string;
+  onClick?: () => void; 
+  className?: string; 
+}
 
 export const CreateProfile: React.FC = () => {
   const [profileData, setProfileData] = React.useState({
@@ -57,6 +65,16 @@ export const CreateProfile: React.FC = () => {
     console.log(profileData, photoFile);
   };
 
+  const [startDate, setStartDate] = React.useState<Date | null>(new Date());
+
+  const ExampleCustomInput = React.forwardRef<HTMLButtonElement, CustomInputProps>(
+    ({ value, onClick, className }, ref) => (
+      <button className={className} onClick={onClick} ref={ref}>
+        {value || "Select Date"}
+      </button>
+    )
+  );
+
   return (
     <main className="flex overflow-hidden flex-col px-5 py-5 text-base bg-white max-w-[824px] max-md:px-5 max-md:py-24">
       <h1 className="self-center text-2xl font-semibold text-black">Yeni profil yarat</h1>
@@ -92,6 +110,12 @@ export const CreateProfile: React.FC = () => {
         value={profileData.location}
         onChange={value => handleInputChange('location', value)}
       />
+       <DatePicker
+      selected={startDate}
+      onChange={(date) => setStartDate(date)}
+      customInput={<ExampleCustomInput />}
+    />
+      
       <TextArea
         label="Haqqında*"
         value={profileData.serviceDescription}
