@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CreateProfile } from '../createprofile/CreateProfile';
+// import { CreateProfile } from '../createprofile/CreateProfile';
 import AddSpeciality from './adddSpeciality';
 
 
