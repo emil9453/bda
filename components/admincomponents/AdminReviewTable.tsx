@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Pencil } from 'lucide-react';
 import React from 'react';
 import ReviewFormForCheck from '../AddReview/ReviewFormForCheck';
@@ -54,17 +55,27 @@ export default function AdminReviewTable() {
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedReview, setSelectedReview] = useState<Reviews | null>(null);
-  // const [reviewStatus, setReviewStatus] = useState<Reviews['status']>('Pending');
-
-  // const ToggleReviewForm = () => {
-  //   setIsReviewFormOpen(!isReviewFormOpen);
-  // }
 
   const HandleClickOutside = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).id === 'overlay') {
       setIsReviewFormOpen(false);
     }
   };
+
+  const sortedReviews = useMemo(() => {
+    if (!doctors) return [];
+    return doctors.flatMap(doctor => 
+      doctor.reviews.map(review => ({
+        ...review,
+        doctorName: doctor.fullName,
+        clinicNames: doctor.clinics.map(c => c.clinicName).join(', ')
+      }))
+    ).sort((a, b) => {
+      if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+      if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
+      return 0;
+    });
+  }, [doctors]);
 
   if (isPending)
     return (
@@ -76,16 +87,18 @@ export default function AdminReviewTable() {
 
   if (error) return 'An error has occurred: ' + error.message;
 
-  const openReviewForm = (doctor: Doctor, review: Reviews) => {
-    setSelectedDoctor(doctor);
-    setSelectedReview(review);
-    setIsReviewFormOpen(true);
+  const openReviewForm = (review: Reviews & { doctorName: string; clinicNames: string }) => {
+    const doctor = doctors.find(d => d.fullName === review.doctorName);
+    if (doctor) {
+      setSelectedDoctor(doctor);
+      setSelectedReview(review);
+      setIsReviewFormOpen(true);
+    }
   };
 
   return (
     <>
       <main className="flex max-w-100 overflow-hidden flex-col pb-0 bg-white max-md:pb-24">
-        {/* Overlay */}
         {isReviewFormOpen && (
           <div
             id="overlay"
@@ -94,9 +107,8 @@ export default function AdminReviewTable() {
           ></div>
         )}
 
-        {/* Sliding Review Form */}
         <div
-          className={`fixed top-0 right-0 overflow-scroll  h-full flex items-center justify-center w-[600px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+          className={`fixed top-0 right-0 overflow-scroll h-full flex items-center justify-center w-[600px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
             isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
@@ -130,43 +142,36 @@ export default function AdminReviewTable() {
                 </tr>
               </thead>
               <tbody>
-                {doctors.map(doctor => (
-                  <React.Fragment key={doctor.doctorId}>
-                    {doctor.reviews.map((review, index) => (
-                      <tr key={index} className="bg-blue-50">
-                        <td className="py-4 px-2">{review.fullName}</td>
-                        <td className="py-4 px-2">{doctor.fullName}</td>
-                        <td className="py-4 px-2">
-                          {doctor.clinics.map(c => c.clinicName).join(', ')}
-                        </td>
-                        <td className="py-4 px-2">{review.comment}</td>
-                        <td className="py-4 px-2">
-                          {' '}
-                          <Image
-                            src={
-                              review.status === 'APPROVED'
-                                ? aproved
-                                : review.status === 'PENDING'
-                                ? pending
-                                : rejected
-                            }
-                            alt="status"
-                          />
-                        </td>
-                        <td className="py-4 px-2 text-center">{review.rating}</td>
-                        <td className="py-4 px-2">
-                          <div className="flex items-center justify-center space-x-2">
-                            <button
-                              onClick={() => openReviewForm(doctor, review)}
-                              className="text-gray-600 hover:text-blue-600"
-                            >
-                              <Pencil size={18} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </React.Fragment>
+                {sortedReviews.map((review, index) => (
+                  <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
+                    <td className="py-4 px-2">{review.fullName}</td>
+                    <td className="py-4 px-2">{review.doctorName}</td>
+                    <td className="py-4 px-2">{review.clinicNames}</td>
+                    <td className="py-4 px-2">{review.comment}</td>
+                    <td className="py-4 px-2">
+                      <Image
+                        src={
+                          review.status === 'APPROVED'
+                            ? aproved
+                            : review.status === 'PENDING'
+                            ? pending
+                            : rejected
+                        }
+                        alt="status"
+                      />
+                    </td>
+                    <td className="py-4 px-2 text-center">{review.rating}</td>
+                    <td className="py-4 px-2">
+                      <div className="flex items-center justify-center space-x-2">
+                        <button
+                          onClick={() => openReviewForm(review)}
+                          className="text-gray-600 hover:text-blue-600"
+                        >
+                          <Pencil size={18} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>

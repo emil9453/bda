@@ -21,6 +21,16 @@ body {
   -ms-overflow-style: none;  /* Internet Explorer ve Edge */
   scrollbar-width: none;     /* Firefox */
 }
+@media screen and (min-width: 300px) {
+  .xs-col-reverse {
+    flex-direction: column-reverse;
+  }
+
+  .xs-h {
+    height: 2px;
+    padding-block: 0px;
+  }
+}
 
 @layer utilities {
   .text-balance {
