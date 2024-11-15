@@ -173,7 +173,7 @@ export const CreateProfile: React.FC = () => {
     setProfileData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleImageUpload = (file: File) => {
+  const handleImageUpload = (file: File | null) => {
     setPhotoFile(file);
   };
 
@@ -252,7 +252,7 @@ export const CreateProfile: React.FC = () => {
       <h1 className="self-center text-2xl font-semibold text-black">Yeni profil yarat</h1>
 
       <div className="flex justify-center my-2">
-        <UploadImage onImageUpload={handleImageUpload} />
+        <UploadImage onImageUpload={handleImageUpload}  />
       </div>
 
       <InputField
