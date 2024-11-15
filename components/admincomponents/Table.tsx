@@ -2,13 +2,15 @@
 
 import Switch from '@/components/admincomponents/togglebutton';
 import { getAllDoctors } from '@/lib/api';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Pencil, Trash2 } from 'lucide-react';
 import TableLoading from './TableLoading';
 import { SERVER_URL } from '../constants';
 import axios from 'axios';
 
 export default function DoctorTable() {
+  const queryClient = useQueryClient();
+
   const {
     isPending,
     error,
@@ -16,6 +18,25 @@ export default function DoctorTable() {
   } = useQuery({
     queryKey: ['doctors'],
     queryFn: getAllDoctors,
+  });
+
+  const toggleMutation = useMutation({
+    mutationFn: (id: number) => axios.put(`${SERVER_URL}/doctor/${id}/toggle-status`),
+    onSuccess: (_, id) => {
+      queryClient.setQueryData(['doctors'], (oldData: any) => {
+        return oldData.map((doctor: any) => 
+          doctor.doctorId === id ? { ...doctor, isActive: !doctor.isActive } : doctor
+        );
+      });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => axios.delete(`${SERVER_URL}/doctor/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['doctors'] });
+      window.location.reload();
+    },
   });
 
   if (isPending)
@@ -28,9 +49,11 @@ export default function DoctorTable() {
   if (error) return 'An error has occurred: ' + error.message;
 
   const handleToggle = (id: number) => {
-    axios.put(`${SERVER_URL}/doctor/${id}/toggle-status`);
-    
-    
+    toggleMutation.mutate(id);
+  };
+
+  const handleDelete = (id: number) => {
+    deleteMutation.mutate(id);
   };
 
   return (
@@ -52,19 +75,19 @@ export default function DoctorTable() {
             <tr key={doctor.doctorId} className={index % 2 === 0 ? 'bg-white' : 'bg-blue-50'}>
               <td className="border-none text-center p-2">{doctor.fullName}</td>
               <td className="border-none text-center p-2">{doctor.speciality}</td>
-              <td className="border-none text-center p-2">{doctor.clinics.map(c => c.clinicName)}</td>
+              <td className="border-none text-center p-2">{doctor.clinics.map(c => c.clinicName).join(', ')}</td>
               <td className="border-none text-center p-2">{doctor.days}</td>
-              <td className="border-none text-center p-2 "><div className='w-60 overflow-hidden'>{doctor.clinics.map(c => c.city)}</div></td>
+              <td className="border-none text-center p-2 "><div className='w-60 overflow-hidden'>{doctor.clinics.map(c => c.city).join(', ')}</div></td>
               <td className="border-none text-center p-2">
                 <div className="flex items-center justify-between space-x-2">
                   <button className="text-gray-600 hover:text-blue-600">
                     <Pencil size={18} />
                   </button>
-                  <button onClick={()=>axios.delete(`${SERVER_URL}/doctor/${doctor.doctorId}`) } className="text-gray-600 hover:text-red-600">
+                  <button onClick={() => handleDelete(doctor.doctorId)} className="text-gray-600 hover:text-red-600">
                     <Trash2 size={18} />
                   </button>
                   <Switch
-                    isChecked={doctor.isActive == true ? true :false}
+                    isChecked={doctor.isActive}
                     onChange={() => handleToggle(doctor.doctorId)}
                   />
                 </div>
