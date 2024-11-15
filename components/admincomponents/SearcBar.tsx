@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-
 import { CreateProfile } from '../createprofile/CreateProfile';
 
 export function SearchBar() {

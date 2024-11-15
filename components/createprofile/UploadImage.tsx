@@ -1,11 +1,12 @@
 'use client'
 
 import * as React from "react"
-import { UploadIcon } from "lucide-react"
+import { UploadIcon, XIcon } from 'lucide-react'
 import Image from "next/image"
+import { Button } from "@/components/ui/button"
 
 interface UploadImageProps {
-  onImageUpload: (file: File) => void;
+  onImageUpload: (file: File | null) => void;
 }
 
 export default function UploadImage({ onImageUpload }: UploadImageProps) {
@@ -47,6 +48,15 @@ export default function UploadImage({ onImageUpload }: UploadImageProps) {
     onImageUpload(file)
   }
 
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent triggering handleClick
+    setUploadedImage(null)
+    if (inputRef.current) {
+      inputRef.current.value = ''
+    }
+    onImageUpload(null)
+  }
+
   return (
     <div
       onClick={handleClick}
@@ -67,13 +77,24 @@ export default function UploadImage({ onImageUpload }: UploadImageProps) {
         accept="image/*"
       />
       {uploadedImage ? (
-        <Image
-          src={uploadedImage}
-          alt="Uploaded image"
-          fill
-          sizes="160px"
-          className="object-cover rounded-full"
-        />
+        <>
+          <Image
+            src={uploadedImage}
+            alt="Uploaded image"
+            fill
+            sizes="160px"
+            className="object-cover rounded-full"
+          />
+          <Button
+            variant="destructive"
+            size="icon"
+            className="absolute top-0 right-0 m-2 rounded-full"
+            onClick={handleDelete}
+            aria-label="Delete uploaded image"
+          >
+            <XIcon className="h-4 w-4" />
+          </Button>
+        </>
       ) : (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-background">
