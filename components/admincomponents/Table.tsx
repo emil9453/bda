@@ -7,6 +7,8 @@ import { Pencil, Trash2 } from 'lucide-react';
 import TableLoading from './TableLoading';
 import { SERVER_URL } from '../constants';
 import axios from 'axios';
+import { Toaster } from 'react-hot-toast';
+
 
 export default function DoctorTable() {
   const queryClient = useQueryClient();
@@ -57,7 +59,7 @@ export default function DoctorTable() {
   };
 
   return (
-    <div className="container max-w-full mx-auto py-10">
+    <><div className="container max-w-full mx-auto py-10">
       <table className="w-full ">
         <thead>
           <tr className="bg-[rgba(255,179,0,1)]">
@@ -88,14 +90,16 @@ export default function DoctorTable() {
                   </button>
                   <Switch
                     isChecked={doctor.isActive}
-                    onChange={() => handleToggle(doctor.doctorId)}
-                  />
+                    onChange={() => handleToggle(doctor.doctorId)} />
                 </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
     </div>
+    <Toaster position='top-center'/>
+    </>
   );
 }

@@ -142,8 +142,8 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   const doctorPhotoUrl = doctors.find(d => d.fullName === doctorFullName)?.photoUrl;
 
   return (
-    <article className="flex flex-col sm:flex-row items-start gap-4 w-full max-w-3xl min-w-80 mx-auto p-4 bg-white rounded-lg shadow-md mb-6">
-      <div className="w-full sm:w-auto flex justify-center sm:justify-start">
+    <article className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-3xl min-w-80 mx-auto p-4 bg-white rounded-lg shadow-md mb-6">
+      <div className="w-full sm:w-auto flex flex-col justify-center sm:justify-start">
         {doctorPhotoUrl ? (
           <img
             src={doctorPhotoUrl}
@@ -157,6 +157,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             <span className="text-gray-500 text-xl">No Image</span>
           </div>
         )}
+        <div><p className='text-sm mt-1 text-zinc-600'>{doctorFullName}</p></div>
       </div>
       <div className="flex flex-col items-start flex-grow">
         <div
