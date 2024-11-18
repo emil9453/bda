@@ -1,7 +1,3 @@
-
-
-
-
 'use client';
 import ReviewForm from '@/components/AddReview/ReviewForm';
 import { SERVER_URL } from '@/components/constants';
@@ -24,6 +20,19 @@ export default function DoctorProfile({ params }: PageProps) {
   const [activeTab, setActiveTab] = useState<'about' | 'reviews'>('about');
   const [activeClinic, setActiveClinic] = useState<number>(0);
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+
+  const weekDayMapping: { [key: string]: string } = {
+    'Sunday': 'Bazar',
+    'Monday': 'B.e',
+    'Tuesday': 'Ç.a',
+    'Wednesday': 'Ç',
+    'Thursday': 'C.a',
+    'Friday': 'C',
+    'Saturday': 'Şənbə'
+  }
+
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
 
   const ToggleReviewForm = () => {
     setIsReviewFormOpen(!isReviewFormOpen);
@@ -146,7 +155,7 @@ export default function DoctorProfile({ params }: PageProps) {
                         return <p className="text-sm">{formattedDate}</p>;
                       })()}
                     <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px]"></div>
-                    <p className="text-sm">{doctor.reviews[doctor.reviews.length - 1].fullName}</p>
+                    <p className="text-sm">{doctor.reviews[doctor.reviews.length - 1]?.fullName}</p>
                   </div>
                 </div>
               </div>
@@ -234,34 +243,24 @@ export default function DoctorProfile({ params }: PageProps) {
 
                   <h4 className="font-bold mb-2">İş günləri</h4>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2">
-                    <div className="bg-gray-100 p-2 rounded">
-                      <p className="font-bold">B.e</p>
-                      <p className="text-sm">18:00-17:00</p>
-                    </div>
-                    <div className="bg-gray-100 p-2 rounded">
-                      <p className="font-bold">Ç.a</p>
-                      <p className="text-sm">18:00-17:00</p>
-                    </div>
-                    <div className="bg-orange-400 text-white p-2 rounded">
-                      <p className="font-bold">Ç</p>
-                      <p className="text-sm">19:00-20:00</p>
-                    </div>
-                    <div className="bg-gray-100 p-2 rounded">
-                      <p className="font-bold">C.a</p>
-                      <p className="text-sm">18:00-17:00</p>
-                    </div>
-                    <div className="bg-orange-400 text-white p-2 rounded">
-                      <p className="font-bold">C</p>
-                      <p className="text-sm">19:00-20:00</p>
-                    </div>
-                    <div className="bg-orange-400 text-white p-2 rounded">
-                      <p className="font-bold">Şənbə</p>
-                      <p className="text-sm">19:00-20:00</p>
-                    </div>
-                    <div className="bg-orange-400 text-white p-2 rounded">
-                      <p className="font-bold">Bazar</p>
-                      <p className="text-sm">19:00-20:00</p>
-                    </div>
+                  {daysOfWeek.map((day) => {
+              const schedule = doctor.clinics[activeClinic]?.schedules.find(
+                (s: any) => s.weekDay.toLowerCase() === day.toLowerCase()
+              )
+              const isAvailable = !!schedule
+              const bgColor = isAvailable ? 'bg-orange-400 text-white' : 'bg-gray-100'
+
+              return (
+                <div key={day} className={`p-2 rounded ${bgColor}`}>
+                  <p className="font-bold">{weekDayMapping[day]}</p>
+                  {isAvailable ? (
+                    <p className="text-sm">{`${schedule.workingHoursFrom}-${schedule.workingHoursTo}`}</p>
+                  ) : (
+                    <p className="text-sm">İstirahət günü</p>
+                  )}
+                </div>
+              )
+            })}
                   </div>
                 </div>
               )}

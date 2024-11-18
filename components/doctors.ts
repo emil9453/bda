@@ -13,12 +13,14 @@ export type Doctors = {
 };
 
 export type Clinic ={
+schedules: any;
 clinicId: number;
 clinicName: string;
 location: string;
 contactDetails: string;
 city: string;
 distance: null;
+
 }
 
 export type Reviews= {
