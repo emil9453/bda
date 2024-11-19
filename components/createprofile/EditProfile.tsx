@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast'
 import toast from 'react-hot-toast'
 import { SERVER_URL } from '../constants'
 
+
 interface Schedule {
   weekDay: string
   workingHoursFrom: string
@@ -63,7 +64,11 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
           throw new Error('Failed to fetch doctor data')
         }
         const data = await response.json()
+        if (data.photoUrl) {
+            delete data.photoUrl;
+          }
         setProfileData(data)
+        console.log(data)
       } catch (error) {
         console.error('Error fetching doctor data:', error)
         toast.error('Failed to load doctor data')
@@ -72,6 +77,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
 
     fetchDoctorData()
   }, [doctorId])
+
+  console.log(profileData, "😀")
 
   const handleInputChange = (name: string, value: string) => {
     setProfileData(prev => ({ ...prev, [name]: value }))
@@ -146,23 +153,29 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
 
   const handleSubmit = async () => {
     const formData = new FormData()
-    formData.append('doctor', new Blob([JSON.stringify(profileData)], { type: 'application/json' }))
+    const doctorData = JSON.stringify(profileData,null,2)
+    formData.append('doctor', new Blob([doctorData], { type: 'application/json' }))
     
     if (photoFile) {
       formData.append('photo', photoFile)
     }
-  
+
+ 
+    if (photoFile) {
+      console.log('Photo file name:', photoFile.name)
+    }
+
     try {
       const response = await fetch(`${SERVER_URL}/doctor/${doctorId}`, {
         method: 'PUT',
         body: formData,
       })
-  
+
       if (!response.ok) {
         const errorText = await response.text()
         throw new Error(`Profile update failed: ${response.status} ${response.statusText} - ${errorText}`)
       }
-  
+
       const result = await response.json()
       console.log('Profile updated:', result)
       toast.success("Həkim profili uğurla yeniləndi")
@@ -171,6 +184,9 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
       console.error('Error updating profile:', error)
       toast.error("Profil yeniləmə xətası")
     }
+
+    console.log('Profile data being sent:', doctorData)
+   
   }
 
   return (

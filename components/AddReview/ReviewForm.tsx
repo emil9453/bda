@@ -13,6 +13,7 @@ import { SERVER_URL } from '../constants';
 interface ReviewFormProps {
   onSubmit: (formData: any) => void;
   doctorName?: string;
+  doctorId?: string,
   clinic?: string;
   specialty?: string;
   isPreFilled?: boolean;
@@ -28,6 +29,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   specialty = '',
   isPreFilled = false,
   setIsReviewFormOpen,
+  doctorId
 }) => {
   const validationSchema = Yup.object({
     fullName: Yup.string()
@@ -63,6 +65,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     },
     validationSchema,
     onSubmit: async values => {
+     const toastId = toast.loading("Gözləyin")
       try {
         const response = await axios.get(`${SERVER_URL}/doctor/all`, {
           params: {
@@ -71,10 +74,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           },
         });
         if (response.data.length > 0) {
-          const doctorId = response.data[0].doctorId;
+        
           console.log(`D👻😐😐 Doctor id: ${doctorId}`);
           await axios.post(
-            `${SERVER_URL}/review/reviews?fullName=${values.doctorName}&clinicName=${values.clinic}%20Clinic&speciality=${values.specialty}`,
+            `${SERVER_URL}/review?id=${doctorId}`,
             {
               fullName: values.fullName,
               comment: values.reviewText,
@@ -82,19 +85,17 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               parentReviewId: 0,
             },
           );
+          alert(doctorId)
           toast.success('Review uğurla gönderildi!');
           setIsReviewFormOpen(false);
+          toast.dismiss(toastId);
         }
 
-        // else {
-        //   await axios.post(`/api/admin/notifications`, {
-        //     message: `Yeni hekim profili yaratmaq lazimdir: ${values.doctorName}, İxtisas: ${values.specialty}`
-        //   })
-        //   alert("hekim tapilmadi, admine bildiris gonderildi.")
-        // }
+       
       } catch (error) {
         console.error('Xeta Bas verdi:', error);
-        alert('Xeta Bas verdi.');
+        toast.error('Xeta Bas verdi.');
+        toast.dismiss(toastId);
       }
       onSubmit(values);
     },

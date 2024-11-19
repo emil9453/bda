@@ -83,6 +83,7 @@ export default function DoctorProfile({ params }: PageProps) {
           specialty={doctor.speciality}
           setIsReviewFormOpen={setIsReviewFormOpen}
           fullname={''}
+          doctorId={doctor.doctorId}
           clinic={doctor.clinics.map(c=>c.clinicName).join("/")}
           reviewtext={''}
         />
@@ -136,7 +137,7 @@ export default function DoctorProfile({ params }: PageProps) {
                   <p className="text-lg sm:text-xl font-semibold leading-tight sm:leading-9 text-left">
                     {`"${
                       doctor.reviews.length > 0
-                        ? doctor.reviews[doctor.reviews.length - 1].comment
+                        ? doctor.reviews.filter(r=>r.status === "APPROVED").at(-1)?.comment
                         : ''
                     }"`}
                   </p>
@@ -216,7 +217,7 @@ export default function DoctorProfile({ params }: PageProps) {
                 {doctor.clinics?.map((clinic, index) => (
                   <button
                     key={index}
-                    className={`py-2 w-full sm:w-[174px] h-[40px] px-4 rounded ${
+                    className={`py-2 w-full sm:w-[174px]  px-4 rounded ${
                       activeClinic === index ? 'bg-orange-400 text-white' : 'bg-gray-200'
                     }`}
                     onClick={() => setActiveClinic(index)}
