@@ -3,6 +3,12 @@
 import { useState } from 'react'
 import Switch from '../admincomponents/togglebutton'
 import { Pencil, Trash2 } from 'lucide-react'
+import { Toaster } from 'react-hot-toast';
+import axios from 'axios';
+import { SERVER_URL } from '../constants';
+
+const response = await axios.get(`${SERVER_URL}/doctor/specialties`);
+const specialities = response.data;
 
 interface DictionaryItem {
   id: number
@@ -40,9 +46,9 @@ export default function DictionaryTable() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
+            {specialities.map((item) => (
               <tr key={item.id}>
-                <td className="border-none text-center p-2">{item.name}</td>
+                <td className="border-none text-center p-2">{item}</td>
                 <td className="border-none text-center p-2">
                   <div className="flex items-center justify-center space-x-4">
                     <button className="text-gray-600 hover:text-blue-600">
@@ -65,6 +71,7 @@ export default function DictionaryTable() {
           </tbody>
         </table>
       </div>
+      <Toaster position='top-center'/>
     </section>
   )
 }
