@@ -22,17 +22,16 @@ export default function DoctorProfile({ params }: PageProps) {
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
 
   const weekDayMapping: { [key: string]: string } = {
-    'Sunday': 'Bazar',
-    'Monday': 'B.e',
-    'Tuesday': 'Ç.a',
-    'Wednesday': 'Ç',
-    'Thursday': 'C.a',
-    'Friday': 'C',
-    'Saturday': 'Şənbə'
-  }
+    Sunday: 'Bazar',
+    Monday: 'B.e',
+    Tuesday: 'Ç.a',
+    Wednesday: 'Ç',
+    Thursday: 'C.a',
+    Friday: 'C',
+    Saturday: 'Şənbə',
+  };
 
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   const ToggleReviewForm = () => {
     setIsReviewFormOpen(!isReviewFormOpen);
@@ -84,7 +83,7 @@ export default function DoctorProfile({ params }: PageProps) {
           setIsReviewFormOpen={setIsReviewFormOpen}
           fullname={''}
           doctorId={doctor.doctorId}
-          clinic={doctor.clinics.map(c=>c.clinicName).join("/")}
+          clinic={doctor.clinics.map(c => c.clinicName).join('/')}
           reviewtext={''}
         />
       </div>
@@ -94,11 +93,18 @@ export default function DoctorProfile({ params }: PageProps) {
           <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
             <div className="lg:w-3/5">
               <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
-                <img
-                  src={doctor.photoUrl}
-                  alt={doctor.fullName}
-                  className="w-full sm:w-[150px] h-[150px] rounded-sm object-cover"
-                />
+                {doctor.photoUrl ? (
+                  <img
+                    loading="lazy"
+                    src={doctor.photoUrl}
+                    alt={`Portrait of Dr. ${doctor.fullName}`}
+                    className="object-cover z-0 shrink-0 self-stretch  h-[150px] rounded-[8px]  w-[150px]"
+                  />
+                ) : (
+                  <div className="w-24 h-24 sm:w-[100px] sm:h-[100px] bg-gray-200 rounded-full flex items-center justify-center">
+                    <span className="text-gray-500 text-xl">No Image</span>
+                  </div>
+                )}
                 <div className="flex-grow">
                   <div className="flex flex-col sm:flex-row sm:items-end justify-between">
                     <h2 className="font-bold font-publicSans text-xl sm:text-2xl leading-tight mb-2 sm:mb-0">
@@ -135,29 +141,54 @@ export default function DoctorProfile({ params }: PageProps) {
                 <div className="hidden sm:block h-[105px] w-[2px] gap-0 border-t border-gray-500 bg-[#959595]"></div>
                 <div className="flex flex-col">
                   <p className="text-lg sm:text-xl font-semibold leading-tight sm:leading-9 text-left">
-                    {`"${
-                      doctor.reviews.length > 0
-                        ? doctor.reviews.filter(r=>r.status === "APPROVED").at(-1)?.comment
-                        : ''
-                    }"`}
+                    
+                    {doctor.reviews.length > 0
+                      ? doctor.reviews.filter(r => r.status === 'APPROVED').at(-1)?.comment || ''
+                      : ''}
+                    
                   </p>
                   <div className="flex items-center gap-2 mt-2">
-                    {doctor.reviews.length > 0 &&
-                      (() => {
-                        const lastReview = doctor.reviews[doctor.reviews.length - 1];
-                        const date = new Date(lastReview.reviewDate);
-                        const months = [
-                          'Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'İyun',
-                          'İyul', 'Avqust', 'Sentyabr', 'Oktyabr', 'Noyabr', 'Dekabr'
-                        ];
-                        const formattedDate = `${date.getDate()} ${
-                          months[date.getMonth()]
-                        } ${date.getFullYear()}`;
-                        return <p className="text-sm">{formattedDate}</p>;
-                      })()}
-                    <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px]"></div>
-                    <p className="text-sm">{doctor.reviews[doctor.reviews.length - 1]?.fullName}</p>
-                  </div>
+  {doctor.reviews.length > 0 &&
+    (() => {
+      const approvedReviews = doctor.reviews.filter(r => r.status === "APPROVED");
+      if (approvedReviews.length === 0) return null;
+
+      const lastReview = approvedReviews[approvedReviews.length - 1];
+      const date = new Date(lastReview.reviewDate);
+      const months = [
+        'Yanvar',
+        'Fevral',
+        'Mart',
+        'Aprel',
+        'May',
+        'İyun',
+        'İyul',
+        'Avqust',
+        'Sentyabr',
+        'Oktyabr',
+        'Noyabr',
+        'Dekabr',
+      ];
+      const formattedDate = `${date.getDate()} ${
+        months[date.getMonth()]
+      } ${date.getFullYear()}`;
+
+      return <p className="text-sm">{formattedDate}</p>;
+    })()}
+  {doctor.reviews.some(r => r.status === "APPROVED") && (
+    <>
+      <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px]"></div>
+      <p className="text-sm">
+        {
+          doctor.reviews
+            .filter(r => r.status === "APPROVED")
+            .at(-1)?.fullName
+        }
+      </p>
+    </>
+  )}
+</div>
+
                 </div>
               </div>
 
@@ -211,7 +242,7 @@ export default function DoctorProfile({ params }: PageProps) {
               )}
             </div>
 
-            <div className="lg:w-2/5 border w-full lg:w-[460px] h-auto lg:h-[694px] p-4 lg:p-[45px] border-[#FFB300]">
+            <div className=" border w-full lg:w-[460px] h-auto lg:h-[694px] p-4 lg:p-[45px] border-[#FFB300]">
               <h3 className="font-bold mb-2">Klinikalar</h3>
               <div className="flex flex-wrap gap-2 mb-4">
                 {doctor.clinics?.map((clinic, index) => (
@@ -244,24 +275,24 @@ export default function DoctorProfile({ params }: PageProps) {
 
                   <h4 className="font-bold mb-2">İş günləri</h4>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2">
-                  {daysOfWeek.map((day) => {
-              const schedule = doctor.clinics[activeClinic]?.schedules.find(
-                (s: any) => s.weekDay.toLowerCase() === day.toLowerCase()
-              )
-              const isAvailable = !!schedule
-              const bgColor = isAvailable ? 'bg-orange-400 text-white' : 'bg-gray-100'
+                    {daysOfWeek.map(day => {
+                      const schedule = doctor.clinics[activeClinic]?.schedules.find(
+                        (s: any) => s.weekDay.toLowerCase() === day.toLowerCase(),
+                      );
+                      const isAvailable = !!schedule;
+                      const bgColor = isAvailable ? 'bg-orange-400 text-white' : 'bg-gray-100';
 
-              return (
-                <div key={day} className={`p-2 rounded ${bgColor}`}>
-                  <p className="font-bold">{weekDayMapping[day]}</p>
-                  {isAvailable ? (
-                    <p className="text-sm">{`${schedule.workingHoursFrom}-${schedule.workingHoursTo}`}</p>
-                  ) : (
-                    <p className="text-sm">İstirahət günü</p>
-                  )}
-                </div>
-              )
-            })}
+                      return (
+                        <div key={day} className={`p-2 rounded ${bgColor}`}>
+                          <p className="font-bold">{weekDayMapping[day]}</p>
+                          {isAvailable ? (
+                            <p className="text-sm">{`${schedule.workingHoursFrom}-${schedule.workingHoursTo}`}</p>
+                          ) : (
+                            <p className="text-sm">İstirahət günü</p>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
