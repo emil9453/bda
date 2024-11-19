@@ -170,7 +170,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
         method: 'PUT',
         body: formData,
       })
-
+      toast.success("Həkim profili uğurla yeniləndi")
+      onClose()
       if (!response.ok) {
         const errorText = await response.text()
         throw new Error(`Profile update failed: ${response.status} ${response.statusText} - ${errorText}`)
@@ -179,10 +180,10 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
       const result = await response.json()
       console.log('Profile updated:', result)
       toast.success("Həkim profili uğurla yeniləndi")
-      onClose()
+      
     } catch (error) {
       console.error('Error updating profile:', error)
-      toast.error("Profil yeniləmə xətası")
+      
     }
 
     console.log('Profile data being sent:', doctorData)
