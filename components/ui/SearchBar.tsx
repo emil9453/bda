@@ -330,6 +330,7 @@ const SearchBar: React.FC<{
       }
       const fetchedArray = await response.json();
       setClinics(prevState => ({ ...prevState, list: fetchedArray }));
+      console.log("😀", clinics)
     } catch (error) {
       console.error('Error fetching clinics', error);
     }

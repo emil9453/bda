@@ -49,7 +49,7 @@ export default function UploadImage({ onImageUpload }: UploadImageProps) {
   }
 
   const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation() // Prevent triggering handleClick
+    e.stopPropagation() 
     setUploadedImage(null)
     if (inputRef.current) {
       inputRef.current.value = ''
