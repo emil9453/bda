@@ -1,8 +1,7 @@
-
 'use client';
 
 import * as React from 'react';
-import "react-datepicker/dist/react-datepicker-cssmodules.css";
+import 'react-datepicker/dist/react-datepicker.css';
 import { SERVER_URL } from '../constants';
 import { InputField } from './inputField';
 import { TextArea } from './TextArea';
@@ -10,6 +9,7 @@ import UploadImage from './UploadImage';
 import { PlusCircle, X } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
 import toast from 'react-hot-toast';
+import { ContentEditableField } from './ContentEditable';
 
 interface Schedule {
   weekDay: string;
@@ -20,7 +20,6 @@ interface Schedule {
 interface Reviews {
   fullName: string;
   rating: number;
-
 }
 
 interface Clinic {
@@ -37,28 +36,26 @@ interface ProfileData {
   serviceDescription: string;
   clinics: Clinic[];
   reviews: Reviews[];
- 
 }
 
 const daysOfWeek = ['Ba.E', 'Ç.A', 'Ç', 'C.A', 'Cüm.', 'Şən.', 'Baz.'];
 const dayMapping: { [key: string]: string } = {
   'Ba.E': 'Monday',
   'Ç.A': 'Tuesday',
-  'Ç': 'Wednesday',
+  Ç: 'Wednesday',
   'C.A': 'Thursday',
   'Cüm.': 'Friday',
   'Şən.': 'Saturday',
-  'Baz.': 'Sunday'
+  'Baz.': 'Sunday',
 };
 
 export const CreateProfile: React.FC = () => {
   const [profileData, setProfileData] = React.useState<ProfileData>({
-    fullName: "",
-    speciality: "",
-    serviceDescription: "",
+    fullName: '',
+    speciality: '',
+    serviceDescription: '',
     clinics: [],
     reviews: [],
-   
   });
   const [photoFile, setPhotoFile] = React.useState<File | null>(null);
 
@@ -73,20 +70,23 @@ export const CreateProfile: React.FC = () => {
   const addClinic = () => {
     setProfileData(prev => ({
       ...prev,
-      clinics: [...prev.clinics, {
-        clinicName: '',
-        location: '',
-        contactDetails: '',
-        city: '',
-        schedules: []
-      }]
+      clinics: [
+        ...prev.clinics,
+        {
+          clinicName: '',
+          location: '',
+          contactDetails: '',
+          city: '',
+          schedules: [],
+        },
+      ],
     }));
   };
 
   const removeClinic = (index: number) => {
     setProfileData(prev => ({
       ...prev,
-      clinics: prev.clinics.filter((_, i) => i !== index)
+      clinics: prev.clinics.filter((_, i) => i !== index),
     }));
   };
 
@@ -94,8 +94,8 @@ export const CreateProfile: React.FC = () => {
     setProfileData(prev => ({
       ...prev,
       clinics: prev.clinics.map((clinic, i) =>
-        i === index ? { ...clinic, [field]: value } : clinic
-      )
+        i === index ? { ...clinic, [field]: value } : clinic,
+      ),
     }));
   };
 
@@ -108,14 +108,26 @@ export const CreateProfile: React.FC = () => {
               ...clinic,
               schedules: clinic.schedules.some(s => s.weekDay === dayMapping[day])
                 ? clinic.schedules.filter(s => s.weekDay !== dayMapping[day])
-                : [...clinic.schedules, { weekDay: dayMapping[day], workingHoursFrom: '09:00', workingHoursTo: '17:00' }]
+                : [
+                    ...clinic.schedules,
+                    {
+                      weekDay: dayMapping[day],
+                      workingHoursFrom: '09:00',
+                      workingHoursTo: '17:00',
+                    },
+                  ],
             }
-          : clinic
-      )
+          : clinic,
+      ),
     }));
   };
 
-  const updateWorkHours = (clinicIndex: number, day: string, field: 'workingHoursFrom' | 'workingHoursTo', value: string) => {
+  const updateWorkHours = (
+    clinicIndex: number,
+    day: string,
+    field: 'workingHoursFrom' | 'workingHoursTo',
+    value: string,
+  ) => {
     setProfileData(prev => ({
       ...prev,
       clinics: prev.clinics.map((clinic, i) =>
@@ -123,13 +135,11 @@ export const CreateProfile: React.FC = () => {
           ? {
               ...clinic,
               schedules: clinic.schedules.map(schedule =>
-                schedule.weekDay === dayMapping[day]
-                  ? { ...schedule, [field]: value }
-                  : schedule
-              )
+                schedule.weekDay === dayMapping[day] ? { ...schedule, [field]: value } : schedule,
+              ),
             }
-          : clinic
-      )
+          : clinic,
+      ),
     }));
   };
 
@@ -139,52 +149,51 @@ export const CreateProfile: React.FC = () => {
       speciality: profileData.speciality,
       serviceDescription: profileData.serviceDescription,
       clinics: profileData.clinics.map(clinic => ({
-      
         clinicName: clinic.clinicName,
         location: clinic.location,
         contactDetails: clinic.contactDetails,
         city: clinic.city,
         schedules: clinic.schedules.map(schedule => ({
-        weekDay: schedule.weekDay,
-        workingHoursFrom: schedule.workingHoursFrom,
-        workingHoursTo: schedule.workingHoursTo,
-      
-      
-        }))
+          weekDay: schedule.weekDay,
+          workingHoursFrom: schedule.workingHoursFrom,
+          workingHoursTo: schedule.workingHoursTo,
+        })),
       })),
       reviews: profileData.reviews,
-     
     };
-  
+
     const formData = new FormData();
     formData.append('doctor', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
-    
+
     if (photoFile) {
       formData.append('photo', photoFile);
     }
-  
+
+    console.log('Submitting profile:', payload);
+
     try {
       const response = await fetch(`${SERVER_URL}/doctor`, {
         method: 'POST',
         body: formData,
       });
-  
+
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`Profile creation failed: ${response.status} ${response.statusText} - ${errorText}`);
+        throw new Error(
+          `Profile creation failed: ${response.status} ${response.statusText} - ${errorText}`,
+        );
       }
-  
+
       const result = await response.json();
       console.log('Profile created:', result);
     } catch (error) {
       console.error('Error creating profile:', error);
     }
-    toast.success("Həkim profili uğurla yaradıldı")
-  
+    toast.success('Həkim profili uğurla yaradıldı');
+
     // For debugging purposes
     console.log(JSON.stringify(payload, null, 2));
   };
-  
 
   return (
     <main className="flex overflow-hidden flex-col px-5 py-5 text-base bg-white max-w-[824px] max-md:px-5 max-md:py-24">
@@ -211,106 +220,113 @@ export const CreateProfile: React.FC = () => {
         value={profileData.serviceDescription}
         onChange={value => handleInputChange('serviceDescription', value)}
       />
-<div className="mb-6">
-  <h2 className="text-lg font-semibold mb-2">Klinikalar</h2>
-  {profileData.clinics.map((clinic, index) => (
-    <div key={index} className="mb-4 p-4 border border-gray-300 rounded-md">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex flex-grow flex-col mr-2">
-          <InputField
-            label="Klinika adı*"
-            value={clinic.clinicName}
-            onChange={value => updateClinic(index, 'clinicName', value)}
-          />
-        </div>
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-2">Klinikalar</h2>
+        {profileData.clinics.map((clinic, index) => (
+          <div key={index} className="mb-4 p-4 border border-gray-300 rounded-md">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-grow flex-col mr-2">
+                <InputField
+                  label="Klinika adı*"
+                  value={clinic.clinicName}
+                  onChange={value => updateClinic(index, 'clinicName', value)}
+                />
+              </div>
+              <button
+                onClick={() => removeClinic(index)}
+                className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 flex-shrink-0"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div className="flex flex-col">
+                <InputField
+                  label="Məkan*"
+                  value={clinic.location}
+                  onChange={value => updateClinic(index, 'location', value)}
+                />
+              </div>
+              <div className="flex flex-col">
+                <ContentEditableField
+                  label="Əlaqə məlumatları*"
+                  defaultValue=" 📞 Tel: 
+  ✉️ Email: 
+ 📱 Mobil:"
+                  value={clinic.contactDetails}
+                  onChange={value => updateClinic(index, 'contactDetails', value)}
+                />
+              </div>
+              <div className="flex flex-col mb-2">
+                <InputField
+                  label="Şəhər*"
+                  value={clinic.city}
+                  onChange={value => updateClinic(index, 'city', value)}
+                />
+              </div>
+            </div>
+            <div className="mb-4 mt-2">
+              <h3 className="text-sm font-medium mb-2">İş günləri və saatları</h3>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
+                {daysOfWeek.map(day => {
+                  const schedule = clinic.schedules.find(s => s.weekDay === dayMapping[day]);
+                  return (
+                    <div
+                      key={day}
+                      className={`p-2 rounded-md ${
+                        schedule ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700'
+                      } transition-colors`}
+                    >
+                      <div
+                        className="text-center font-medium cursor-pointer"
+                        onClick={() => toggleWorkDay(index, day)}
+                      >
+                        {day}
+                      </div>
+                      {schedule && (
+                        <div className="mt-2 text-xs">
+                          <select
+                            value={schedule.workingHoursFrom}
+                            onChange={e =>
+                              updateWorkHours(index, day, 'workingHoursFrom', e.target.value)
+                            }
+                            className="w-full px-1 py-1 border border-gray-300 rounded-md"
+                          >
+                            {Array.from({ length: 24 }, (_, i) => i).map(hour => (
+                              <option key={hour} value={`${hour.toString().padStart(2, '0')}:00`}>
+                                {`${hour.toString().padStart(2, '0')}:00`}
+                              </option>
+                            ))}
+                          </select>
+                          <select
+                            value={schedule.workingHoursTo}
+                            onChange={e =>
+                              updateWorkHours(index, day, 'workingHoursTo', e.target.value)
+                            }
+                            className="w-full px-1 py-1 border border-gray-300 rounded-md mt-1"
+                          >
+                            {Array.from({ length: 24 }, (_, i) => i).map(hour => (
+                              <option key={hour} value={`${hour.toString().padStart(2, '0')}:00`}>
+                                {`${hour.toString().padStart(2, '0')}:00`}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        ))}
         <button
-          onClick={() => removeClinic(index)}
-          className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 flex-shrink-0"
+          onClick={addClinic}
+          className="w-full py-2 px-4 bg-[rgba(252,151,54,1)] text-white rounded-md hover:bg-[rgba(252,151,54,0.8)] transition-colors flex items-center justify-center"
         >
-          <X className="h-4 w-4" />
+          <PlusCircle className="mr-2 h-4 w-4" /> Yeni klinika əlavə et
         </button>
       </div>
-      <div className="space-y-4">
-       <div className='flex flex-col'>
-       <InputField
-          label="Məkan*"
-          value={clinic.location}
-          onChange={value => updateClinic(index, 'location', value)}
-        />
-       </div>
-     <div className='flex flex-col'>
-     <InputField
-          label="Əlaqə məlumatları*"
-          value={clinic.contactDetails}
-          onChange={value => updateClinic(index, 'contactDetails', value)}
-        />
-     </div>
-           <div className='flex flex-col mb-2'>
-           <InputField
-          label="Şəhər*"
-          value={clinic.city}
-          onChange={value => updateClinic(index, 'city', value)}
-        />
-           </div>
-      </div>
-      <div className="mb-4 mt-2">
-        <h3 className="text-sm font-medium mb-2">İş günləri və saatları</h3>
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
-          {daysOfWeek.map(day => {
-            const schedule = clinic.schedules.find(s => s.weekDay === dayMapping[day]);
-            return (
-              <div
-                key={day}
-                className={`p-2 rounded-md ${
-                  schedule ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700'
-                } transition-colors`}
-              >
-                <div
-                  className="text-center font-medium cursor-pointer"
-                  onClick={() => toggleWorkDay(index, day)}
-                >
-                  {day}
-                </div>
-                {schedule && (
-                  <div className="mt-2 text-xs">
-                    <select
-                      value={schedule.workingHoursFrom}
-                      onChange={e => updateWorkHours(index, day, 'workingHoursFrom', e.target.value)}
-                      className="w-full px-1 py-1 border border-gray-300 rounded-md"
-                    >
-                      {Array.from({ length: 24 }, (_, i) => i).map(hour => (
-                        <option key={hour} value={`${hour.toString().padStart(2, '0')}:00`}>
-                          {`${hour.toString().padStart(2, '0')}:00`}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      value={schedule.workingHoursTo}
-                      onChange={e => updateWorkHours(index, day, 'workingHoursTo', e.target.value)}
-                      className="w-full px-1 py-1 border border-gray-300 rounded-md mt-1"
-                    >
-                      {Array.from({ length: 24 }, (_, i) => i).map(hour => (
-                        <option key={hour} value={`${hour.toString().padStart(2, '0')}:00`}>
-                          {`${hour.toString().padStart(2, '0')}:00`}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  ))}
-  <button
-    onClick={addClinic}
-    className="w-full py-2 px-4 bg-[rgba(252,151,54,1)] text-white rounded-md hover:bg-[rgba(252,151,54,0.8)] transition-colors flex items-center justify-center"
-  >
-    <PlusCircle className="mr-2 h-4 w-4" /> Yeni klinika əlavə et
-  </button>
-</div>
 
       <button
         className="h-[52px] px-[121px] py-[17px] rounded-[6px] my-4 w-full mx-auto bg-[rgba(252,151,54,1)] hover:bg-[rgba(252,151,54,0.8)]"
@@ -320,8 +336,5 @@ export const CreateProfile: React.FC = () => {
       </button>
       <Toaster position="top-center" />
     </main>
-    
-    
   );
-
 };

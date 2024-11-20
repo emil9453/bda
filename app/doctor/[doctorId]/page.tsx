@@ -4,7 +4,7 @@ import { SERVER_URL } from '@/components/constants';
 import { Doctors } from '@/components/doctors';
 import location from '@/public/location/gridicons_location.png';
 import stars from '@/public/stars/stars.png';
-import { Mail, MapPin, Phone, Star } from 'lucide-react';
+import { MapPin, Star } from 'lucide-react';
 import Image from 'next/image';
 import { use, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -141,54 +141,47 @@ export default function DoctorProfile({ params }: PageProps) {
                 <div className="hidden sm:block h-[105px] w-[2px] gap-0 border-t border-gray-500 bg-[#959595]"></div>
                 <div className="flex flex-col">
                   <p className="text-lg sm:text-xl font-semibold leading-tight sm:leading-9 text-left">
-                    
                     {doctor.reviews.length > 0
                       ? doctor.reviews.filter(r => r.status === 'APPROVED').at(-1)?.comment || ''
                       : ''}
-                    
                   </p>
                   <div className="flex items-center gap-2 mt-2">
-  {doctor.reviews.length > 0 &&
-    (() => {
-      const approvedReviews = doctor.reviews.filter(r => r.status === "APPROVED");
-      if (approvedReviews.length === 0) return null;
+                    {doctor.reviews.length > 0 &&
+                      (() => {
+                        const approvedReviews = doctor.reviews.filter(r => r.status === 'APPROVED');
+                        if (approvedReviews.length === 0) return null;
 
-      const lastReview = approvedReviews[approvedReviews.length - 1];
-      const date = new Date(lastReview.reviewDate);
-      const months = [
-        'Yanvar',
-        'Fevral',
-        'Mart',
-        'Aprel',
-        'May',
-        'İyun',
-        'İyul',
-        'Avqust',
-        'Sentyabr',
-        'Oktyabr',
-        'Noyabr',
-        'Dekabr',
-      ];
-      const formattedDate = `${date.getDate()} ${
-        months[date.getMonth()]
-      } ${date.getFullYear()}`;
+                        const lastReview = approvedReviews[approvedReviews.length - 1];
+                        const date = new Date(lastReview.reviewDate);
+                        const months = [
+                          'Yanvar',
+                          'Fevral',
+                          'Mart',
+                          'Aprel',
+                          'May',
+                          'İyun',
+                          'İyul',
+                          'Avqust',
+                          'Sentyabr',
+                          'Oktyabr',
+                          'Noyabr',
+                          'Dekabr',
+                        ];
+                        const formattedDate = `${date.getDate()} ${
+                          months[date.getMonth()]
+                        } ${date.getFullYear()}`;
 
-      return <p className="text-sm">{formattedDate}</p>;
-    })()}
-  {doctor.reviews.some(r => r.status === "APPROVED") && (
-    <>
-      <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px]"></div>
-      <p className="text-sm">
-        {
-          doctor.reviews
-            .filter(r => r.status === "APPROVED")
-            .at(-1)?.fullName
-        }
-      </p>
-    </>
-  )}
-</div>
-
+                        return <p className="text-sm">{formattedDate}</p>;
+                      })()}
+                    {doctor.reviews.some(r => r.status === 'APPROVED') && (
+                      <>
+                        <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px]"></div>
+                        <p className="text-sm">
+                          {doctor.reviews.filter(r => r.status === 'APPROVED').at(-1)?.fullName}
+                        </p>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -264,13 +257,13 @@ export default function DoctorProfile({ params }: PageProps) {
                     <p className="flex items-center mb-2">
                       <MapPin className="w-4 h-4 mr-2" /> {doctor.clinics[activeClinic]?.city}
                     </p>
-                    <p className="flex items-center mb-2">
-                      <Phone className="w-4 h-4 mr-2" />{' '}
-                      {doctor.clinics[activeClinic]?.contactDetails}
-                    </p>
-                    <p className="flex items-center mb-4">
-                      <Mail className="w-4 h-4 mr-2" /> bmpbabek@bmp.az
-                    </p>
+                    {doctor.clinics[activeClinic]?.contactDetails
+                      ?.split('\n')
+                      .map((line, index) => (
+                        <p key={index} className="flex items-center mb-2">
+                          {line}
+                        </p>
+                      ))}
                   </div>
 
                   <h4 className="font-bold mb-2">İş günləri</h4>
