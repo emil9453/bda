@@ -1,121 +1,124 @@
-'use client'
+'use client';
 
-import * as React from 'react'
-import { InputField } from './inputField'
-import { TextArea } from './TextArea'
-import UploadImage from './UploadImage'
-import { PlusCircle, X } from 'lucide-react'
-import { Toaster } from 'react-hot-toast'
-import toast from 'react-hot-toast'
-import { SERVER_URL } from '../constants'
-
+import * as React from 'react';
+import { InputField } from './inputField';
+import { TextArea } from './TextArea';
+import UploadImage from './UploadImage';
+import { PlusCircle, X } from 'lucide-react';
+import { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
+import { SERVER_URL } from '../constants';
+import { ContentEditableField } from './ContentEditable';
 
 interface Schedule {
-  weekDay: string
-  workingHoursFrom: string
-  workingHoursTo: string
+  weekDay: string;
+  workingHoursFrom: string;
+  workingHoursTo: string;
 }
 
 interface Clinic {
-  clinicName: string
-  location: string
-  contactDetails: string
-  city: string
-  schedules: Schedule[]
+  clinicName: string;
+  location: string;
+  contactDetails: string;
+  city: string;
+  schedules: Schedule[];
 }
 
 interface ProfileData {
-  fullName: string
-  speciality: string
-  serviceDescription: string
-  clinics: Clinic[]
+  fullName: string;
+  speciality: string;
+  serviceDescription: string;
+  clinics: Clinic[];
 }
 
-const daysOfWeek = ['Ba.E', 'Ç.A', 'Ç', 'C.A', 'Cüm.', 'Şən.', 'Baz.']
+const daysOfWeek = ['Ba.E', 'Ç.A', 'Ç', 'C.A', 'Cüm.', 'Şən.', 'Baz.'];
 const dayMapping: { [key: string]: string } = {
   'Ba.E': 'Monday',
   'Ç.A': 'Tuesday',
-  'Ç': 'Wednesday',
+  Ç: 'Wednesday',
   'C.A': 'Thursday',
   'Cüm.': 'Friday',
   'Şən.': 'Saturday',
-  'Baz.': 'Sunday'
-}
+  'Baz.': 'Sunday',
+};
 
 interface EditProfileProps {
-  doctorId: number
-  onClose: () => void
+  doctorId: number;
+  onClose: () => void;
 }
 
 export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) => {
   const [profileData, setProfileData] = React.useState<ProfileData>({
-    fullName: "",
-    speciality: "",
-    serviceDescription: "",
+    fullName: '',
+    speciality: '',
+    serviceDescription: '',
     clinics: [],
-  })
-  const [photoFile, setPhotoFile] = React.useState<File | null>(null)
+  });
+  const [photoFile, setPhotoFile] = React.useState<File | null>(null);
 
   React.useEffect(() => {
     const fetchDoctorData = async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/doctor/${doctorId}`)
+        const response = await fetch(`${SERVER_URL}/doctor/${doctorId}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch doctor data')
+          throw new Error('Failed to fetch doctor data');
         }
-        const data = await response.json()
+        const data = await response.json();
         if (data.photoUrl) {
-            delete data.photoUrl;
-          }
-        setProfileData(data)
-        console.log(data)
+          delete data.photoUrl;
+        }
+        setProfileData(data);
+        console.log(data);
       } catch (error) {
-        console.error('Error fetching doctor data:', error)
-        toast.error('Failed to load doctor data')
+        console.error('Error fetching doctor data:', error);
+        toast.error('Failed to load doctor data');
       }
-    }
+    };
 
-    fetchDoctorData()
-  }, [doctorId])
+    fetchDoctorData();
+  }, [doctorId]);
 
-  console.log(profileData, "😀")
+  console.log(profileData, '😀');
 
   const handleInputChange = (name: string, value: string) => {
-    setProfileData(prev => ({ ...prev, [name]: value }))
-  }
+    setProfileData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleImageUpload = (file: File | null) => {
-    setPhotoFile(file)
-  }
+    setPhotoFile(file);
+  };
 
   const addClinic = () => {
     setProfileData(prev => ({
       ...prev,
-      clinics: [...prev.clinics, {
-        clinicName: '',
-        location: '',
-        contactDetails: '',
-        city: '',
-        schedules: []
-      }]
-    }))
-  }
+      clinics: [
+        ...prev.clinics,
+        {
+          clinicName: '',
+          location: '',
+          contactDetails: '',
+          city: '',
+          schedules: [],
+        },
+      ],
+    }));
+  };
 
   const removeClinic = (index: number) => {
     setProfileData(prev => ({
       ...prev,
-      clinics: prev.clinics.filter((_, i) => i !== index)
-    }))
-  }
+      clinics: prev.clinics.filter((_, i) => i !== index),
+    }));
+  };
 
   const updateClinic = (index: number, field: keyof Clinic, value: string) => {
     setProfileData(prev => ({
       ...prev,
       clinics: prev.clinics.map((clinic, i) =>
-        i === index ? { ...clinic, [field]: value } : clinic
-      )
-    }))
-  }
+        i === index ? { ...clinic, [field]: value } : clinic,
+      ),
+    }));
+  };
 
   const toggleWorkDay = (clinicIndex: number, day: string) => {
     setProfileData(prev => ({
@@ -126,14 +129,26 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
               ...clinic,
               schedules: clinic.schedules.some(s => s.weekDay === dayMapping[day])
                 ? clinic.schedules.filter(s => s.weekDay !== dayMapping[day])
-                : [...clinic.schedules, { weekDay: dayMapping[day], workingHoursFrom: '09:00', workingHoursTo: '17:00' }]
+                : [
+                    ...clinic.schedules,
+                    {
+                      weekDay: dayMapping[day],
+                      workingHoursFrom: '09:00',
+                      workingHoursTo: '17:00',
+                    },
+                  ],
             }
-          : clinic
-      )
-    }))
-  }
+          : clinic,
+      ),
+    }));
+  };
 
-  const updateWorkHours = (clinicIndex: number, day: string, field: 'workingHoursFrom' | 'workingHoursTo', value: string) => {
+  const updateWorkHours = (
+    clinicIndex: number,
+    day: string,
+    field: 'workingHoursFrom' | 'workingHoursTo',
+    value: string,
+  ) => {
     setProfileData(prev => ({
       ...prev,
       clinics: prev.clinics.map((clinic, i) =>
@@ -141,54 +156,50 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
           ? {
               ...clinic,
               schedules: clinic.schedules.map(schedule =>
-                schedule.weekDay === dayMapping[day]
-                  ? { ...schedule, [field]: value }
-                  : schedule
-              )
+                schedule.weekDay === dayMapping[day] ? { ...schedule, [field]: value } : schedule,
+              ),
             }
-          : clinic
-      )
-    }))
-  }
+          : clinic,
+      ),
+    }));
+  };
 
   const handleSubmit = async () => {
-    const formData = new FormData()
-    const doctorData = JSON.stringify(profileData,null,2)
-    formData.append('doctor', new Blob([doctorData], { type: 'application/json' }))
-    
+    const formData = new FormData();
+    const doctorData = JSON.stringify(profileData, null, 2);
+    formData.append('doctor', new Blob([doctorData], { type: 'application/json' }));
+
     if (photoFile) {
-      formData.append('photo', photoFile)
+      formData.append('photo', photoFile);
     }
 
- 
     if (photoFile) {
-      console.log('Photo file name:', photoFile.name)
+      console.log('Photo file name:', photoFile.name);
     }
 
     try {
       const response = await fetch(`${SERVER_URL}/doctor/${doctorId}`, {
         method: 'PUT',
         body: formData,
-      })
-      toast.success("Həkim profili uğurla yeniləndi")
-      onClose()
+      });
+      toast.success('Həkim profili uğurla yeniləndi');
+      onClose();
       if (!response.ok) {
-        const errorText = await response.text()
-        throw new Error(`Profile update failed: ${response.status} ${response.statusText} - ${errorText}`)
+        const errorText = await response.text();
+        throw new Error(
+          `Profile update failed: ${response.status} ${response.statusText} - ${errorText}`,
+        );
       }
 
-      const result = await response.json()
-      console.log('Profile updated:', result)
-      toast.success("Həkim profili uğurla yeniləndi")
-      
+      const result = await response.json();
+      console.log('Profile updated:', result);
+      toast.success('Həkim profili uğurla yeniləndi');
     } catch (error) {
-      console.error('Error updating profile:', error)
-      
+      console.error('Error updating profile:', error);
     }
 
-    console.log('Profile data being sent:', doctorData)
-   
-  }
+    console.log('Profile data being sent:', doctorData);
+  };
 
   return (
     <main className="flex overflow-hidden flex-col px-5 py-5 text-base bg-white max-w-[824px] max-md:px-5 max-md:py-24">
@@ -236,21 +247,21 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
               </button>
             </div>
             <div className="space-y-4">
-              <div className='flex flex-col'>
+              <div className="flex flex-col">
                 <InputField
                   label="Məkan*"
                   value={clinic.location}
                   onChange={value => updateClinic(index, 'location', value)}
                 />
               </div>
-              <div className='flex flex-col'>
-                <InputField
+              <div className="flex flex-col">
+                <ContentEditableField
                   label="Əlaqə məlumatları*"
                   value={clinic.contactDetails}
                   onChange={value => updateClinic(index, 'contactDetails', value)}
                 />
               </div>
-              <div className='flex flex-col mb-2'>
+              <div className="flex flex-col mb-2">
                 <InputField
                   label="Şəhər*"
                   value={clinic.city}
@@ -262,7 +273,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
               <h3 className="text-sm font-medium mb-2">İş günləri və saatları</h3>
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
                 {daysOfWeek.map(day => {
-                  const schedule = clinic.schedules.find(s => s.weekDay === dayMapping[day])
+                  const schedule = clinic.schedules.find(s => s.weekDay === dayMapping[day]);
                   return (
                     <div
                       key={day}
@@ -280,7 +291,9 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
                         <div className="mt-2 text-xs">
                           <select
                             value={schedule.workingHoursFrom}
-                            onChange={e => updateWorkHours(index, day, 'workingHoursFrom', e.target.value)}
+                            onChange={e =>
+                              updateWorkHours(index, day, 'workingHoursFrom', e.target.value)
+                            }
                             className="w-full px-1 py-1 border border-gray-300 rounded-md"
                           >
                             {Array.from({ length: 24 }, (_, i) => i).map(hour => (
@@ -291,7 +304,9 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
                           </select>
                           <select
                             value={schedule.workingHoursTo}
-                            onChange={e => updateWorkHours(index, day, 'workingHoursTo', e.target.value)}
+                            onChange={e =>
+                              updateWorkHours(index, day, 'workingHoursTo', e.target.value)
+                            }
                             className="w-full px-1 py-1 border border-gray-300 rounded-md mt-1"
                           >
                             {Array.from({ length: 24 }, (_, i) => i).map(hour => (
@@ -303,7 +318,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
                         </div>
                       )}
                     </div>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -325,5 +340,5 @@ export const EditProfile: React.FC<EditProfileProps> = ({ doctorId, onClose }) =
       </button>
       <Toaster position="top-center" />
     </main>
-  )
-}
+  );
+};

@@ -4,7 +4,7 @@ import { SERVER_URL } from '@/components/constants';
 import { Doctors } from '@/components/doctors';
 import location from '@/public/location/gridicons_location.png';
 import stars from '@/public/stars/stars.png';
-import { Mail, MapPin, Phone, Star } from 'lucide-react';
+import { MapPin, Star } from 'lucide-react';
 import Image from 'next/image';
 import { use, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -22,17 +22,16 @@ export default function DoctorProfile({ params }: PageProps) {
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
 
   const weekDayMapping: { [key: string]: string } = {
-    'Sunday': 'Bazar',
-    'Monday': 'B.e',
-    'Tuesday': 'Ç.a',
-    'Wednesday': 'Ç',
-    'Thursday': 'C.a',
-    'Friday': 'C',
-    'Saturday': 'Şənbə'
-  }
+    Sunday: 'Bazar',
+    Monday: 'B.e',
+    Tuesday: 'Ç.a',
+    Wednesday: 'Ç',
+    Thursday: 'C.a',
+    Friday: 'C',
+    Saturday: 'Şənbə',
+  };
 
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   const ToggleReviewForm = () => {
     setIsReviewFormOpen(!isReviewFormOpen);
@@ -84,7 +83,7 @@ export default function DoctorProfile({ params }: PageProps) {
           setIsReviewFormOpen={setIsReviewFormOpen}
           fullname={''}
           doctorId={doctor.doctorId}
-          clinic={doctor.clinics.map(c=>c.clinicName).join("/")}
+          clinic={doctor.clinics.map(c => c.clinicName).join('/')}
           reviewtext={''}
         />
       </div>
@@ -137,7 +136,7 @@ export default function DoctorProfile({ params }: PageProps) {
                   <p className="text-lg sm:text-xl font-semibold leading-tight sm:leading-9 text-left">
                     {`"${
                       doctor.reviews.length > 0
-                        ? doctor.reviews.filter(r=>r.status === "APPROVED").at(-1)?.comment
+                        ? doctor.reviews.filter(r => r.status === 'APPROVED').at(-1)?.comment
                         : ''
                     }"`}
                   </p>
@@ -147,8 +146,18 @@ export default function DoctorProfile({ params }: PageProps) {
                         const lastReview = doctor.reviews[doctor.reviews.length - 1];
                         const date = new Date(lastReview.reviewDate);
                         const months = [
-                          'Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'İyun',
-                          'İyul', 'Avqust', 'Sentyabr', 'Oktyabr', 'Noyabr', 'Dekabr'
+                          'Yanvar',
+                          'Fevral',
+                          'Mart',
+                          'Aprel',
+                          'May',
+                          'İyun',
+                          'İyul',
+                          'Avqust',
+                          'Sentyabr',
+                          'Oktyabr',
+                          'Noyabr',
+                          'Dekabr',
                         ];
                         const formattedDate = `${date.getDate()} ${
                           months[date.getMonth()]
@@ -233,35 +242,35 @@ export default function DoctorProfile({ params }: PageProps) {
                     <p className="flex items-center mb-2">
                       <MapPin className="w-4 h-4 mr-2" /> {doctor.clinics[activeClinic]?.city}
                     </p>
-                    <p className="flex items-center mb-2">
-                      <Phone className="w-4 h-4 mr-2" />{' '}
-                      {doctor.clinics[activeClinic]?.contactDetails}
-                    </p>
-                    <p className="flex items-center mb-4">
-                      <Mail className="w-4 h-4 mr-2" /> bmpbabek@bmp.az
-                    </p>
+                    {doctor.clinics[activeClinic]?.contactDetails
+                      ?.split('\n')
+                      .map((line, index) => (
+                        <p key={index} className="flex items-center mb-2">
+                          {line}
+                        </p>
+                      ))}
                   </div>
 
                   <h4 className="font-bold mb-2">İş günləri</h4>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2">
-                  {daysOfWeek.map((day) => {
-              const schedule = doctor.clinics[activeClinic]?.schedules.find(
-                (s: any) => s.weekDay.toLowerCase() === day.toLowerCase()
-              )
-              const isAvailable = !!schedule
-              const bgColor = isAvailable ? 'bg-orange-400 text-white' : 'bg-gray-100'
+                    {daysOfWeek.map(day => {
+                      const schedule = doctor.clinics[activeClinic]?.schedules.find(
+                        (s: any) => s.weekDay.toLowerCase() === day.toLowerCase(),
+                      );
+                      const isAvailable = !!schedule;
+                      const bgColor = isAvailable ? 'bg-orange-400 text-white' : 'bg-gray-100';
 
-              return (
-                <div key={day} className={`p-2 rounded ${bgColor}`}>
-                  <p className="font-bold">{weekDayMapping[day]}</p>
-                  {isAvailable ? (
-                    <p className="text-sm">{`${schedule.workingHoursFrom}-${schedule.workingHoursTo}`}</p>
-                  ) : (
-                    <p className="text-sm">İstirahət günü</p>
-                  )}
-                </div>
-              )
-            })}
+                      return (
+                        <div key={day} className={`p-2 rounded ${bgColor}`}>
+                          <p className="font-bold">{weekDayMapping[day]}</p>
+                          {isAvailable ? (
+                            <p className="text-sm">{`${schedule.workingHoursFrom}-${schedule.workingHoursTo}`}</p>
+                          ) : (
+                            <p className="text-sm">İstirahət günü</p>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
