@@ -95,15 +95,14 @@ export default function DoctorProfile({ params }: PageProps) {
               <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
                 {doctor.photoUrl ? (
                   <img
+                    loading="lazy"
                     src={doctor.photoUrl}
-                    alt={doctor.fullName}
-                    className="w-full sm:w-[150px] h-[150px] rounded-sm object-cover"
+                    alt={`Portrait of Dr. ${doctor.fullName}`}
+                    className="object-cover z-0 shrink-0 self-stretch  h-[150px] rounded-[8px]  w-[150px]"
                   />
                 ) : (
-                  <div className="w-[150px] h-[150px] bg-gray-200 rounded-sm">
-                    <p className="flex items-center justify-center h-full text-center text-gray-500 text-sm">
-                      No Image
-                    </p>
+                  <div className="w-24 h-24 sm:w-[100px] sm:h-[100px] bg-gray-200 rounded-full flex items-center justify-center">
+                    <span className="text-gray-500 text-xl">No Image</span>
                   </div>
                 )}
                 <div className="flex-grow">
@@ -142,16 +141,17 @@ export default function DoctorProfile({ params }: PageProps) {
                 <div className="hidden sm:block h-[105px] w-[2px] gap-0 border-t border-gray-500 bg-[#959595]"></div>
                 <div className="flex flex-col">
                   <p className="text-lg sm:text-xl font-semibold leading-tight sm:leading-9 text-left">
-                    {`"${
-                      doctor.reviews.length > 0
-                        ? doctor.reviews.filter(r => r.status === 'APPROVED').at(-1)?.comment
-                        : ''
-                    }"`}
+                    {doctor.reviews.length > 0
+                      ? doctor.reviews.filter(r => r.status === 'APPROVED').at(-1)?.comment || ''
+                      : ''}
                   </p>
                   <div className="flex items-center gap-2 mt-2">
                     {doctor.reviews.length > 0 &&
                       (() => {
-                        const lastReview = doctor.reviews[doctor.reviews.length - 1];
+                        const approvedReviews = doctor.reviews.filter(r => r.status === 'APPROVED');
+                        if (approvedReviews.length === 0) return null;
+
+                        const lastReview = approvedReviews[approvedReviews.length - 1];
                         const date = new Date(lastReview.reviewDate);
                         const months = [
                           'Yanvar',
@@ -170,10 +170,17 @@ export default function DoctorProfile({ params }: PageProps) {
                         const formattedDate = `${date.getDate()} ${
                           months[date.getMonth()]
                         } ${date.getFullYear()}`;
+
                         return <p className="text-sm">{formattedDate}</p>;
                       })()}
-                    <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px]"></div>
-                    <p className="text-sm">{doctor.reviews[doctor.reviews.length - 1]?.fullName}</p>
+                    {doctor.reviews.some(r => r.status === 'APPROVED') && (
+                      <>
+                        <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px]"></div>
+                        <p className="text-sm">
+                          {doctor.reviews.filter(r => r.status === 'APPROVED').at(-1)?.fullName}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -228,7 +235,7 @@ export default function DoctorProfile({ params }: PageProps) {
               )}
             </div>
 
-            <div className="lg:w-2/5 border w-full lg:w-[460px] h-auto lg:h-[694px] p-4 lg:p-[45px] border-[#FFB300]">
+            <div className=" border w-full lg:w-[460px] h-auto lg:h-[694px] p-4 lg:p-[45px] border-[#FFB300]">
               <h3 className="font-bold mb-2">Klinikalar</h3>
               <div className="flex flex-wrap gap-2 mb-4">
                 {doctor.clinics?.map((clinic, index) => (

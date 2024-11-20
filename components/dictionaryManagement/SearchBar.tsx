@@ -71,7 +71,7 @@ export default function SearchBarDictionary() {
           isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-       <AddSpeciality/>
+       <AddSpeciality />
       </div>
         
       </div>

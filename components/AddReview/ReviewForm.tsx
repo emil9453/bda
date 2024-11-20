@@ -29,7 +29,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   specialty = '',
   isPreFilled = false,
   setIsReviewFormOpen,
-  doctorId
+  doctorId,
 }) => {
   const validationSchema = Yup.object({
     fullName: Yup.string()
@@ -77,7 +77,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
         
           console.log(`D👻😐😐 Doctor id: ${doctorId}`);
           await axios.post(
-            `${SERVER_URL}/review?id=${doctorId}`,
+            `${SERVER_URL}/review/reviews?fullName=${values.doctorName}&clinicName=${values.clinic}%20Clinic&speciality=${values.specialty}`,
             {
               fullName: values.fullName,
               comment: values.reviewText,
@@ -85,7 +85,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               parentReviewId: 0,
             },
           );
-          alert(doctorId)
+          
           toast.success('Review uğurla gönderildi!');
           setIsReviewFormOpen(false);
           toast.dismiss(toastId);
