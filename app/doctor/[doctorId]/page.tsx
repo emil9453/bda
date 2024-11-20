@@ -93,11 +93,19 @@ export default function DoctorProfile({ params }: PageProps) {
           <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
             <div className="lg:w-3/5">
               <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
-                <img
-                  src={doctor.photoUrl}
-                  alt={doctor.fullName}
-                  className="w-full sm:w-[150px] h-[150px] rounded-sm object-cover"
-                />
+                {doctor.photoUrl ? (
+                  <img
+                    src={doctor.photoUrl}
+                    alt={doctor.fullName}
+                    className="w-full sm:w-[150px] h-[150px] rounded-sm object-cover"
+                  />
+                ) : (
+                  <div className="w-[150px] h-[150px] bg-gray-200 rounded-sm">
+                    <p className="flex items-center justify-center h-full text-center text-gray-500 text-sm">
+                      No Image
+                    </p>
+                  </div>
+                )}
                 <div className="flex-grow">
                   <div className="flex flex-col sm:flex-row sm:items-end justify-between">
                     <h2 className="font-bold font-publicSans text-xl sm:text-2xl leading-tight mb-2 sm:mb-0">

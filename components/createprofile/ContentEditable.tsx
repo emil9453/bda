@@ -5,16 +5,17 @@ interface ContentEditableFieldProps {
   value: string;
   className?: string;
   onChange: (value: string) => void;
+  defaultValue?: string;
 }
 
 export const ContentEditableField: React.FC<ContentEditableFieldProps> = ({
   label,
   value,
+  defaultValue,
   className = '',
   onChange,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
-
   const handleInput = () => {
     if (contentRef.current) {
       onChange(contentRef.current.innerText);
@@ -34,7 +35,7 @@ export const ContentEditableField: React.FC<ContentEditableFieldProps> = ({
         className={`overflow-hidden py-1 mt-1 ml-0 focus:outline-none relative max-w-full font-semibold border-b border-solid border-b-yellow-500 text-neutral-800 w-[200px] h-[100px] max-md:pr-5 max-md:ml-2.5 ${className}`}
         style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
       >
-        {value}
+        {value && value?.trim() != '' ? value : defaultValue}
       </div>
     </>
   );

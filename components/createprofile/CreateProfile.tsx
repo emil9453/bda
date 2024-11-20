@@ -250,6 +250,9 @@ export const CreateProfile: React.FC = () => {
               <div className="flex flex-col">
                 <ContentEditableField
                   label="Əlaqə məlumatları*"
+                  defaultValue=" 📞 Tel: 
+  ✉️ Email: 
+ 📱 Mobil:"
                   value={clinic.contactDetails}
                   onChange={value => updateClinic(index, 'contactDetails', value)}
                 />
