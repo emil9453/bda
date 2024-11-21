@@ -70,7 +70,7 @@ const TopDocPage: React.FC = () => {
             clinic={''}
             specialty={''}
             setIsReviewFormOpen={setIsReviewFormOpen}
-            fullname=""
+            fullName=""
             reviewtext=""
           />
         </div>

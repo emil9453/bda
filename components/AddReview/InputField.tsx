@@ -3,7 +3,7 @@ import React from 'react';
 interface InputFieldProps {
   label: string;
   id: string;
-  value: string;
+  value: any;
   name: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>; 
   onBlur: React.FocusEventHandler<HTMLInputElement>;

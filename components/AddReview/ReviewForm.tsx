@@ -1,25 +1,32 @@
-'use client';
+'use client'
 
-import axios from 'axios';
-import { useFormik } from 'formik';
-import React from 'react';
-import toast from 'react-hot-toast';
-import * as Yup from 'yup';
-import InputField from './InputField';
-import RatingStars from './RatingStars';
-import SubmitButton from './SubmitButton';
-import { SERVER_URL } from '../constants';
+import axios from 'axios'
+import { useFormik } from 'formik'
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
+import Select from 'react-select'
+import * as Yup from 'yup'
+import InputField from './InputField'
+import RatingStars from './RatingStars'
+import SubmitButton from './SubmitButton'
+import { SERVER_URL } from '../constants'
+import { DOCTOR_URL } from '../constants';
 
 interface ReviewFormProps {
-  onSubmit: (formData: any) => void;
-  doctorName?: string;
-  doctorId?: string,
-  clinic?: string;
-  specialty?: string;
-  isPreFilled?: boolean;
-  setIsReviewFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  fullname: string;
-  reviewtext: string;
+  onSubmit: (formData: any) => void
+  doctorName?: string
+  doctorId?: string
+  clinic?: string
+  specialty?: string
+  isPreFilled?: boolean
+  setIsReviewFormOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  fullName?: string
+  reviewtext? : string;
+}
+
+interface ClinicOption {
+  value: any
+  label: any
 }
 
 const ReviewForm: React.FC<ReviewFormProps> = ({
@@ -30,76 +37,126 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
   isPreFilled = false,
   setIsReviewFormOpen,
   doctorId,
+  reviewtext,
+  fullName,
 }) => {
+  const [clinicOptions, setClinicOptions] = useState<ClinicOption[]>([])
+
+  useEffect(() => {
+    const fetchClinics = async () => {
+      try {
+        const response = await axios.get(`${DOCTOR_URL}`);
+        const clinics = response.data.flatMap(d => d.clinics?.map(c => c.clinicName));
+        const uniqueClinics = [...new Set(clinics)]; 
+        const clinicOptions = uniqueClinics?.map(clinicName => ({
+          value: clinicName,
+          label: clinicName,
+        }));
+        setClinicOptions([...clinicOptions, { value: 'other', label: 'Other Option' }]);
+        console.log("😎", clinicOptions);
+      } catch (error) {
+        console.error('Error fetching clinics:', error);
+        toast.error('Failed to fetch clinics');
+      }
+    };
+
+    fetchClinics();
+  }, []);
+
+  const selectStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      border: 'none',
+      boxShadow: 'none',
+      minWidth: '100%',
+    }),
+    indicatorSeparator: () => ({
+      display: 'none',
+    }),
+    container: (provided: any) => ({
+      ...provided,
+      minWidth: '100%',
+      scrollbarWidth: 'none',
+    }),
+  };
+
   const validationSchema = Yup.object({
     fullName: Yup.string()
       .test(
         'fullName',
         'Ad və soyad tələb olunur (ən azı iki söz olmalıdır)',
-        value => !!value && value.trim().split(/\s+/).filter(Boolean).length >= 2,
+        (value) => !!value && value.trim().split(/\s+/).filter(Boolean).length >= 2
       )
       .required('Ad və soyad tələb olunur'),
     doctorName: Yup.string()
       .test(
         'doctorName',
         'Həkimin adı, soyadı tələb olunur (ən azı iki söz olmalıdır)',
-        value => !!value && value.trim().split(/\s+/).filter(Boolean).length >= 2,
+        (value) => !!value && value.trim().split(/\s+/).filter(Boolean).length >= 2
       )
       .required('Həkimin adı, soyadı tələb olunur'),
     clinic: Yup.string().required('Klinika tələb olunur'),
+    otherClinic: Yup.string().test(
+      'conditional-other-clinic',
+      'Digər klinika adı tələb olunur',
+      function (value) {
+        return this.parent.clinic !== 'other' || (this.parent.clinic === 'other' && !!value);
+      }
+    ),
     specialty: Yup.string().required('İxtisas tələb olunur'),
     rating: Yup.number().min(1, 'Reytinq tələb olunur').required('Reytinq tələb olunur'),
     reviewText: Yup.string().required('Rəy yazılması tələb olunur'),
     acceptTerms: Yup.boolean().oneOf([true], 'Şərtləri qəbul etməlisiniz'),
-  });
+  })
 
   const formik = useFormik({
     initialValues: {
-      fullName: '',
+      fullName: fullName,
       doctorName: doctorName,
       clinic: clinic,
+      otherClinic: '',
       specialty: specialty,
       rating: 0,
-      reviewText: '',
+      reviewText: reviewtext,
+
       acceptTerms: false,
     },
     validationSchema,
-    onSubmit: async values => {
-     const toastId = toast.loading("Gözləyin")
+    onSubmit: async (values) => {
+      const toastId = toast.loading('Gözləyin')
       try {
         const response = await axios.get(`${SERVER_URL}/doctor/all`, {
           params: {
             fullName: values.doctorName,
             speciality: values.specialty,
           },
-        });
+        })
         if (response.data.length > 0) {
-        
-          console.log(`D👻😐😐 Doctor id: ${doctorId}`);
+          console.log(`D👻😐😐 Doctor id: ${doctorId}`)
           await axios.post(
-            `${SERVER_URL}/review/reviews?fullName=${values.doctorName}&clinicName=${values.clinic}%20Clinic&speciality=${values.specialty}`,
+            `${SERVER_URL}/review/reviews?fullName=${values.doctorName}&clinicName=${
+              values.clinic === 'other' ? values.otherClinic : values.clinic
+            }&speciality=${values.specialty}`,
             {
               fullName: values.fullName,
               comment: values.reviewText,
               rating: values.rating,
               parentReviewId: 0,
-            },
-          );
-          
-          toast.success('Review uğurla gönderildi!');
-          setIsReviewFormOpen(false);
-          toast.dismiss(toastId);
-        }
+            }
+          )
 
-       
+          toast.success('Review uğurla gönderildi!')
+          setIsReviewFormOpen(false)
+        }
       } catch (error) {
-        console.error('Xeta Bas verdi:', error);
-        toast.error('Xeta Bas verdi.');
-        toast.dismiss(toastId);
+        console.error('Xeta Bas verdi:', error)
+        toast.error('Xeta Bas verdi.')
+      } finally {
+        toast.dismiss(toastId)
       }
-      onSubmit(values);
+      onSubmit(values)
     },
-  });
+  })
 
   return (
     <form
@@ -140,9 +197,9 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
               <div className="w-full">
                 <RatingStars
                   rating={formik.values.rating}
-                  onRatingChange={newRating => {
-                    formik.setFieldValue('rating', newRating);
-                    formik.setFieldTouched('rating', true, false);
+                  onRatingChange={(newRating) => {
+                    formik.setFieldValue('rating', newRating)
+                    formik.setFieldTouched('rating', true, false)
                   }}
                 />
                 {formik.touched.rating && formik.errors.rating && (
@@ -153,17 +210,41 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
           </div>
 
           <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-            <InputField
-              label="Klinika*"
-              id="clinic"
-              name="clinic"
-              value={formik.values.clinic}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              disabled={isPreFilled}
-            />
-            {formik.touched.clinic && formik.errors.clinic && (
-              <div className="text-red-500 text-xs">{formik.errors.clinic}</div>
+            <div className="">
+              <label htmlFor="clinic" className="text-xs mt-2 font-bold text-zinc-400">
+                Klinika*
+              </label>
+              <Select
+                id="clinic"
+                name="clinic"
+                styles={selectStyles}
+                options={clinicOptions}
+                value={clinicOptions.find((option) => option.value === formik.values.clinic)}
+                onChange={(selectedOption) => formik.setFieldValue('clinic', selectedOption?.value)}
+                onBlur={formik.handleBlur}
+                isDisabled={isPreFilled}
+                placeholder="Klinika seçin"
+                className="basic-single"
+                classNamePrefix="select"
+              />
+              {formik.touched.clinic && formik.errors.clinic && (
+                <div className="text-red-500 text-xs">{formik.errors.clinic}</div>
+              )}
+            </div>
+
+            {formik.values.clinic === 'other' && (
+              <InputField
+                label="Digər klinika*"
+                id="otherClinic"
+                name="otherClinic"
+                value={formik.values.otherClinic}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                disabled={false}
+              />
+            )}
+            {formik.touched.otherClinic && formik.errors.otherClinic && (
+              <div className="text-red-500 text-xs">{formik.errors.otherClinic}</div>
             )}
 
             <InputField
@@ -221,9 +302,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
       )}
       <SubmitButton />
     </form>
-  );
-};
+  )
+}
 
-export default ReviewForm;
-
-
+export default ReviewForm
