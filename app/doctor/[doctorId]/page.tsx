@@ -81,7 +81,7 @@ export default function DoctorProfile({ params }: PageProps) {
           doctorName={doctor.fullName}
           specialty={doctor.speciality}
           setIsReviewFormOpen={setIsReviewFormOpen}
-          fullname={''}
+          fullName={''}
           doctorId={doctor.doctorId}
           clinic={doctor.clinics.map(c => c.clinicName).join('/')}
           reviewtext={''}
