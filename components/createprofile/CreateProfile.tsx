@@ -186,10 +186,10 @@ export const CreateProfile: React.FC = () => {
 
       const result = await response.json();
       console.log('Profile created:', result);
+      toast.success('Həkim profili uğurla yaradıldı');
     } catch (error) {
       console.error('Error creating profile:', error);
     }
-    toast.success('Həkim profili uğurla yaradıldı');
 
     // For debugging purposes
     console.log(JSON.stringify(payload, null, 2));
