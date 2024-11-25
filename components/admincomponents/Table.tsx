@@ -124,7 +124,6 @@ export default function DoctorTable() {
   const {
     isPending,
     error,
-    isLoading,
     data: doctors,
   } = useQuery({
     queryKey: ['doctors'],
