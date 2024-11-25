@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useMemo } from 'react';
@@ -64,18 +63,22 @@ export default function AdminReviewTable() {
 
   const sortedReviews = useMemo(() => {
     if (!doctors) return [];
-    return doctors.flatMap(doctor => 
-      doctor.reviews.map(review => ({
-        ...review,
-        doctorName: doctor.fullName,
-        clinicNames: doctor.clinics.map(c => c.clinicName).join(', ')
-      }))
-    ).sort((a, b) => {
-      if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
-      if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
-      return 0;
-    });
+    return doctors
+      .flatMap(doctor =>
+        doctor.reviews.map(review => ({
+          ...review,
+          doctorName: doctor.fullName,
+          clinicNames: doctor.clinics.map(c => c.clinicName).join(', '),
+        })),
+      )
+      .sort((a, b) => {
+        if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+        if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
+        return b.reviewDate - a.reviewDate;
+      });
   }, [doctors]);
+
+  console.log(sortedReviews);
 
   if (isPending)
     return (

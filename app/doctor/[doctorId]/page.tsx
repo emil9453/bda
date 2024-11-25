@@ -61,6 +61,8 @@ export default function DoctorProfile({ params }: PageProps) {
     return <p>Loading...</p>;
   }
 
+  const hasApprovedReviews = doctor?.reviews?.some(r => r.status === 'APPROVED');
+
   return (
     <>
       {isReviewFormOpen && (
@@ -85,6 +87,7 @@ export default function DoctorProfile({ params }: PageProps) {
           doctorId={doctor.doctorId}
           clinic={doctor.clinics.map(c => c.clinicName).join('/')}
           reviewtext={''}
+          isPreFilled
         />
       </div>
 
@@ -131,59 +134,63 @@ export default function DoctorProfile({ params }: PageProps) {
                 </div>
               </div>
 
-              <div className="w-full sm:w-[710px] flex flex-col sm:flex-row h-auto sm:h-[145px] p-4 sm:p-[12px_10px] gap-4 sm:gap-[40px] rounded-sm shadow-custom-shadow">
-                <div className="flex sm:flex-col items-center gap-2 sm:gap-[12px]">
-                  <p className="font-poppins text-xl font-semibold leading-9 text-center">
-                    {doctor?.reviews.length > 0 ? doctor.reviews[0].rating : 'N/A'}
-                  </p>
-                  <Star className="w-[35.6px] h-[31.72px] text-yellow-400" fill="currentColor" />
-                </div>
-                <div className="hidden sm:block h-[105px] w-[2px] gap-0 border-t border-gray-500 bg-[#959595]"></div>
-                <div className="flex flex-col">
-                  <p className="text-lg sm:text-xl font-semibold leading-tight sm:leading-9 text-left">
-                    {doctor.reviews.length > 0
-                      ? doctor.reviews.filter(r => r.status === 'APPROVED').at(-1)?.comment || ''
-                      : ''}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    {doctor.reviews.length > 0 &&
-                      (() => {
-                        const approvedReviews = doctor.reviews.filter(r => r.status === 'APPROVED');
-                        if (approvedReviews.length === 0) return null;
+              {hasApprovedReviews && (
+                <div className="w-full sm:w-[710px] flex flex-col sm:flex-row h-auto sm:h-[145px] p-4 sm:p-[12px_10px] gap-4 sm:gap-[40px] rounded-sm shadow-custom-shadow">
+                  <div className="flex sm:flex-col items-center gap-2 sm:gap-[12px]">
+                    <p className="font-poppins text-xl font-semibold leading-9 text-center">
+                      {doctor?.reviews.length > 0 ? doctor.reviews[0].rating : 'N/A'}
+                    </p>
+                    <Star className="w-[35.6px] h-[31.72px] text-yellow-400" fill="currentColor" />
+                  </div>
+                  <div className="hidden sm:block h-[105px] w-[2px] gap-0 border-t border-gray-500 bg-[#959595]"></div>
+                  <div className="flex flex-col">
+                    <p className="text-lg sm:text-xl font-semibold leading-tight sm:leading-9 text-left">
+                      {doctor.reviews.length > 0
+                        ? doctor.reviews.filter(r => r.status === 'APPROVED').at(-1)?.comment || ''
+                        : ''}
+                    </p>
+                    <div className="flex items-center gap-2 mt-2">
+                      {doctor.reviews.length > 0 &&
+                        (() => {
+                          const approvedReviews = doctor.reviews.filter(
+                            r => r.status === 'APPROVED',
+                          );
+                          if (approvedReviews.length === 0) return null;
 
-                        const lastReview = approvedReviews[approvedReviews.length - 1];
-                        const date = new Date(lastReview.reviewDate);
-                        const months = [
-                          'Yanvar',
-                          'Fevral',
-                          'Mart',
-                          'Aprel',
-                          'May',
-                          'İyun',
-                          'İyul',
-                          'Avqust',
-                          'Sentyabr',
-                          'Oktyabr',
-                          'Noyabr',
-                          'Dekabr',
-                        ];
-                        const formattedDate = `${date.getDate()} ${
-                          months[date.getMonth()]
-                        } ${date.getFullYear()}`;
+                          const lastReview = approvedReviews[approvedReviews.length - 1];
+                          const date = new Date(lastReview.reviewDate);
+                          const months = [
+                            'Yanvar',
+                            'Fevral',
+                            'Mart',
+                            'Aprel',
+                            'May',
+                            'İyun',
+                            'İyul',
+                            'Avqust',
+                            'Sentyabr',
+                            'Oktyabr',
+                            'Noyabr',
+                            'Dekabr',
+                          ];
+                          const formattedDate = `${date.getDate()} ${
+                            months[date.getMonth()]
+                          } ${date.getFullYear()}`;
 
-                        return <p className="text-sm">{formattedDate}</p>;
-                      })()}
-                    {doctor.reviews.some(r => r.status === 'APPROVED') && (
-                      <>
-                        <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px]"></div>
-                        <p className="text-sm">
-                          {doctor.reviews.filter(r => r.status === 'APPROVED').at(-1)?.fullName}
-                        </p>
-                      </>
-                    )}
+                          return <p className="text-sm">{formattedDate}</p>;
+                        })()}
+                      {doctor.reviews.some(r => r.status === 'APPROVED') && (
+                        <>
+                          <div className="w-[5px] h-[5px] bg-[#D9D9D9] rounded-full mx-[18px]"></div>
+                          <p className="text-sm">
+                            {doctor.reviews.filter(r => r.status === 'APPROVED').at(-1)?.fullName}
+                          </p>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               <div className="flex my-6 text-sm">
                 <button
