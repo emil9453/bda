@@ -30,16 +30,31 @@ const SearchBar: React.FC<{
   defaultDoctorName = '',
   defaultLocation = '',
   refetch = () => {},
+  defaultClinic,
+  defaultSpecialty,
   rating = '',
   review = '',
   onSearch,
   onDoctorsFetch,
 }) => {
+  const defaultSelectedSpecialty = useMemo(
+    () => (defaultSpecialty ? { value: defaultSpecialty, label: defaultSpecialty } : null),
+    [defaultSpecialty],
+  );
+
+  const defaultSelectedClinic = defaultClinic
+    ? { value: defaultClinic, label: defaultClinic }
+    : null;
+
   const [doctorName, setDoctorName] = useState<string>(defaultDoctorName);
-  const [selectedSpecialty, setSelectedSpecialty] = useState<ClinicOption | null>(null);
+  const [selectedSpecialty, setSelectedSpecialty] = useState<ClinicOption | null>(
+    defaultSelectedSpecialty,
+  );
   const [location, setLocation] = useState<string>(defaultLocation);
-  const [clinicOptions, setClinicOptions] = useState<ClinicOption[]>([]);
-  const [selectedClinic, setSelectedClinic] = useState<ClinicOption | null>(null);
+  const [clinicOptions, setClinicOptions] = useState<ClinicOption[]>(
+    defaultSelectedClinic ? [defaultSelectedClinic] : [],
+  );
+  const [selectedClinic, setSelectedClinic] = useState<ClinicOption | null>(defaultSelectedClinic);
   const [filteredDoctors, setFilteredDoctors] = useState<Doctors[]>([]);
   const [doctorArray, setDoctorArray] = useState<Doctors[]>([]);
 
@@ -63,8 +78,8 @@ const SearchBar: React.FC<{
     try {
       const response = await axios.get(`${DOCTOR_URL}`);
       const clinics = response.data.flatMap((d: any) => d.clinics?.map((c: any) => c.clinicName));
-      const uniqueClinics = [...new Set(clinics)]; 
-      const clinicOptions = uniqueClinics?.map((clinicName) => ({
+      const uniqueClinics = [...new Set(clinics)];
+      const clinicOptions = uniqueClinics?.map(clinicName => ({
         value: clinicName,
         label: clinicName,
       }));
@@ -107,7 +122,7 @@ const SearchBar: React.FC<{
     query.set('review', review ?? '');
 
     window.history.pushState({}, '', `?${query.toString()}`);
-    if(onSearch) {
+    if (onSearch) {
       onSearch(query.toString());
       return;
     }
@@ -141,12 +156,13 @@ const SearchBar: React.FC<{
   };
 
   const specialtyOptions = useMemo(() => {
+    if (doctorArray.length === 0 && defaultSelectedSpecialty) return [defaultSelectedSpecialty];
     const uniqueSpecialties = Array.from(new Set(doctorArray.map(doc => doc.speciality)));
     return uniqueSpecialties.map(specialty => ({
       value: specialty,
       label: specialty,
     }));
-  }, [doctorArray]);
+  }, [doctorArray, defaultSelectedSpecialty]);
 
   const selectStyles = {
     control: (provided: any) => ({
@@ -237,7 +253,7 @@ const SearchBar: React.FC<{
                 type="text"
                 placeholder="Məkan"
                 value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={e => setLocation(e.target.value)}
               />
             </StandaloneSearchBox>
           ) : (
@@ -246,12 +262,15 @@ const SearchBar: React.FC<{
               type="text"
               placeholder="Məkan"
               value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              onChange={e => setLocation(e.target.value)}
             />
           )}
         </div>
 
-        <button type="submit" className="w-full sm:h-[54px] sm:w-auto px-4 py-2 mt-4 sm:mt-0 flex items-center justify-center rounded-lg bg-orange-500 text-white">
+        <button
+          type="submit"
+          className="w-full sm:h-[54px] sm:w-auto px-4 py-2 mt-4 sm:mt-0 flex items-center justify-center rounded-lg bg-orange-500 text-white"
+        >
           <Image src={search} alt="search" className="h-full" />
           <span className="sm:hidden">Axtar</span>
         </button>
@@ -261,4 +280,3 @@ const SearchBar: React.FC<{
 };
 
 export default SearchBar;
-

@@ -79,10 +79,10 @@ const TopDocPage: React.FC = () => {
       <section className="flex mx-auto flex-col items-start self-center mb-8 sm:mb-16 w-full max-w-[1097px] px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
           <div className="w-full sm:w-[820px]">
-          <h1 className="text-2xl sm:text-3xl lg:text-[32px] text-[rgba(255,145,2,1)] font-semibold leading-tight sm:leading-[54px] text-center sm:text-left">
-  &quot;Sağlamlığınızı etibar etdiyiniz həkimi seçin, həyatınızı daha sağlam yaşayın!&quot;
-</h1>
-
+            <h1 className="text-2xl sm:text-3xl lg:text-[32px] text-[rgba(255,145,2,1)] font-semibold leading-tight sm:leading-[54px] text-center sm:text-left">
+              &quot;Sağlamlığınızı etibar etdiyiniz həkimi seçin, həyatınızı daha sağlam
+              yaşayın!&quot;
+            </h1>
           </div>
           <div className="relative w-full sm:w-auto mt-6 sm:mt-0">
             <Image src={notepad} alt="notepad" className="mx-auto sm:mx-0" />
@@ -106,10 +106,15 @@ const TopDocPage: React.FC = () => {
           {doctors &&
             reviews
               ?.filter(r => r.status === 'APPROVED')
-              .slice(-3)
+              ?.sort((a, b) => b.reviewDate - a.reviewDate)
+              .slice(0, 3)
               .map((review, index) => <ReviewCard doctors={doctors} key={index} {...review} />)}
         </div>
-        <Image src={Cardiologist} alt="cardiolog" className="w-full sm:h-[300px] sm:w-auto order-1 sm:order-2" />
+        <Image
+          src={Cardiologist}
+          alt="cardiolog"
+          className="w-full sm:h-[300px] sm:w-auto order-1 sm:order-2"
+        />
       </div>
       <Toaster position="top-center" />
     </>
@@ -117,5 +122,3 @@ const TopDocPage: React.FC = () => {
 };
 
 export default TopDocPage;
-
-

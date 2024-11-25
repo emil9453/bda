@@ -1,4 +1,3 @@
-
 export type Doctors = {
   doctorId: string;
   fullName: string;
@@ -12,24 +11,24 @@ export type Doctors = {
   serviceDescription: string;
 };
 
-export type Clinic ={
-schedules: any;
-clinicId: number;
-clinicName: string;
-location: string;
-contactDetails: string;
-city: string;
-distance: null;
+export type Clinic = {
+  schedules: any;
+  clinicId: number;
+  clinicName: string;
+  location: string;
+  contactDetails: string;
+  city: string;
+  distance: null;
+};
 
-}
-
-export type Reviews= {
-  status: string,
+export type Reviews = {
+  status: string;
   rating: number;
   comment: string;
   reviewDate: string;
-  fullName: string
-}
+  fullName: string;
+  isActive: boolean;
+};
 // const DoctorsArray: Doctors[] = [
 //   {
 //     id: '4',
