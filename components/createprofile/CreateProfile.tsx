@@ -49,7 +49,9 @@ const dayMapping: { [key: string]: string } = {
   'Baz.': 'Sunday',
 };
 
-export const CreateProfile: React.FC = () => {
+export const CreateProfile: React.FC<{
+  toggleProfileOpen: () => void;
+}> = ({ toggleProfileOpen }) => {
   const [profileData, setProfileData] = React.useState<ProfileData>({
     fullName: '',
     speciality: '',
@@ -187,6 +189,7 @@ export const CreateProfile: React.FC = () => {
       const result = await response.json();
       console.log('Profile created:', result);
       toast.success('Həkim profili uğurla yaradıldı');
+      toggleProfileOpen();
     } catch (error) {
       console.error('Error creating profile:', error);
     }
