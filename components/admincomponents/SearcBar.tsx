@@ -4,14 +4,14 @@ import { useState } from 'react';
 import { CreateProfile } from '../createprofile/CreateProfile';
 
 export function SearchBar() {
-  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
-  const ToggleReviewForm = () => {
-    setIsReviewFormOpen(!isReviewFormOpen);
+  const [profileOpened, setProfileOpened] = useState(false);
+  const toggleProfileOpen = () => {
+    setProfileOpened(!profileOpened);
   };
 
   const HandleClickOutside = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).id === 'overlay') {
-      setIsReviewFormOpen(false);
+      setProfileOpened(false);
     }
   };
 
@@ -38,7 +38,7 @@ export function SearchBar() {
         </div>
       </form>
       <button
-        onClick={ToggleReviewForm}
+        onClick={toggleProfileOpen}
         className="flex gap-2 items-center self-start px-2 py-2 mt-1 text-xl font-semibold text-white bg-amber-500 rounded-lg"
       >
         <img
@@ -53,7 +53,7 @@ export function SearchBar() {
       </button>
 
       {/* Overlay */}
-      {isReviewFormOpen && (
+      {profileOpened && (
         <div
           id="overlay"
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
@@ -64,10 +64,10 @@ export function SearchBar() {
       {/* Sliding Review Form */}
       <div
         className={`fixed top-0 right-0 overflow-scroll h-full w-[600px] hidden-scrollbar bg-white shadow-lg z-50 transform transition-transform duration-300 ${
-          isReviewFormOpen ? 'translate-x-0' : 'translate-x-full'
+          profileOpened ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <CreateProfile />
+        <CreateProfile toggleProfileOpen={toggleProfileOpen} />
       </div>
     </div>
   );
