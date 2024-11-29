@@ -181,6 +181,19 @@ const SearchBar: React.FC<{
     }),
   };
 
+  const locationInput = useMemo(
+    () => (
+      <input
+        className="w-full p-2 focus:outline-none"
+        type="search"
+        placeholder="Məkan"
+        value={location}
+        onChange={e => setLocation(e.target.value)}
+      />
+    ),
+    [location, setLocation],
+  );
+
   return (
     <div className="w-full max-w-7xl sm:py-3 py-4 mx-auto px-4 sm:px-6 lg:px-8">
       <form
@@ -248,22 +261,10 @@ const SearchBar: React.FC<{
               onLoad={ref => (inputRef.current = ref)}
               onPlacesChanged={handleOnPlaceChanged}
             >
-              <input
-                className="w-full p-2 focus:outline-none"
-                type="text"
-                placeholder="Məkan"
-                value={location}
-                onChange={e => setLocation(e.target.value)}
-              />
+              <>{locationInput}</>
             </StandaloneSearchBox>
           ) : (
-            <input
-              className="w-full p-2 focus:outline-none"
-              type="text"
-              placeholder="Məkan"
-              value={location}
-              onChange={e => setLocation(e.target.value)}
-            />
+            locationInput
           )}
         </div>
 
