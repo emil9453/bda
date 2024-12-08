@@ -98,7 +98,7 @@ const SearchBar: React.FC<{
   const inputRef = useRef<google.maps.places.SearchBox | null>(null);
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyCt-YiA9TJ2hNVuVWbytkAcbqEMga-nGLs',
+    googleMapsApiKey: 'AIzaSyAo1hCUnTpVTfjsyYrjGSjlhnIW6gsQjN8',
     libraries: ['places'],
   });
 
